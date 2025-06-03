@@ -1,0 +1,26 @@
+# Core dependencies
+dash>=2.14.0
+plotly>=5.17.0
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Database connections
+SQLAlchemy>=2.0.0
+psycopg2-binary>=2.9.0
+pyodbc>=4.0.0
+
+# File handling and configuration
+python-dotenv>=1.0.0
+PyYAML>=6.0.0
+openpyxl>=3.1.0
+
+# Statistical analysis
+scipy>=1.11.0
+scikit-learn>=0.24
+# Security
+cryptography>=3.4
+# File Encoding Detection
+chardet>=4.0.0
+# UI and Plotting
+dash-bootstrap-components>=1.0.0
+Flask>=2.0.0

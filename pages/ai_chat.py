@@ -1,0 +1,519 @@
+# pages/ai_chat.py
+import dash
+from dash import dcc, html, Input, Output, State, callback_context
+import dash_bootstrap_components as dbc
+import pandas as pd
+import json
+import uuid
+from datetime import datetime
+from typing import List, Dict, Optional, Any
+import re # For parsing chart JSON
+
+# Plotly for chart generation
+import plotly.express as px
+import plotly.graph_objects as go
+
+from utils.rag_module import prepare_dataframe_for_chat, query_data_with_llm # Ensure these are the updated versions
+
+cache = None
+
+# Helper to parse chart parameters from LLM response
+def extract_chart_params_from_response(text_response: str) -> Optional[Dict]:
+    # [cite: 15] LLM returns JSON for chart
+    match = re.search(r"CHART_PARAMS_JSON:\s*(\{.*?\})", text_response, re.DOTALL | re.IGNORECASE)
+    if match:
+        json_str = match.group(1)
+        try:
+            params = json.loads(json_str)
+            # Basic validation
+            if isinstance(params, dict) and "chart_type" in params and "x_column" in params:
+                print(f"AI_CHAT: Parsed chart params: {params}")
+                return params
+        except json.JSONDecodeError as e:
+            print(f"AI_CHAT: Error decoding chart JSON: {e}. JSON string: '{json_str}'")
+    return None
+
+# Helper to generate Plotly charts [cite: 4, 18, 19, 20, 21, 22, 23, 24, 25]
+def generate_plotly_chart(chart_params: Dict, df: pd.DataFrame) -> Optional[go.Figure]:
+    try:
+        chart_type = chart_params.get("chart_type", "").lower()
+        x_col = chart_params.get("x_column")
+        y_col = chart_params.get("y_column")
+        color_col = chart_params.get("color_column")
+        title = chart_params.get("title", f"{chart_type.capitalize()} of {x_col}" + (f" by {y_col}" if y_col else ""))
+
+        if not x_col or x_col not in df.columns:
+            print(f"AI_CHAT: X-column '{x_col}' not found in DataFrame.")
+            return None
+        if y_col and y_col not in df.columns:
+            print(f"AI_CHAT: Y-column '{y_col}' not found in DataFrame.")
+            return None # Or proceed if y_col is optional for the chart type
+        if color_col and color_col not in df.columns:
+            print(f"AI_CHAT: Color-column '{color_col}' not found in DataFrame. Ignoring.")
+            color_col = None
+
+
+        fig = None
+        if chart_type == "bar":
+            # If y_col is numeric, it's a direct bar chart. If not, or if y_col is None, it might be a count.
+            # For simplicity, assuming y_col is provided for value aggregation or x_col for counts.
+            if y_col:
+                fig = px.bar(df, x=x_col, y=y_col, color=color_col, title=title)
+            else: # Count occurrences of x_col if y_col is not specified
+                fig = px.bar(df.groupby(x_col).size().reset_index(name='count'), x=x_col, y='count', color=color_col, title=title if title else f"Count of {x_col}")
+        elif chart_type == "line":
+            fig = px.line(df, x=x_col, y=y_col, color=color_col, title=title, markers=True)
+        elif chart_type == "scatter":
+            fig = px.scatter(df, x=x_col, y=y_col, color=color_col, title=title)
+        elif chart_type == "pie":
+             # Pie usually takes names and values. If y_col is numeric, x_col is names.
+            if y_col: # y_col are values, x_col are names
+                 fig = px.pie(df, names=x_col, values=y_col, color=color_col, title=title)
+            else: # If no y_col, count occurrences of x_col
+                 fig = px.pie(df[x_col].value_counts().reset_index(), names='index', values=x_col, title=title if title else f"Distribution of {x_col}")
+        elif chart_type == "histogram":
+            fig = px.histogram(df, x=x_col, color=color_col, title=title, marginal="rug" if y_col else None, y=y_col) # y_col can be used for barmode='overlay' etc.
+        elif chart_type == "boxplot":
+            fig = px.box(df, x=x_col, y=y_col, color=color_col, title=title) # x_col could be categorical, y_col numerical
+        elif chart_type == "heatmap":
+            # Heatmap typically needs a matrix or x, y, z. For simplicity, try correlation matrix if only df is given.
+            # Or if x, y, z are provided, use them. This is a simplified version.
+            if x_col and y_col and chart_params.get("z_column") and chart_params.get("z_column") in df.columns:
+                z_col = chart_params.get("z_column")
+                pivot_df = df.pivot_table(index=y_col, columns=x_col, values=z_col, aggfunc='mean') # Example aggregation
+                fig = px.imshow(pivot_df, title=title, aspect="auto")
+            else: # Default to correlation heatmap of numeric columns
+                numeric_df = df.select_dtypes(include=np.number)
+                if not numeric_df.empty:
+                    corr_matrix = numeric_df.corr()
+                    fig = px.imshow(corr_matrix, title=title if title else "Correlation Heatmap", text_auto=True, aspect="auto")
+                else:
+                    print("AI_CHAT: No numeric data for correlation heatmap.")
+                    return None
+        else:
+            print(f"AI_CHAT: Unsupported chart type: {chart_type}")
+            return None
+
+        if fig: # [cite: 30] dcc.Graph allows interactivity
+            fig.update_layout(title_x=0.5, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
+        return fig
+
+    except Exception as e:
+        print(f"AI_CHAT: Error generating Plotly chart: {e}")
+        import traceback
+        traceback.print_exc()
+        return None
+
+
+layout = dbc.Container([
+    dcc.Store(id="ai-chat-index-status-store", storage_type="session", data={"summary_cache_key": None, "status_message": "Nenhum dado preparado.", "original_data_key": None}),
+    dcc.Store(id="ai-chat-history-store", storage_type="session", data=[]),
+    dcc.Store(id="ai-chat-pending-suggestion-store", storage_type="session", data=None), # For chart suggestions
+    dcc.Store(id="ai-chat-generated-charts-store", storage_type="session", data=[]), # [cite: 33, 35] For chart gallery
+
+    dbc.Row(dbc.Col(html.H2([html.I(className="fas fa-comments me-2"), "Assistente de Análise (Chat com Dados)"], className="mb-4 text-primary"))),
+
+    dbc.Row([
+        dbc.Col(md=4, children=[
+            dbc.Card([
+                dbc.CardHeader(html.H5([html.I(className="fas fa-cogs me-2"), "Configurações e Ações"])),
+                dbc.CardBody([
+                    dbc.Alert("Carregue dados (BD/Upload) e depois prepare-os para o chat abaixo.", color="info", id="ai-chat-initial-info", is_open=True, className="small"),
+                    html.Div(id="ai-chat-current-data-info", className="mb-3 small text-muted"),
+
+                    dbc.Button([html.I(className="fas fa-brain me-1"), "Preparar Dados Atuais para Chat"],
+                               id="ai-chat-prepare-data-btn", color="success", className="w-100 mb-1", n_clicks=0, disabled=True),
+                    dcc.Loading(html.Div(id="ai-chat-prepare-status", className="small mt-1 text-center")),
+
+                    html.Hr(),
+                    dbc.Button([html.I(className="fas fa-chart-bar me-2"), "Ver Gráficos Gerados"], # [cite: 32]
+                               id="ai-chat-view-gallery-btn", color="info", outline=True, className="w-100 mb-3", n_clicks=0),
+                    html.Hr(),
+
+                    dbc.Label("Provedor LLM:", html_for="ai-chat-llm-provider", className="fw-bold small"),
+                    dcc.Dropdown(id="ai-chat-llm-provider", options=[
+                        {"label": "Ollama (Local)", "value": "ollama"},
+                        {"label": "Groq API", "value": "groq"},
+                    ], value="ollama", clearable=False, className="mb-2"),
+
+                    html.Div(id="ai-chat-ollama-options", children=[
+                        dbc.Label("Modelo Ollama:", html_for="ai-chat-ollama-model", className="fw-bold small"),
+                        dbc.Input(id="ai-chat-ollama-model", placeholder="Ex: llama3, mistral", value="llama3", className="mb-2"),
+                    ]),
+
+                    html.Div(id="ai-chat-groq-options", style={'display':'none'}, children=[
+                        dbc.Label("Chave API Groq:", html_for="ai-chat-groq-api-key", className="fw-bold small"),
+                        dbc.Input(id="ai-chat-groq-api-key", type="password", placeholder="Sua chave API Groq...", className="mb-2"),
+                        dbc.Label("Modelo Groq:", html_for="ai-chat-groq-model", className="fw-bold small"),
+                        dcc.Dropdown(id="ai-chat-groq-model",
+                                     options=[
+                                         {"label": "Llama3 8B", "value": "llama3-8b-8192"},
+                                         {"label": "Llama3 70B", "value": "llama3-70b-8192"},
+                                         {"label": "Mixtral 8x7B", "value": "mixtral-8x7b-32768"},
+                                         {"label": "Gemma 7B", "value": "gemma-7b-it"},
+                                     ],
+                                     value="llama3-8b-8192", className="mb-2"),
+                    ]),
+                ])
+            ], className="shadow-sm sticky-top", style={"top":"80px"})
+        ]),
+
+        dbc.Col(md=8, children=[
+            dbc.Card([
+                dbc.CardHeader(html.H5([html.I(className="fas fa-comment-dots me-2"), "Conversa"])),
+                dbc.CardBody([
+                    dcc.Loading(id="ai-chat-loading-conversation", type="default", children=[
+                        html.Div(id="ai-chat-conversation-area", style={
+                            "height": "calc(100vh - 380px)", "minHeight": "400px",
+                            "overflowY": "auto", "border": "1px solid #dee2e6",
+                            "padding": "15px", "borderRadius":"5px", "backgroundColor":"#f8f9fa" # Light background
+                        }, children=[dbc.Alert("Configure e prepare os dados para iniciar o chat.", color="light", className="text-center")])
+                    ]),
+                    dbc.InputGroup([
+                        dcc.Textarea(id="ai-chat-user-question", placeholder="Faça uma pergunta sobre seus dados ou peça um gráfico...", className="mt-3", style={"height": "80px", "resize":"none"}),
+                        dbc.Button(html.I(className="fas fa-paper-plane fs-5"), id="ai-chat-send-question-btn", color="primary", className="mt-3", n_clicks=0, disabled=True)
+                    ], className="mt-2")
+                ])
+            ], className="shadow-sm")
+        ])
+    ]),
+    # Offcanvas for Chart Gallery [cite: 33]
+    dbc.Offcanvas(
+        id="ai-chat-charts-gallery-offcanvas",
+        title="Galeria de Gráficos Gerados",
+        is_open=False,
+        placement="end", # Or "start", "top", "bottom"
+        backdrop=True,
+        scrollable=True,
+        style={"width": "60%"} # Adjust width as needed
+    )
+], fluid=True)
+
+
+def chat_history_to_html(chat_history_list: List[Dict]) -> List:
+    if not chat_history_list:
+        return [dbc.Alert("Faça sua primeira pergunta sobre os dados preparados!", color="light", className="text-center p-3")]
+    components = []
+    for entry in chat_history_list:
+        timestamp = entry.get("timestamp", datetime.now().strftime("%H:%M:%S"))
+        role = entry.get("role")
+        content_type = entry.get("type", "text") # Default to text
+        message_content = entry.get("content")
+
+        card_props = {"className": "mb-2 shadow-sm"}
+        header_props = {"className": "small text-muted"}
+        body_props = {"className": "p-2"}
+
+        if role == "user":
+            card_props.update({"color": "primary", "outline": True, "style": {'maxWidth':'80%', "marginLeft": "auto"}})
+            header_props["className"] += " text-end pe-2"
+            header_text = f"Você ({timestamp})"
+            body_content_processed = dcc.Markdown(message_content, className="mb-0")
+        elif role == "assistant":
+            card_props.update({"style": {'maxWidth':'80%', "marginRight": "auto"}})
+            header_props["className"] += " ps-2"
+            header_text = f"Assistente IA ({timestamp})"
+
+            if content_type == "error":
+                card_props.update({"color": "danger", "outline": False})
+                body_content_processed = html.Pre(message_content) if isinstance(message_content, str) else message_content
+            elif content_type == "loading":
+                card_props.update({"color": "light", "outline": True})
+                body_content_processed = html.Div([dbc.Spinner(size="sm", className="me-2"), message_content])
+            elif content_type == "chart": # [cite: 5, 27, 29] Inline chart rendering in a card
+                card_props.update({"color": "light", "outline": True})
+                if isinstance(message_content, go.Figure):
+                    body_content_processed = dcc.Graph(figure=message_content, config={'displayModeBar': True, 'scrollZoom': True})
+                else: # Should not happen if figure is passed correctly
+                    body_content_processed = html.P("Erro ao renderizar gráfico.")
+            else: # Default AI text response
+                card_props.update({"color": "light", "outline": True})
+                body_content_processed = dcc.Markdown(message_content, dangerously_allow_html=False, className="mb-0") # Main AI response
+                # Check for chart suggestion in the text itself (the CHART_PARAMS_JSON is for direct generation)
+                # For now, chart suggestions are part of the main text from LLM.
+
+        else: # Should not happen
+            continue
+
+        components.append(
+            dbc.Row(dbc.Col(
+                dbc.Card([
+                    dbc.CardHeader(header_text, **header_props),
+                    dbc.CardBody(body_content_processed, **body_props)
+                ], **card_props),
+            width=12 )) # Full width for the inner card, outer row controls offset if needed
+        )
+    return components
+
+
+def register_callbacks(app, cache_instance):
+    global cache
+    cache = cache_instance
+    print(f"AI_CHAT.PY - register_callbacks CALLED. Cache object ID: {id(cache)}")
+
+    @app.callback(
+        [Output("ai-chat-groq-options", "style"), Output("ai-chat-ollama-options", "style")],
+        Input("ai-chat-llm-provider", "value")
+    )
+    def toggle_llm_provider_options(provider):
+        return ({'display':'block'},{'display':'none'}) if provider=="groq" else ({'display':'none'},{'display':'block'})
+
+    @app.callback(
+        [Output("ai-chat-current-data-info", "children"),
+         Output("ai-chat-prepare-data-btn", "disabled"),
+         Output("ai-chat-initial-info", "is_open"),
+         Output("ai-chat-send-question-btn", "disabled"), # Initial state based on data prep
+         Output("ai-chat-index-status-store", "data", allow_duplicate=True)],
+        [Input("app-url", "pathname"),
+         Input("server-side-data-key", "data")], # Main trigger for data change
+        [State("active-table-name", "data"),
+         State("data-source-type", "data"),
+         State("ai-chat-index-status-store", "data")],
+        prevent_initial_call='initial_duplicate' # Crucial to prevent issues on load
+    )
+    def update_current_data_status(pathname, data_key, table_name, source_type, current_index_status):
+        if pathname != "/ai-chat":
+            # print("AI_CHAT - update_current_data_status: Not on AI Chat page, preventing update.")
+            raise dash.exceptions.PreventUpdate
+
+        ctx = callback_context
+        triggered_id = ctx.triggered[0]['prop_id'].split('.')[0] if ctx.triggered else "None"
+        # print(f"AI_CHAT - update_current_data_status: Triggered by {triggered_id}. Data_Key: {data_key}")
+
+
+        data_info_children = dbc.Alert("Nenhum dado carregado. Vá para 'Dados' ou 'Upload'.",color="info",className="small")
+        prepare_btn_disabled = True; initial_info_open = True; send_btn_disabled = True
+        index_status_to_set = current_index_status
+        if index_status_to_set is None:
+            index_status_to_set = {"summary_cache_key": None, "status_message": "Nenhum dado preparado.", "original_data_key": None}
+
+        if not data_key:
+            index_status_to_set.update({"summary_cache_key":None,"status_message":"Nenhum dado para preparar.","original_data_key":None})
+            return data_info_children, prepare_btn_disabled, initial_info_open, send_btn_disabled, index_status_to_set
+
+        df = cache.get(data_key)
+        df_is_valid = df is not None and isinstance(df, pd.DataFrame) and not df.empty
+
+        if df_is_valid:
+            info_text = f"Dados atuais: '{table_name or 'DataFrame'}' ({len(df):,}l, {len(df.columns)}c) de '{source_type or 'N/A'}'."
+            initial_info_open = False; prepare_btn_disabled = False
+            is_prepared = False
+
+            # Check if the current data_key matches the one in store and if summary_cache_key is valid
+            if current_index_status and \
+               current_index_status.get("original_data_key") == data_key and \
+               current_index_status.get("summary_cache_key") and \
+               cache.has(current_index_status.get("summary_cache_key")): # check if cache still has the RAG index
+                is_prepared = True
+
+            if is_prepared:
+                status_msg_display = current_index_status.get('status_message', 'Dados preparados e prontos para chat!')
+                data_info_children = dbc.Alert(f"{info_text} {status_msg_display}", color="success", className="small")
+                send_btn_disabled = False # Enable send if prepared
+                index_status_to_set = current_index_status # Keep current status
+            else:
+                status_msg_display = "Clique em 'Preparar Dados Atuais para Chat' para começar."
+                data_info_children = dbc.Alert(info_text + " " + status_msg_display, color="info", className="small")
+                send_btn_disabled = True # Disable send if not prepared
+                # Reset summary_cache_key if data_key has changed or data is not prepared
+                index_status_to_set = {"summary_cache_key":None,"status_message":status_msg_display,"original_data_key":data_key}
+        else:
+            msg = "Dados não encontrados no cache, vazios ou inválidos. Recarregue.";
+            data_info_children = dbc.Alert(msg,color="warning",className="small")
+            index_status_to_set.update({"summary_cache_key":None,"status_message":msg,"original_data_key":data_key}) # Update status for this data_key
+            send_btn_disabled = True
+
+        return data_info_children, prepare_btn_disabled, initial_info_open, send_btn_disabled, index_status_to_set
+
+
+    @app.callback(
+        [Output("ai-chat-prepare-status", "children"),
+         Output("ai-chat-index-status-store", "data", allow_duplicate=True),
+         Output("ai-chat-send-question-btn", "disabled", allow_duplicate=True)], # Controls send button after prep
+        [Input("ai-chat-prepare-data-btn", "n_clicks")],
+        [State("server-side-data-key", "data"),
+         State("ai-chat-index-status-store", "data")], # Pass current store to preserve original_data_key if needed
+        prevent_initial_call=True
+    )
+    def handle_prepare_data_for_chat(n_clicks, data_key, current_index_status):
+        if not data_key:
+            return dbc.Alert("Nenhum dado principal para preparar.", color="warning"), dash.no_update, True
+        df = cache.get(data_key)
+        if df is None or df.empty:
+            return dbc.Alert("Dados do cache inválidos ou não encontrados. Recarregue.", color="danger"), \
+                   {"summary_cache_key":None,"status_message":"Falha ao carregar do cache.","original_data_key":data_key}, True
+
+        # Call RAG module's prepare function
+        # Using force_complete_processing=True as per rag_module.py's updated prepare_dataframe_for_chat default
+        success, message, summary_key = prepare_dataframe_for_chat(data_key, df, cache, force_complete_processing=True)
+
+        if success and summary_key:
+            alert_msg = dbc.Alert(message, color="success", duration=4000, className="small")
+            # Update store with new summary_key and original_data_key
+            new_index_status = {"summary_cache_key": summary_key, "status_message": "Dados preparados!", "original_data_key": data_key}
+            return alert_msg, new_index_status, False # Enable send button
+        else:
+            alert_msg = dbc.Alert(f"Falha ao preparar dados: {message}", color="danger", className="small")
+            # Keep original_data_key, but clear summary_key
+            failed_index_status = {"summary_cache_key": None, "status_message": f"Falha: {message}", "original_data_key": data_key}
+            return alert_msg, failed_index_status, True # Keep send button disabled
+
+
+    @app.callback(
+        [Output("ai-chat-conversation-area", "children"),
+         Output("ai-chat-user-question", "value"),
+         Output("ai-chat-history-store", "data"),
+         Output("ai-chat-pending-suggestion-store", "data", allow_duplicate=True), # Store LLM's chart suggestions
+         Output("ai-chat-generated-charts-store", "data", allow_duplicate=True)], # Add generated charts
+        [Input("ai-chat-send-question-btn", "n_clicks")],
+        [State("ai-chat-user-question", "value"),
+         State("ai-chat-index-status-store", "data"),
+         State("ai-chat-llm-provider", "value"),
+         State("ai-chat-ollama-model", "value"),
+         State("ai-chat-groq-api-key", "value"),
+         State("ai-chat-groq-model", "value"),
+         State("ai-chat-history-store", "data"),
+         State("ai-chat-pending-suggestion-store", "data"), # Get pending suggestions
+         State("ai-chat-generated-charts-store", "data"), # Get current list of charts
+         State("server-side-data-key", "data")], # For chart generation
+        prevent_initial_call=True
+    )
+    def handle_chat_interaction(n_clicks, user_question, index_status,
+                                llm_provider, ollama_model, groq_api_key, groq_model,
+                                chat_history_list, pending_suggestion, generated_charts_list,
+                                data_key_for_charting): # data_key from server_side_data_store
+
+        if not user_question or not user_question.strip():
+            # If empty, just return current history, don't add new entries
+            return chat_history_to_html(chat_history_list), "", chat_history_list, pending_suggestion, generated_charts_list
+
+        summary_key = index_status.get("summary_cache_key") if isinstance(index_status, dict) else None
+        original_data_key = index_status.get("original_data_key") if isinstance(index_status, dict) else None
+        current_timestamp = datetime.now().strftime("%H:%M:%S")
+
+        # Ensure data is prepared before proceeding
+        if not summary_key or not cache.has(summary_key) or \
+           not original_data_key or not cache.has(original_data_key): # Also check original_data_key in cache
+            error_msg = "Dados não preparados ou sumário expirado. Clique em 'Preparar Dados Atuais para Chat'."
+            chat_history_list.append({"role": "user", "content": user_question, "timestamp": current_timestamp})
+            chat_history_list.append({"role": "assistant", "content": error_msg, "type": "error", "timestamp": current_timestamp})
+            return chat_history_to_html(chat_history_list), "", chat_history_list, None, generated_charts_list # Clear pending suggestion
+
+        # Add user question to history
+        chat_history_list.append({"role": "user", "content": user_question, "timestamp": current_timestamp})
+        # Add loading message for assistant
+        chat_history_list.append({"role": "assistant", "content": "Analisando e respondendo...", "type": "loading", "timestamp": current_timestamp})
+
+        # Determine if this is a chart confirmation (simplified)
+        is_chart_confirmation = user_question.strip().lower() in ["sim", "yes", "ok", "gerar gráfico", "pode gerar"] and pending_suggestion
+
+        new_pending_suggestion = None # Reset for this turn unless a new one is made
+
+        try:
+            if is_chart_confirmation:
+                chart_params = pending_suggestion # Use the stored suggestion
+                ai_response_text = f"Ok, tentando gerar o gráfico sugerido: {chart_params.get('title', 'gráfico')}"
+                error_msg_llm = None
+            else:
+                # Regular query or new chart request
+                ai_response_text, error_msg_llm = query_data_with_llm(
+                    summary_key, cache, user_question, llm_provider,
+                    ollama_model_name=ollama_model,
+                    groq_api_key=groq_api_key, groq_model_name=groq_model
+                )
+                # Try to extract chart params from this new response
+                chart_params = extract_chart_params_from_response(ai_response_text) if not error_msg_llm else None
+
+
+            # Remove loading message
+            chat_history_list.pop()
+            response_timestamp = datetime.now().strftime("%H:%M:%S")
+
+            if error_msg_llm:
+                chat_history_list.append({"role":"assistant","content":error_msg_llm,"type":"error","timestamp":response_timestamp})
+            else:
+                chat_history_list.append({"role":"assistant","content":ai_response_text,"type":"ai","timestamp":response_timestamp})
+                if chart_params and not is_chart_confirmation : # If LLM suggested & parsed a new chart, store it as pending
+                    new_pending_suggestion = chart_params
+                    # Optionally, add a small text like "I can generate this chart for you. Say 'yes' or similar."
+                    # For now, the main text might contain the suggestion phrase.
+
+            # If chart_params are available (either from new extraction or confirmed suggestion)
+            # And we have a valid data_key_for_charting
+            if chart_params and data_key_for_charting:
+                df_for_chart = cache.get(data_key_for_charting)
+                if df_for_chart is not None and not df_for_chart.empty:
+                    plotly_fig = generate_plotly_chart(chart_params, df_for_chart)
+                    if plotly_fig:
+                        # Add chart to conversation
+                        chart_entry_ts = datetime.now().strftime("%H:%M:%S")
+                        chart_title = chart_params.get("title", "Gráfico Gerado")
+                        chat_history_list.append({
+                            "role": "assistant",
+                            "content": plotly_fig, # The actual Plotly Figure object
+                            "type": "chart", # Special type for rendering
+                            "timestamp": chart_entry_ts,
+                            "chart_title": chart_title # Store title for gallery
+                        })
+                        # Add chart to gallery store [cite: 33]
+                        # Storing as JSON for dcc.Store if Figure object is too large or complex
+                        generated_charts_list.append({"title": chart_title, "figure_json": plotly_fig.to_json()})
+                        new_pending_suggestion = None # Clear suggestion once plotted
+                    else:
+                        err_msg_chart = f"Desculpe, não consegui gerar o gráfico com os parâmetros: {chart_params}"
+                        chat_history_list.append({"role":"assistant","content":err_msg_chart,"type":"error","timestamp":datetime.now().strftime("%H:%M:%S")})
+
+                else:
+                    err_msg_df = "Não foi possível carregar os dados para gerar o gráfico."
+                    chat_history_list.append({"role":"assistant","content":err_msg_df,"type":"error","timestamp":datetime.now().strftime("%H:%M:%S")})
+
+
+        except Exception as e:
+            if chat_history_list and chat_history_list[-1].get("type") == "loading": # Ensure loading is popped
+                chat_history_list.pop()
+            err_str=f"Erro durante o processamento do chat: {e}"
+            response_timestamp=datetime.now().strftime("%H:%M:%S")
+            chat_history_list.append({"role":"assistant","content":err_str,"type":"error","timestamp":response_timestamp})
+            print(f"AI_CHAT: Erro chat IA: {e}"); import traceback; traceback.print_exc()
+
+        return chat_history_to_html(chat_history_list), "", chat_history_list, new_pending_suggestion, generated_charts_list
+
+    # Callback for chart gallery [cite: 32, 34]
+    @app.callback(
+        [Output("ai-chat-charts-gallery-offcanvas", "is_open"),
+         Output("ai-chat-charts-gallery-offcanvas", "children")],
+        [Input("ai-chat-view-gallery-btn", "n_clicks"),
+         Input("ai-chat-generated-charts-store", "data")], # Update when new charts are added
+        [State("ai-chat-charts-gallery-offcanvas", "is_open")],
+        prevent_initial_call=True
+    )
+    def toggle_and_populate_charts_gallery(n_clicks_btn, generated_charts_data, is_open_state):
+        ctx = callback_context
+        triggered_id = ctx.triggered[0]['prop_id'].split('.')[0] if ctx.triggered else None
+
+        new_is_open_state = is_open_state
+        if triggered_id == "ai-chat-view-gallery-btn" and n_clicks_btn:
+            new_is_open_state = not is_open_state
+
+        if not generated_charts_data:
+            gallery_content = [dbc.Alert("Nenhum gráfico foi gerado nesta sessão ainda.", color="info")]
+        else:
+            gallery_content = [html.H5("Gráficos Gerados na Sessão")]
+            for idx, chart_data in enumerate(reversed(generated_charts_data)): # Show newest first
+                try:
+                    fig = go.Figure(json.loads(chart_data["figure_json"]))
+                    title = chart_data.get("title", f"Gráfico {len(generated_charts_data) - idx}")
+                    gallery_content.append(
+                        dbc.Card([
+                            dbc.CardHeader(title),
+                            dbc.CardBody(dcc.Graph(figure=fig, style={"height": "300px"})) # Smaller height for gallery view
+                        ], className="mb-3")
+                    )
+                except Exception as e_fig:
+                    gallery_content.append(dbc.Alert(f"Erro ao carregar gráfico: {e_fig}", color="danger"))
+        
+        # Only update if the button was clicked or if the charts data changed while gallery is open
+        if triggered_id == "ai-chat-view-gallery-btn" or (triggered_id == "ai-chat-generated-charts-store" and new_is_open_state) or (not triggered_id and new_is_open_state): # last for initial open if any charts
+             return new_is_open_state, gallery_content
+        
+        return dash.no_update, dash.no_update # Default: no change

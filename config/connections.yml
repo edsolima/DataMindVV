@@ -1,0 +1,16 @@
+local_data:
+  type: postgresql
+  host: localhost
+  port: 5432
+  database: postgres
+  username: Verton
+  password: gAAAAABoOOoYZZIaijs38HcmWTS1tBn6O_1iCYXs3gvIK2kkVtlWBubXaLsabTQzHvj6ESzuLRkAVZoXrEpoJAr4O4Z7WjKUYg==
+  schema: null
+local_data2:
+  type: postgresql
+  host: localhost
+  port: 5432
+  database: postgres
+  username: Verton
+  password: gAAAAABoOQ8UOGSjJ0CKiTUll_v9jdifla8aUNYmPay8FwqwJ03PlNKJzGg3jIcIgjQ7KImzinRyK85CCR__9QVNzU7Z9jCiNg==
+  schema: null

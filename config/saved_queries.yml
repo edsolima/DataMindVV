@@ -1,0 +1,8 @@
+JOIN MULTA - TB sc_view_contratos e pagamentos:
+  query: "SELECT \n    B.DATA_PAGAMENTO, \n    B.CPF_CLIENTE, \n    B.MULTA,\n   \
+    \ A.CPF, \n    A.NOME,\n    A.VALOR\nFROM \n    sc_view_contratos AS A\nINNER\
+    \ JOIN \n    pagamentos AS B\nON \n    B.CPF_CLIENTE = A.CPF;\n"
+  description: query para pegar a data de pagamento e multa na tabela pagamentos
+selecionar 10k da tabela contratos:
+  query: select * from sc_view_contratos limit 10000
+  description: null

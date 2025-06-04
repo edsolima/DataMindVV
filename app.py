@@ -25,29 +25,27 @@ app = dash.Dash(
 )
 app.server.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 
 
-# Configurar Cache com caminho absoluto
+# Importar o backend SQLite personalizado
+from utils.sqlite_cache import SQLiteCache
+
+# Configurar caminho para o banco de dados SQLite do cache
 project_root = os.path.dirname(os.path.abspath(__file__))
-cache_dir = os.path.join(project_root, 'cache-directory')
+sqlite_cache_path = os.path.join(project_root, 'cache.sqlite')
 
-# Tentar criar o diretório de cache se ele não existir
-if not os.path.exists(cache_dir):
-    try:
-        os.makedirs(cache_dir)
-        print(f"Diretório de cache criado em: {cache_dir}")
-    except OSError as e:
-        print(f"ALERTA: Erro ao criar diretório de cache '{cache_dir}': {e}. Verifique as permissões.")
-        print("AVISO: O cache em FileSystem pode não funcionar. A aplicação tentará continuar.")
-        # Poderia definir um CACHE_TYPE='simple' como fallback aqui se desejado,
-        # mas isso mudaria o comportamento esperado de persistência.
+# Inicializar o cache
+cache = Cache()
 
+# Configuração do cache usando SimpleCache
 CACHE_CONFIG = {
-    #'CACHE_TYPE': 'simple', # MANTENHA 'simple' PARA TESTES ATUAIS
-    'CACHE_TYPE': 'filesystem', # DESCOMENTE PARA USAR FILESYSTEM
-    'CACHE_DIR': cache_dir, 
-    'CACHE_THRESHOLD': 500  
+    'CACHE_TYPE': 'SimpleCache',  # Usar o backend SimpleCache
+    'CACHE_DEFAULT_TIMEOUT': 3600,  # Tempo padrão de expiração em segundos (1 hora)
+    'CACHE_THRESHOLD': 1000  # Número máximo de itens no cache
 }
-cache = Cache(app.server, config=CACHE_CONFIG) 
-print(f"Cache inicializado. Tipo: {CACHE_CONFIG['CACHE_TYPE']}{', Diretório: ' + cache_dir if CACHE_CONFIG['CACHE_TYPE'] == 'filesystem' else ''}")
+
+# Inicializar o cache
+cache = Cache()
+cache.init_app(app.server, config=CACHE_CONFIG)
+print("Cache SimpleCache inicializado.")
 
 
 config_manager = ConfigManager()

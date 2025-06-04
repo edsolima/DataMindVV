@@ -8,6 +8,9 @@ import plotly.express as px
 import numpy as np
 import json 
 
+# Importar classes de visualizações e análises avançadas
+from utils.advanced_visualizations import AdvancedVisualizations
+
 # A função load_dataframe_from_store de utils.dataframe_utils não será mais usada aqui
 # para carregar o DataFrame principal, pois ele virá do cache do servidor.
 # from utils.dataframe_utils import load_dataframe_from_store 
@@ -30,6 +33,7 @@ layout = dbc.Container([
                             dcc.Dropdown(
                                 id="viz-chart-type-dropdown",
                                 options=[
+                                    # Gráficos Básicos
                                     {"label": "📊 Gráfico de Barras", "value": "bar"},
                                     {"label": "📈 Gráfico de Linha", "value": "line"},
                                     {"label": "↔️ Gráfico de Dispersão", "value": "scatter"},
@@ -37,7 +41,17 @@ layout = dbc.Container([
                                     {"label": "🔥 Heatmap (Correlação/Pivot)", "value": "heatmap"},
                                     {"label": "📦 Box Plot", "value": "box"},
                                     {"label": "📊 Histograma", "value": "histogram"},
-                                    {"label": "🎻 Violin Plot", "value": "violin"}
+                                    {"label": "🎻 Violin Plot", "value": "violin"},
+                                    # Gráficos Avançados
+                                    {"label": "🌳 Treemap (Hierárquico)", "value": "treemap"},
+                                    {"label": "☀️ Sunburst (Gráfico Solar)", "value": "sunburst"},
+                                    {"label": "⏬ Funil de Conversão", "value": "funnel"},
+                                    {"label": "🌊 Gráfico de Cascata", "value": "waterfall"},
+                                    {"label": "🕸️ Gráfico Radar", "value": "radar"},
+                                    {"label": "🔀 Diagrama de Sankey", "value": "sankey"},
+                                    {"label": "🎯 Gráfico de Bala", "value": "bullet"},
+                                    {"label": "📊 Análise de Pareto", "value": "pareto"},
+                                    {"label": "📅 Mapa de Calor Calendário", "value": "calendar"}
                                 ],
                                 value="bar", clearable=False, className="mb-3"
                             ),
@@ -126,23 +140,64 @@ def register_callbacks(app, cache_instance):
         def create_opt_dropdown(label, opt_name, options, placeholder=None, value=None, multi=False, clearable=True):
             return [dbc.Label(label, html_for={"type": "viz-opt", "index": opt_name}), 
                     dcc.Dropdown(id={"type": "viz-opt", "index": opt_name}, options=options, placeholder=placeholder, value=value, multi=multi, clearable=clearable, className="mb-2")]
-        if chart_type in ["bar", "line", "scatter", "box", "violin", "histogram", "heatmap"]:
+        # Opções para gráficos básicos
+        if chart_type in ["bar", "line", "scatter", "box", "violin", "histogram", "heatmap", "funnel", "waterfall", "pareto", "calendar"]:
             layout_opts.extend(create_opt_dropdown("Eixo X / Categoria:", "x", all_c, "Obrigatório"))
-        if chart_type in ["bar", "line", "scatter", "box", "violin", "heatmap"]:
-            layout_opts.extend(create_opt_dropdown("Eixo Y / Valor:", "y", num_c if chart_type != "bar" else all_c, "Opcional para Contagem (Barra) / Obrigatório para outros"))
-        if chart_type == "pie":
+        
+        if chart_type in ["bar", "line", "scatter", "box", "violin", "heatmap", "funnel", "waterfall", "radar", "bullet", "pareto", "calendar"]:
+            layout_opts.extend(create_opt_dropdown("Eixo Y / Valor:", "y", num_c if chart_type not in ["bar", "funnel"] else all_c, "Opcional para Contagem (Barra) / Obrigatório para outros"))
+        
+        # Opções para gráficos de pizza, treemap e sunburst
+        if chart_type in ["pie", "treemap", "sunburst"]:
             layout_opts.extend(create_opt_dropdown("Nomes (Categorias):", "names", cat_c, "Obrigatório"))
             layout_opts.extend(create_opt_dropdown("Valores:", "values", num_c, "Obrigatório"))
-        if chart_type in ["bar", "line", "heatmap", "pie"]:
+        
+        # Opções de agregação
+        if chart_type in ["bar", "line", "heatmap", "pie", "treemap", "sunburst", "pareto"]:
              layout_opts.append(dbc.Label("Função de Agregação:", html_for={"type": "viz-opt", "index": "agg"}))
-             layout_opts.append(dcc.Dropdown(id={"type": "viz-opt", "index": "agg"}, options=[{"label": L, "value": V} for L,V in [("Soma","sum"),("Média","mean"),("Contagem","count"),("Mediana","median"),("Mínimo","min"),("Máximo","max"), ("Nenhum (usar valores diretos)","none")]], value="sum" if chart_type != "pie" else "none", clearable=False, className="mb-2"))
+             layout_opts.append(dcc.Dropdown(id={"type": "viz-opt", "index": "agg"}, options=[{"label": L, "value": V} for L,V in [("Soma","sum"),("Média","mean"),("Contagem","count"),("Mediana","median"),("Mínimo","min"),("Máximo","max"), ("Nenhum (usar valores diretos)","none")]], value="sum" if chart_type not in ["pie", "treemap", "sunburst"] else "none", clearable=False, className="mb-2"))
+        
+        # Opções de cor
         if chart_type not in ["heatmap"]:
-            layout_opts.extend(create_opt_dropdown("Agrupar por Cor (Opcional):", "color", all_c, clearable=True))
+            if chart_type == "radar":
+                layout_opts.extend(create_opt_dropdown("Categoria para Comparação:", "color", cat_c, "Obrigatório para Radar", clearable=False))
+            elif chart_type == "bullet":
+                layout_opts.extend(create_opt_dropdown("Categoria:", "color", cat_c, "Obrigatório para Bullet", clearable=False))
+            elif chart_type == "sankey":
+                layout_opts.extend(create_opt_dropdown("Categoria (Opcional):", "color", cat_c, clearable=True))
+            else:
+                layout_opts.extend(create_opt_dropdown("Agrupar por Cor (Opcional):", "color", all_c, clearable=True))
+        
+        # Opções específicas para scatter
         if chart_type == "scatter":
             layout_opts.extend(create_opt_dropdown("Variar Tamanho por (Opcional, Numérico):", "size", num_c, clearable=True))
+        
+        # Opções específicas para sankey
+        if chart_type == "sankey":
+            layout_opts.extend(create_opt_dropdown("Valores de Fluxo (Opcional, Numérico):", "size", num_c, "Se não especificado, todos os fluxos terão o mesmo valor", clearable=True))
+        
+        # Opções específicas para heatmap
         if chart_type == "heatmap":
              layout_opts.extend(create_opt_dropdown("Valores (Z - para Pivot):", "z", num_c, "Usar correlação se X,Y,Z não para pivot", clearable=True))
              layout_opts.append(html.Small("Se X, Y, Z preenchidos e 'Agregação' != 'Nenhum', cria Pivot. Senão, Heatmap de Correlação (ignora X,Y,Z).", className="text-muted d-block mb-2"))
+        
+        # Instruções específicas para tipos de gráficos avançados
+        if chart_type == "treemap" or chart_type == "sunburst":
+            layout_opts.append(html.Small("Selecione 'Nomes' para o primeiro nível hierárquico e 'Agrupar por Cor' para o segundo nível (opcional).", className="text-muted d-block mb-2"))
+        elif chart_type == "funnel":
+            layout_opts.append(html.Small("Selecione 'Eixo X' para as etapas do funil e 'Eixo Y' para os valores em cada etapa.", className="text-muted d-block mb-2"))
+        elif chart_type == "waterfall":
+            layout_opts.append(html.Small("Selecione 'Eixo X' para as categorias e 'Eixo Y' para os valores. O primeiro valor é o inicial, os intermediários são incrementos/decrementos, e o último é o total.", className="text-muted d-block mb-2"))
+        elif chart_type == "radar":
+            layout_opts.append(html.Small("Selecione 'Categoria para Comparação' para agrupar e 'Eixo Y' como uma das métricas. Até 5 métricas numéricas serão incluídas automaticamente.", className="text-muted d-block mb-2"))
+        elif chart_type == "sankey":
+            layout_opts.append(html.Small("Selecione 'Eixo X' para origem, 'Eixo Y' para destino e opcionalmente 'Valores de Fluxo' para a intensidade das conexões.", className="text-muted d-block mb-2"))
+        elif chart_type == "bullet":
+            layout_opts.append(html.Small("Selecione 'Eixo Y' para valores atuais, 'Eixo X' para metas e 'Categoria' para agrupar os medidores.", className="text-muted d-block mb-2"))
+        elif chart_type == "pareto":
+            layout_opts.append(html.Small("Selecione 'Eixo X' para categorias e 'Eixo Y' para valores. O gráfico mostrará a distribuição e o percentual cumulativo.", className="text-muted d-block mb-2"))
+        elif chart_type == "calendar":
+            layout_opts.append(html.Small("Selecione 'Eixo X' para a coluna de data e 'Eixo Y' para os valores a serem exibidos no calendário.", className="text-muted d-block mb-2"))
         return html.Div(layout_opts) if layout_opts else dbc.Alert("Selecione tipo.", color="light")
 
     @app.callback(
@@ -241,7 +296,104 @@ def register_callbacks(app, cache_instance):
                         num_df_h=plot_args['data_frame'].select_dtypes(include=np.number)
                         if len(num_df_h.columns)<2:raise ValueError("Heatmap (correlação) requer >=2 colunas numéricas.")
                         fig=px.imshow(num_df_h.corr(),text_auto=".2f",aspect="auto",color_continuous_scale='RdBu_r',color_continuous_midpoint=0);title="Heatmap de Correlação"
-                else:raise ValueError("Tipo de gráfico não suportado.")
+                elif chart_type == "treemap":
+                    if not opt_names or not opt_values_pie: raise ValueError("'Nomes' e 'Valores' para Treemap são obrigatórios.")
+                    path_cols = [opt_names]
+                    if opt_color and opt_color != opt_names: path_cols.append(opt_color)
+                    fig = AdvancedVisualizations.create_treemap(
+                        df=plot_args['data_frame'],
+                        path_columns=path_cols,
+                        values_column=opt_values_pie,
+                        color_column=opt_values_pie,
+                        title=f"Treemap de {opt_values_pie} por {' > '.join(path_cols)}"
+                    )
+                elif chart_type == "sunburst":
+                    if not opt_names or not opt_values_pie: raise ValueError("'Nomes' e 'Valores' para Sunburst são obrigatórios.")
+                    path_cols = [opt_names]
+                    if opt_color and opt_color != opt_names: path_cols.append(opt_color)
+                    fig = AdvancedVisualizations.create_sunburst(
+                        df=plot_args['data_frame'],
+                        path_columns=path_cols,
+                        values_column=opt_values_pie,
+                        color_column=opt_values_pie,
+                        title=f"Sunburst de {opt_values_pie} por {' > '.join(path_cols)}"
+                    )
+                elif chart_type == "funnel":
+                    if not opt_x or not opt_y: raise ValueError("Eixos X e Y são obrigatórios para Funil.")
+                    fig = AdvancedVisualizations.create_funnel(
+                        df=plot_args['data_frame'],
+                        x_column=opt_x,
+                        y_column=opt_y,
+                        title=f"Funil de Conversão: {opt_y} por {opt_x}"
+                    )
+                elif chart_type == "waterfall":
+                    if not opt_x or not opt_y: raise ValueError("Eixos X e Y são obrigatórios para Cascata.")
+                    fig = AdvancedVisualizations.create_waterfall(
+                        df=plot_args['data_frame'],
+                        x_column=opt_x,
+                        y_column=opt_y,
+                        title=f"Gráfico de Cascata: {opt_y} por {opt_x}"
+                    )
+                elif chart_type == "radar":
+                    if not opt_color or not opt_y: raise ValueError("'Agrupar por Cor' e 'Eixo Y' são obrigatórios para Radar.")
+                    # Para radar, precisamos de múltiplas colunas numéricas
+                    # Usamos opt_color como categoria e opt_y como uma das colunas de valor
+                    num_cols = df.select_dtypes(include=np.number).columns.tolist()
+                    if opt_y not in num_cols: raise ValueError(f"'{opt_y}' deve ser numérico para Radar.")
+                    # Usar até 5 colunas numéricas incluindo opt_y
+                    value_cols = [opt_y]
+                    for col in num_cols:
+                        if col != opt_y and len(value_cols) < 5:
+                            value_cols.append(col)
+                    fig = AdvancedVisualizations.create_radar(
+                        df=plot_args['data_frame'],
+                        category_column=opt_color,
+                        value_columns=value_cols,
+                        title=f"Gráfico Radar por {opt_color}"
+                    )
+                elif chart_type == "sankey":
+                    if not opt_x or not opt_y: raise ValueError("'Origem' (X) e 'Destino' (Y) são obrigatórios para Sankey.")
+                    fig = AdvancedVisualizations.create_sankey(
+                        df=plot_args['data_frame'],
+                        source_column=opt_x,
+                        target_column=opt_y,
+                        value_column=opt_size,  # Opcional
+                        title=f"Diagrama de Sankey: {opt_x} → {opt_y}"
+                    )
+                elif chart_type == "bullet":
+                    if not opt_y or not opt_x: raise ValueError("'Valor Atual' (Y) e 'Meta' (X) são obrigatórios para Bullet.")
+                    if not opt_color: raise ValueError("'Categoria' (Cor) é obrigatório para Bullet.")
+                    fig = AdvancedVisualizations.create_bullet_chart(
+                        df=plot_args['data_frame'],
+                        actual_column=opt_y,
+                        target_column=opt_x,
+                        category_column=opt_color,
+                        title=f"Gráfico de Bala: {opt_y} vs Meta ({opt_x})"
+                    )
+                elif chart_type == "pareto":
+                    if not opt_x or not opt_y: raise ValueError("Eixos X e Y são obrigatórios para Pareto.")
+                    fig = AdvancedVisualizations.create_pareto_chart(
+                        df=plot_args['data_frame'],
+                        category_column=opt_x,
+                        value_column=opt_y,
+                        title=f"Análise de Pareto: {opt_y} por {opt_x}"
+                    )
+                elif chart_type == "calendar":
+                    if not opt_x: raise ValueError("'Data' (X) é obrigatório para Calendário.")
+                    if not opt_y: raise ValueError("'Valor' (Y) é obrigatório para Calendário.")
+                    # Verificar se opt_x é uma coluna de data
+                    try:
+                        pd.to_datetime(df[opt_x])
+                        fig = AdvancedVisualizations.create_calendar_heatmap(
+                            df=plot_args['data_frame'],
+                            date_column=opt_x,
+                            value_column=opt_y,
+                            title=f"Mapa de Calor Calendário: {opt_y} por {opt_x}"
+                        )
+                    except:
+                        raise ValueError(f"'{opt_x}' deve ser uma coluna de data válida para Calendário.")
+                else:
+                    raise ValueError("Tipo de gráfico não suportado.")
             fig.update_layout(title_text=title,title_x=0.5,template="plotly_white",paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',clickmode='event+select')
             feedback_msg_content = dbc.Alert("Gráfico gerado!",color="success",duration=3000)
         except Exception as e:

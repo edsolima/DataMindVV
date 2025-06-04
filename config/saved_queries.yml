@@ -5,4 +5,4 @@ JOIN MULTA - TB sc_view_contratos e pagamentos:
   description: query para pegar a data de pagamento e multa na tabela pagamentos
 selecionar 10k da tabela contratos:
   query: select * from sc_view_contratos limit 10000
-  description: null
+  description: ""

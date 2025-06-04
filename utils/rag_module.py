@@ -456,8 +456,7 @@ def query_data_with_llm_optimized(
                 response_mode="tree_summarize", # Good for summarization over multiple documents
             )
 
-            # Enhanced prompt for data analysis and chart suggestions [cite: 6, 7, 8, 9, 10, 11, 12]
-            # This prompt also attempts to get structured info for charts if applicable.
+            # Enhanced prompt for data analysis and chart suggestions with improved column interpretation
             enhanced_question = f"""
             Você é um analista de dados especializado. Analise TODOS os dados fornecidos e responda à seguinte pergunta de forma precisa, detalhada e abrangente.
 
@@ -475,11 +474,27 @@ def query_data_with_llm_optimized(
             9. Se houver análises por colunas específicas, utilize essas informações detalhadas.
             10. Sempre mencione o total de registros analisados quando relevante.
 
+            INTERPRETAÇÃO DE COLUNAS:
+            - Identifique o tipo de cada coluna (numérica, categórica, data/hora, texto) e seu significado no contexto dos dados.
+            - Para colunas numéricas, identifique se representam valores contínuos (como preços, idades) ou discretos (como contagens).
+            - Para colunas categóricas, identifique os valores possíveis e suas frequências.
+            - Para colunas de data/hora, identifique o intervalo temporal e a granularidade (diária, mensal, etc.).
+            - Identifique relações entre colunas, como correlações entre variáveis numéricas ou associações entre categorias.
+
             SUGESTÃO DE GRÁFICOS:
-            - Se a sua análise revelar padrões visuais interessantes (tendências temporais, relações entre variáveis, comparações de categorias, distribuições), sugira um tipo de gráfico apropriado.
-            - Tipos de gráficos a considerar: 'bar' (barras), 'line' (linhas), 'scatter' (dispersão), 'pie' (pizza), 'histogram', 'boxplot', 'heatmap'.
+            - Se a sua análise revelar padrões visuais interessantes, sugira um tipo de gráfico apropriado.
+            - Escolha o tipo de gráfico mais adequado para o tipo de dados e a pergunta:
+              * 'bar' (barras): Para comparar categorias ou valores discretos
+              * 'line' (linhas): Para tendências temporais ou sequências ordenadas
+              * 'scatter' (dispersão): Para relações entre duas variáveis numéricas
+              * 'pie' (pizza): Para proporções de um todo (use apenas quando apropriado)
+              * 'histogram': Para distribuições de variáveis numéricas
+              * 'boxplot': Para distribuições e outliers de variáveis numéricas
+              * 'heatmap': Para correlações ou dados bidimensionais
+              * 'area': Para valores cumulativos ou composição ao longo do tempo
+              * 'violin': Para distribuições detalhadas comparativas
             - Exemplo de sugestão: "Parece haver uma tendência de crescimento nas vendas ao longo do tempo. Um gráfico de linhas da coluna 'Vendas' pela coluna 'Data' poderia visualizar isso."
-            - Se você sugerir um gráfico, tente também extrair os parâmetros para ele no seguinte formato JSON (apenas se um gráfico for claramente aplicável e solicitado ou sugerido):
+            - Se você sugerir um gráfico, SEMPRE extraia os parâmetros para ele no seguinte formato JSON:
               `CHART_PARAMS_JSON: {{"chart_type": "tipo_do_grafico", "x_column": "nome_coluna_x", "y_column": "nome_coluna_y", "color_column": "nome_coluna_cor_opcional", "title": "titulo_sugerido"}}`
               (Não inclua este JSON se nenhum gráfico for relevante ou se a extração dos parâmetros for ambígua).
 

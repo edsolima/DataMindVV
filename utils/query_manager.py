@@ -38,11 +38,11 @@ class QueryManager:
             try:
                 with open(self.query_file, 'r') as f:
                     loaded_data = yaml.safe_load(f)
-                    if loaded_data: # Verificar se o arquivo não está vazio ou malformado
+                    if loaded_data and isinstance(loaded_data, dict): # Verificar se o arquivo não está vazio ou malformado
                         queries = loaded_data
             except Exception as e:
                 print(f"Error loading queries from {self.query_file}: {e}")
-                queries = {} # Retornar vazio em caso de erro
+                # Retornar vazio em caso de erro
         return queries
 
     def get_query(self, name: str) -> Optional[Dict]:

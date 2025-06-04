@@ -33,7 +33,7 @@ def extract_chart_params_from_response(text_response: str) -> Optional[Dict]:
             print(f"AI_CHAT: Error decoding chart JSON: {e}. JSON string: '{json_str}'")
     return None
 
-# Helper to generate Plotly charts [cite: 4, 18, 19, 20, 21, 22, 23, 24, 25]
+# Helper to generate Plotly charts with improved column interpretation
 def generate_plotly_chart(chart_params: Dict, df: pd.DataFrame) -> Optional[go.Figure]:
     try:
         chart_type = chart_params.get("chart_type", "").lower()
@@ -41,7 +41,8 @@ def generate_plotly_chart(chart_params: Dict, df: pd.DataFrame) -> Optional[go.F
         y_col = chart_params.get("y_column")
         color_col = chart_params.get("color_column")
         title = chart_params.get("title", f"{chart_type.capitalize()} of {x_col}" + (f" by {y_col}" if y_col else ""))
-
+        
+        # Verificar se as colunas existem no DataFrame
         if not x_col or x_col not in df.columns:
             print(f"AI_CHAT: X-column '{x_col}' not found in DataFrame.")
             return None
@@ -51,55 +52,188 @@ def generate_plotly_chart(chart_params: Dict, df: pd.DataFrame) -> Optional[go.F
         if color_col and color_col not in df.columns:
             print(f"AI_CHAT: Color-column '{color_col}' not found in DataFrame. Ignoring.")
             color_col = None
-
+            
+        # Detectar automaticamente tipos de colunas para melhor visualização
+        column_types = {}
+        for col in [x_col, y_col, color_col]:
+            if col and col in df.columns:
+                if pd.api.types.is_numeric_dtype(df[col]):
+                    column_types[col] = 'numeric'
+                elif pd.api.types.is_datetime64_any_dtype(df[col]) or pd.api.types.is_period_dtype(df[col]):
+                    column_types[col] = 'datetime'
+                    # Garantir que a coluna seja datetime
+                    if not pd.api.types.is_datetime64_any_dtype(df[col]):
+                        try:
+                            df[col] = pd.to_datetime(df[col])
+                        except:
+                            pass
+                else:
+                    column_types[col] = 'categorical'
 
         fig = None
         if chart_type == "bar":
-            # If y_col is numeric, it's a direct bar chart. If not, or if y_col is None, it might be a count.
-            # For simplicity, assuming y_col is provided for value aggregation or x_col for counts.
+            # Se y_col for numérico, é um gráfico de barras direto. Se não, ou se y_col for None, pode ser uma contagem.
             if y_col:
-                fig = px.bar(df, x=x_col, y=y_col, color=color_col, title=title)
-            else: # Count occurrences of x_col if y_col is not specified
-                fig = px.bar(df.groupby(x_col).size().reset_index(name='count'), x=x_col, y='count', color=color_col, title=title if title else f"Count of {x_col}")
+                # Verificar se x_col é categórico ou datetime para ordenação adequada
+                if column_types.get(x_col) == 'datetime':
+                    df_sorted = df.sort_values(by=x_col)
+                    fig = px.bar(df_sorted, x=x_col, y=y_col, color=color_col, title=title)
+                else:
+                    # Para colunas categóricas, ordenar por valor de y para melhor visualização
+                    if column_types.get(y_col) == 'numeric' and column_types.get(x_col) == 'categorical':
+                        # Calcular média ou soma por categoria
+                        agg_df = df.groupby(x_col)[y_col].agg('mean').reset_index().sort_values(y_col, ascending=False)
+                        fig = px.bar(df, x=x_col, y=y_col, color=color_col, title=title, 
+                                     category_orders={x_col: agg_df[x_col].tolist()})
+                    else:
+                        fig = px.bar(df, x=x_col, y=y_col, color=color_col, title=title)
+            else: # Contar ocorrências de x_col se y_col não for especificado
+                counts = df[x_col].value_counts().reset_index()
+                counts.columns = [x_col, 'count']
+                counts = counts.sort_values('count', ascending=False)
+                fig = px.bar(counts, x=x_col, y='count', color=color_col, 
+                             title=title if title else f"Contagem de {x_col}")
+                
         elif chart_type == "line":
-            fig = px.line(df, x=x_col, y=y_col, color=color_col, title=title, markers=True)
+            # Verificar se x_col é datetime ou numérico para ordenação adequada
+            if column_types.get(x_col) in ['datetime', 'numeric']:
+                df_sorted = df.sort_values(by=x_col)
+                fig = px.line(df_sorted, x=x_col, y=y_col, color=color_col, title=title, markers=True)
+            else:
+                fig = px.line(df, x=x_col, y=y_col, color=color_col, title=title, markers=True)
+                
         elif chart_type == "scatter":
-            fig = px.scatter(df, x=x_col, y=y_col, color=color_col, title=title)
+            fig = px.scatter(df, x=x_col, y=y_col, color=color_col, title=title, 
+                           hover_data=df.select_dtypes(include=['number', 'object']).columns[:5].tolist())
+            
         elif chart_type == "pie":
-             # Pie usually takes names and values. If y_col is numeric, x_col is names.
-            if y_col: # y_col are values, x_col are names
-                 fig = px.pie(df, names=x_col, values=y_col, color=color_col, title=title)
-            else: # If no y_col, count occurrences of x_col
-                 fig = px.pie(df[x_col].value_counts().reset_index(), names='index', values=x_col, title=title if title else f"Distribution of {x_col}")
+            # Pie geralmente usa nomes e valores. Se y_col for numérico, x_col são os nomes.
+            if y_col: # y_col são valores, x_col são nomes
+                # Agregar dados se necessário
+                if len(df[x_col].unique()) > 10:  # Muitas categorias
+                    print(f"AI_CHAT: Many categories ({len(df[x_col].unique())}) for pie chart. Showing top 10.")
+                    agg_df = df.groupby(x_col)[y_col].sum().reset_index()
+                    agg_df = agg_df.sort_values(y_col, ascending=False).head(10)
+                    # Adicionar categoria 'Outros' se necessário
+                    if len(df[x_col].unique()) > 10:
+                        other_sum = df.groupby(x_col)[y_col].sum().reset_index()
+                        other_sum = other_sum[~other_sum[x_col].isin(agg_df[x_col])][y_col].sum()
+                        if other_sum > 0:
+                            agg_df = pd.concat([agg_df, pd.DataFrame({x_col: ['Outros'], y_col: [other_sum]})], ignore_index=True)
+                    fig = px.pie(agg_df, names=x_col, values=y_col, title=title)
+                else:
+                    fig = px.pie(df, names=x_col, values=y_col, title=title)
+            else: # Se não houver y_col, contar ocorrências de x_col
+                counts = df[x_col].value_counts().reset_index()
+                counts.columns = ['category', 'count']
+                # Limitar a 10 categorias para legibilidade
+                if len(counts) > 10:
+                    other_count = counts.iloc[10:]['count'].sum()
+                    counts = counts.iloc[:10]
+                    if other_count > 0:
+                        counts = pd.concat([counts, pd.DataFrame({'category': ['Outros'], 'count': [other_count]})], ignore_index=True)
+                fig = px.pie(counts, names='category', values='count', 
+                             title=title if title else f"Distribuição de {x_col}")
+                
         elif chart_type == "histogram":
-            fig = px.histogram(df, x=x_col, color=color_col, title=title, marginal="rug" if y_col else None, y=y_col) # y_col can be used for barmode='overlay' etc.
+            # Verificar se a coluna é numérica
+            if column_types.get(x_col) == 'numeric':
+                fig = px.histogram(df, x=x_col, color=color_col, title=title, 
+                                  marginal="rug" if y_col else None, y=y_col,
+                                  histnorm='probability density' if chart_params.get('normalize') else None)
+            else:
+                # Para colunas não numéricas, usar contagem de valores
+                counts = df[x_col].value_counts().reset_index()
+                counts.columns = [x_col, 'count']
+                fig = px.bar(counts, x=x_col, y='count', title=title if title else f"Distribuição de {x_col}")
+                
         elif chart_type == "boxplot":
-            fig = px.box(df, x=x_col, y=y_col, color=color_col, title=title) # x_col could be categorical, y_col numerical
+            # Verificar se y_col é numérico (necessário para boxplot)
+            if y_col and column_types.get(y_col) == 'numeric':
+                fig = px.box(df, x=x_col, y=y_col, color=color_col, title=title, 
+                            points='outliers')  # Mostrar apenas outliers para reduzir ruído visual
+            elif x_col and column_types.get(x_col) == 'numeric':
+                # Se apenas x_col for numérico, inverter eixos
+                fig = px.box(df, y=x_col, x=y_col, color=color_col, title=title, 
+                            points='outliers')
+            else:
+                print("AI_CHAT: Boxplot requires at least one numeric column.")
+                return None
+                
         elif chart_type == "heatmap":
-            # Heatmap typically needs a matrix or x, y, z. For simplicity, try correlation matrix if only df is given.
-            # Or if x, y, z are provided, use them. This is a simplified version.
+            # Heatmap geralmente precisa de uma matriz ou x, y, z.
             if x_col and y_col and chart_params.get("z_column") and chart_params.get("z_column") in df.columns:
                 z_col = chart_params.get("z_column")
-                pivot_df = df.pivot_table(index=y_col, columns=x_col, values=z_col, aggfunc='mean') # Example aggregation
-                fig = px.imshow(pivot_df, title=title, aspect="auto")
-            else: # Default to correlation heatmap of numeric columns
-                numeric_df = df.select_dtypes(include=np.number)
-                if not numeric_df.empty:
-                    corr_matrix = numeric_df.corr()
-                    fig = px.imshow(corr_matrix, title=title if title else "Correlation Heatmap", text_auto=True, aspect="auto")
+                # Verificar se z_col é numérico
+                if pd.api.types.is_numeric_dtype(df[z_col]):
+                    pivot_df = df.pivot_table(index=y_col, columns=x_col, values=z_col, aggfunc='mean')
+                    fig = px.imshow(pivot_df, title=title, aspect="auto", labels=dict(color=z_col))
                 else:
-                    print("AI_CHAT: No numeric data for correlation heatmap.")
+                    print(f"AI_CHAT: Z-column '{z_col}' must be numeric for heatmap.")
                     return None
+            else: # Default para matriz de correlação de colunas numéricas
+                numeric_df = df.select_dtypes(include=['number'])
+                if not numeric_df.empty and len(numeric_df.columns) > 1:
+                    corr_matrix = numeric_df.corr()
+                    fig = px.imshow(corr_matrix, title=title if title else "Matriz de Correlação", 
+                                   text_auto=True, aspect="auto", color_continuous_scale='RdBu_r',
+                                   zmin=-1, zmax=1)
+                else:
+                    print("AI_CHAT: Not enough numeric data for correlation heatmap.")
+                    return None
+                    
+        elif chart_type == "area":
+            # Verificar se x_col é datetime ou numérico para ordenação adequada
+            if column_types.get(x_col) in ['datetime', 'numeric']:
+                df_sorted = df.sort_values(by=x_col)
+                if color_col:  # Área empilhada por categoria
+                    fig = px.area(df_sorted, x=x_col, y=y_col, color=color_col, title=title)
+                else:  # Área simples
+                    fig = px.area(df_sorted, x=x_col, y=y_col, title=title)
+            else:
+                if color_col:  # Área empilhada por categoria
+                    fig = px.area(df, x=x_col, y=y_col, color=color_col, title=title)
+                else:  # Área simples
+                    fig = px.area(df, x=x_col, y=y_col, title=title)
+                    
+        elif chart_type == "violin":
+            # Verificar se y_col é numérico (necessário para violin plot)
+            if y_col and column_types.get(y_col) == 'numeric':
+                fig = px.violin(df, x=x_col, y=y_col, color=color_col, title=title, 
+                               box=True, points="outliers")
+            elif x_col and column_types.get(x_col) == 'numeric':
+                # Se apenas x_col for numérico, inverter eixos
+                fig = px.violin(df, y=x_col, x=y_col, color=color_col, title=title, 
+                               box=True, points="outliers")
+            else:
+                print("AI_CHAT: Violin plot requires at least one numeric column.")
+                return None
         else:
-            print(f"AI_CHAT: Unsupported chart type: {chart_type}")
+            print(f"AI_CHAT: Tipo de gráfico não suportado: {chart_type}")
             return None
 
-        if fig: # [cite: 30] dcc.Graph allows interactivity
-            fig.update_layout(title_x=0.5, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
+        if fig:
+            # Melhorar layout do gráfico
+            fig.update_layout(
+                title_x=0.5,  # Centralizar título
+                paper_bgcolor="rgba(0,0,0,0)",  # Fundo transparente
+                plot_bgcolor="rgba(0,0,0,0)",  # Fundo do gráfico transparente
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),  # Legenda horizontal no topo
+                margin=dict(l=40, r=40, t=50, b=40),  # Margens reduzidas
+                xaxis=dict(showgrid=True, gridcolor='rgba(211,211,211,0.3)'),  # Grade leve no eixo x
+                yaxis=dict(showgrid=True, gridcolor='rgba(211,211,211,0.3)')   # Grade leve no eixo y
+            )
+            
+            # Adicionar linha de referência zero para gráficos com eixo y numérico
+            if chart_type in ["bar", "line", "scatter", "area"] and y_col and column_types.get(y_col) == 'numeric':
+                y_min, y_max = df[y_col].min(), df[y_col].max()
+                if y_min < 0 < y_max:  # Se o intervalo cruza zero
+                    fig.add_shape(type="line", x0=0, x1=1, y0=0, y1=0,
+                                 xref="paper", yref="y", line=dict(color="gray", width=1, dash="dot"))
         return fig
 
     except Exception as e:
-        print(f"AI_CHAT: Error generating Plotly chart: {e}")
+        print(f"AI_CHAT: Erro ao gerar gráfico Plotly: {e}")
         import traceback
         traceback.print_exc()
         return None

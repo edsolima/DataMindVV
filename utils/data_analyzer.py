@@ -294,3 +294,203 @@ class DataAnalyzer:
             }
         
         return report
+        
+    def perform_ttest_ind(self, data_col: str, group_col: str) -> Dict:
+        """Perform independent t-test between two groups"""
+        if data_col not in self.numeric_columns:
+            return None
+        if group_col not in self.categorical_columns:
+            return None
+            
+        # Get unique groups
+        groups = self.data[group_col].unique()
+        if len(groups) != 2:
+            return None
+            
+        # Extract data for each group
+        group1_data = self.data[self.data[group_col] == groups[0]][data_col].dropna()
+        group2_data = self.data[self.data[group_col] == groups[1]][data_col].dropna()
+        
+        if len(group1_data) < 2 or len(group2_data) < 2:
+            return None
+            
+        # Perform t-test
+        t_stat, p_value = stats.ttest_ind(group1_data, group2_data, equal_var=False)
+        
+        # Calculate effect size (Cohen's d)
+        mean1, mean2 = group1_data.mean(), group2_data.mean()
+        std1, std2 = group1_data.std(), group2_data.std()
+        pooled_std = np.sqrt(((len(group1_data) - 1) * std1**2 + (len(group2_data) - 1) * std2**2) / 
+                             (len(group1_data) + len(group2_data) - 2))
+        effect_size = abs(mean1 - mean2) / pooled_std if pooled_std > 0 else 0
+        
+        return {
+            'group1': str(groups[0]),
+            'group2': str(groups[1]),
+            'group1_mean': float(mean1),
+            'group2_mean': float(mean2),
+            'group1_std': float(std1),
+            'group2_std': float(std2),
+            'group1_count': int(len(group1_data)),
+            'group2_count': int(len(group2_data)),
+            't_statistic': float(t_stat),
+            'p_value': float(p_value),
+            'effect_size': float(effect_size)
+        }
+        
+    def perform_anova_oneway(self, value_col: str, group_col: str) -> Dict:
+        """Perform one-way ANOVA test"""
+        if value_col not in self.numeric_columns:
+            return None
+        if group_col not in self.categorical_columns:
+            return None
+            
+        # Get groups
+        groups = self.data[group_col].unique()
+        if len(groups) < 2:
+            return None
+            
+        # Extract data for each group
+        group_data = []
+        group_stats = []
+        
+        for group in groups:
+            group_values = self.data[self.data[group_col] == group][value_col].dropna()
+            if len(group_values) > 0:
+                group_data.append(group_values)
+                group_stats.append({
+                    'group': str(group),
+                    'mean': float(group_values.mean()),
+                    'std': float(group_values.std() if len(group_values) > 1 else 0),
+                    'count': int(len(group_values))
+                })
+        
+        if len(group_data) < 2 or any(len(gd) < 2 for gd in group_data):
+            return None
+            
+        # Perform ANOVA
+        f_stat, p_value = stats.f_oneway(*group_data)
+        
+        return {
+            'f_statistic': float(f_stat),
+            'p_value': float(p_value),
+            'group_stats': group_stats,
+            'num_groups': len(group_data)
+        }
+        
+    def perform_chi_square_test(self, col1: str, col2: str) -> Dict:
+        """Perform chi-square test of independence"""
+        if col1 not in self.categorical_columns or col2 not in self.categorical_columns:
+            return None
+            
+        # Create contingency table
+        contingency_table = pd.crosstab(self.data[col1], self.data[col2])
+        
+        if contingency_table.shape[0] < 2 or contingency_table.shape[1] < 2:
+            return None
+            
+        # Perform chi-square test
+        chi2, p_value, dof, expected = stats.chi2_contingency(contingency_table)
+        
+        # Calculate Cramer's V (effect size)
+        n = contingency_table.sum().sum()
+        phi2 = chi2 / n
+        r, k = contingency_table.shape
+        cramer_v = np.sqrt(phi2 / min(k-1, r-1)) if min(k-1, r-1) > 0 else 0
+        
+        return {
+            'chi2_statistic': float(chi2),
+            'p_value': float(p_value),
+            'degrees_of_freedom': int(dof),
+            'cramer_v': float(cramer_v),
+            'contingency_table': contingency_table.to_dict()
+        }
+        
+    def generate_textual_insights(self, results: Dict, test_type: str) -> List[str]:
+        """Generate textual insights based on statistical test results"""
+        insights = []
+        
+        if not results:
+            return ["Não foi possível gerar insights com os dados fornecidos."]
+        
+        if test_type == "ttest":
+            p_value = results.get('p_value', 1.0)
+            effect_size = results.get('effect_size', 0.0)
+            group1 = results.get('group1', 'Grupo 1')
+            group2 = results.get('group2', 'Grupo 2')
+            mean1 = results.get('group1_mean', 0)
+            mean2 = results.get('group2_mean', 0)
+            
+            # Significance interpretation
+            if p_value < 0.001:
+                insights.append(f"Há uma diferença estatisticamente muito significativa (p < 0.001) entre '{group1}' e '{group2}'.")
+            elif p_value < 0.01:
+                insights.append(f"Há uma diferença estatisticamente significativa (p < 0.01) entre '{group1}' e '{group2}'.")
+            elif p_value < 0.05:
+                insights.append(f"Há uma diferença estatisticamente significativa (p < 0.05) entre '{group1}' e '{group2}'.")
+            else:
+                insights.append(f"Não há diferença estatisticamente significativa (p = {p_value:.3f}) entre '{group1}' e '{group2}'.")
+            
+            # Effect size interpretation
+            if effect_size < 0.2:
+                effect_text = "negligível"
+            elif effect_size < 0.5:
+                effect_text = "pequeno"
+            elif effect_size < 0.8:
+                effect_text = "médio"
+            else:
+                effect_text = "grande"
+                
+            insights.append(f"O tamanho do efeito é {effect_text} (d = {effect_size:.2f}).")
+            
+            # Mean comparison
+            insights.append(f"Média para '{group1}': {mean1:.2f}, Média para '{group2}': {mean2:.2f}.")
+            
+        elif test_type == "anova":
+            p_value = results.get('p_value', 1.0)
+            f_stat = results.get('f_statistic', 0.0)
+            num_groups = results.get('num_groups', 0)
+            
+            # Significance interpretation
+            if p_value < 0.001:
+                insights.append(f"Há diferenças estatisticamente muito significativas (p < 0.001) entre os {num_groups} grupos.")
+            elif p_value < 0.01:
+                insights.append(f"Há diferenças estatisticamente significativas (p < 0.01) entre os {num_groups} grupos.")
+            elif p_value < 0.05:
+                insights.append(f"Há diferenças estatisticamente significativas (p < 0.05) entre os {num_groups} grupos.")
+            else:
+                insights.append(f"Não há diferenças estatisticamente significativas (p = {p_value:.3f}) entre os {num_groups} grupos.")
+            
+            # Group means
+            if 'group_stats' in results:
+                means_text = "Médias por grupo: " + ", ".join([f"{stat['group']}: {stat['mean']:.2f}" for stat in results['group_stats']])
+                insights.append(means_text)
+                
+        elif test_type == "chi_square":
+            p_value = results.get('p_value', 1.0)
+            cramer_v = results.get('cramer_v', 0.0)
+            dof = results.get('degrees_of_freedom', 0)
+            
+            # Significance interpretation
+            if p_value < 0.001:
+                insights.append(f"Há uma associação estatisticamente muito significativa (p < 0.001) entre as variáveis.")
+            elif p_value < 0.01:
+                insights.append(f"Há uma associação estatisticamente significativa (p < 0.01) entre as variáveis.")
+            elif p_value < 0.05:
+                insights.append(f"Há uma associação estatisticamente significativa (p < 0.05) entre as variáveis.")
+            else:
+                insights.append(f"Não há associação estatisticamente significativa (p = {p_value:.3f}) entre as variáveis.")
+            
+            # Effect size interpretation
+            if cramer_v < 0.1:
+                effect_text = "negligível"
+            elif cramer_v < 0.3:
+                effect_text = "fraca"
+            elif cramer_v < 0.5:
+                effect_text = "moderada"
+            else:
+                effect_text = "forte"
+                
+            insights.append(f"A força da associação é {effect_text} (V de Cramer = {cramer_v:.2f}).")
+            
+        return insights

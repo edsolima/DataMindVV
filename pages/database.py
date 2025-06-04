@@ -439,9 +439,9 @@ def register_callbacks(app, db_manager_instance, config_manager_instance, query_
         triggered_by_save = ctx.triggered_id == "save-query-btn"
         triggered_by_delete = isinstance(ctx.triggered_id, dict) and ctx.triggered_id.get("type") == "delete-saved-query-from-list-btn" and any(c is not None and c > 0 for c in del_n_list)
         if path=="/database" or triggered_by_save or triggered_by_delete:
-            std_q,saved_q=query_manager.get_standard_queries(),query_manager.load_queries()
-            std_opts=[{"label":f"{n} - {d['description'][:50]}...","value":n} for n,d in std_q.items()]
-            saved_opts=[{"label":f"{n} - {d.get('description','')[:50]}...","value":n} for n,d in saved_q.items()]
+            std_q,saved_q=query_manager.get_standard_queries(),query_manager.load_queries() or {}
+            std_opts=[{"label":f"{n} - {d.get('description', '')[:50] if d.get('description') else ''}","value":n} for n,d in std_q.items()]
+            saved_opts=[{"label":f"{n} - {d.get('description', '')[:50] if d.get('description') else ''}","value":n} for n,d in saved_q.items()]
             return std_opts,saved_opts,render_saved_queries(query_manager)
         return dash.no_update,dash.no_update,dash.no_update
 

@@ -9,6 +9,7 @@ import numpy as np
 import json 
 
 from utils.data_analyzer import DataAnalyzer
+from utils.advanced_analytics import AdvancedAnalytics
 # A função load_dataframe_from_store não será mais usada aqui para o DF principal.
 # from utils.dataframe_utils import load_dataframe_from_store 
 
@@ -29,16 +30,21 @@ layout = dbc.Container([
                             dcc.Dropdown(
                                 id="analytics-type-dropdown", 
                                 options=[
-                                    {"label": "📋 Relatório de Qualidade dos Dados", "value": "quality"},
-                                    {"label": "📊 Estatísticas Descritivas", "value": "descriptive"},
-                                    {"label": "🔗 Análise de Correlação", "value": "correlation"},
-                                    {"label": "📈 Análise de Distribuição", "value": "distribution"},
-                                    {"label": "⚠️ Detecção de Outliers", "value": "outliers"},
-                                    {"label": "🔍 Análise Comparativa (Agrupada)", "value": "comparative"},
-                                    {"label": "📊 Teste t (2 Grupos)", "value": "ttest"},
-                                    {"label": "📈 ANOVA (>2 Grupos)", "value": "anova"},
-                                    {"label": "🔗 Teste Qui-Quadrado", "value": "chi_square"},
-                                ],
+                                        {"label": "📋 Relatório de Qualidade dos Dados", "value": "quality"},
+                                        {"label": "📊 Estatísticas Descritivas", "value": "descriptive"},
+                                        {"label": "🔗 Análise de Correlação", "value": "correlation"},
+                                        {"label": "📈 Análise de Distribuição", "value": "distribution"},
+                                        {"label": "⚠️ Detecção de Outliers", "value": "outliers"},
+                                        {"label": "🔍 Análise Comparativa (Agrupada)", "value": "comparative"},
+                                        {"label": "📊 Teste t (2 Grupos)", "value": "ttest"},
+                                        {"label": "📈 ANOVA (>2 Grupos)", "value": "anova"},
+                                        {"label": "🔗 Teste Qui-Quadrado", "value": "chi_square"},
+                                        {"label": "🧩 Análise de Clusters", "value": "cluster"},
+                                        {"label": "🔄 Análise de Componentes Principais (PCA)", "value": "pca"},
+                                        {"label": "🚨 Detecção de Anomalias", "value": "anomalies"},
+                                        {"label": "📅 Decomposição de Séries Temporais", "value": "time_series"},
+                                        {"label": "👥 Análise de Coorte", "value": "cohort"},
+                                    ],
                                 value="quality", clearable=False
                             )
                         ], md=4, className="mb-2"),
@@ -71,6 +77,170 @@ layout = dbc.Container([
 
 # ----- Funções de Criação de Conteúdo de Análise (permanecem as mesmas) -----
 # (Copie suas funções generate_descriptive_stats_content, generate_correlation_analysis_content, etc., daqui da última resposta)
+def create_kpi_card(title, value, icon, color, note=None):
+    return dbc.Col(dbc.Card([
+        dbc.CardBody([
+            html.Div([html.I(className=f"{icon} me-2"), html.Span(title)], className="text-muted small"),
+            html.H4(value, className="mt-2 mb-0"),
+            html.Small(note, className="text-muted") if note else None
+        ])
+    ], color=color, outline=True, className="shadow-sm"), md=3, className="mb-3")
+
+# Funções para gerar conteúdo das análises avançadas
+def generate_cluster_analysis_content(df, cluster_cols, n_clusters):
+    if not cluster_cols or len(cluster_cols) < 2:
+        return create_card_layout("🧩 Análise de Clusters", dbc.Alert("Selecione pelo menos duas colunas numéricas para clustering.", color="warning"), icon="fas fa-puzzle-piece")
+    
+    try:
+        df_with_clusters, fig = AdvancedAnalytics.perform_cluster_analysis(df, cluster_cols, n_clusters=n_clusters)
+        
+        # Estatísticas por cluster
+        cluster_stats = df_with_clusters.groupby('Cluster')[cluster_cols].agg(['mean', 'count'])
+        cluster_stats_reset = cluster_stats.reset_index()
+        
+        # Formatar para exibição
+        cluster_stats_display = format_datatable(cluster_stats_reset, "cluster-stats-table")
+        
+        # Amostra de dados com clusters
+        sample_with_clusters = df_with_clusters.sample(min(10, len(df_with_clusters))).reset_index(drop=True)
+        sample_display = format_datatable(sample_with_clusters, "cluster-sample-table")
+        
+        content = [
+            html.H5(f"Análise de Clusters com {n_clusters} grupos", className="mb-3"),
+            dcc.Graph(figure=fig),
+            html.H5("Estatísticas por Cluster:", className="mt-4 mb-2"),
+            cluster_stats_display,
+            html.H5("Amostra de Dados com Clusters:", className="mt-4 mb-2"),
+            sample_display
+        ]
+        
+        return create_card_layout("🧩 Análise de Clusters", content, icon="fas fa-puzzle-piece")
+    except Exception as e:
+        return create_card_layout("🧩 Análise de Clusters", dbc.Alert(f"Erro na análise de clusters: {str(e)}", color="danger"), icon="fas fa-puzzle-piece")
+
+def generate_pca_analysis_content(df, pca_cols, n_components):
+    if not pca_cols or len(pca_cols) < 2:
+        return create_card_layout("🔄 Análise de Componentes Principais", dbc.Alert("Selecione pelo menos duas colunas numéricas para PCA.", color="warning"), icon="fas fa-sync-alt")
+    
+    try:
+        df_pca, fig, explained_variance = AdvancedAnalytics.perform_pca_analysis(df, pca_cols, n_components=n_components)
+        
+        # Criar tabela de variância explicada
+        variance_df = pd.DataFrame({
+            'Componente': [f'PC{i+1}' for i in range(len(explained_variance))],
+            'Variância Explicada (%)': [f"{var:.2f}%" for var in explained_variance],
+            'Variância Acumulada (%)': [f"{sum(explained_variance[:i+1]):.2f}%" for i in range(len(explained_variance))]
+        })
+        variance_table = format_datatable(variance_df, "pca-variance-table")
+        
+        # Amostra de dados com componentes principais
+        pc_cols = [col for col in df_pca.columns if col.startswith('PC')]
+        if pc_cols:
+            sample_with_pca = df_pca[pc_cols].head(10).reset_index(drop=True)
+            sample_display = format_datatable(sample_with_pca, "pca-sample-table")
+        else:
+            sample_display = dbc.Alert("Nenhum componente principal gerado.", color="warning")
+        
+        content = [
+            html.H5(f"Análise de Componentes Principais com {n_components} componentes", className="mb-3"),
+            dcc.Graph(figure=fig),
+            html.H5("Variância Explicada:", className="mt-4 mb-2"),
+            variance_table,
+            html.H5("Amostra de Componentes Principais:", className="mt-4 mb-2"),
+            sample_display,
+            html.Hr(),
+            html.P("Interpretação: Os componentes principais são combinações lineares das variáveis originais que capturam a maior variância possível nos dados. PC1 é o componente que explica a maior parte da variância, seguido por PC2, e assim por diante.", className="text-muted")
+        ]
+        
+        return create_card_layout("🔄 Análise de Componentes Principais", content, icon="fas fa-sync-alt")
+    except Exception as e:
+        return create_card_layout("🔄 Análise de Componentes Principais", dbc.Alert(f"Erro na análise PCA: {str(e)}", color="danger"), icon="fas fa-sync-alt")
+
+def generate_anomaly_detection_content(df, anomaly_cols, contamination):
+    if not anomaly_cols or len(anomaly_cols) < 1:
+        return create_card_layout("🚨 Detecção de Anomalias", dbc.Alert("Selecione pelo menos uma coluna numérica para detecção de anomalias.", color="warning"), icon="fas fa-exclamation-triangle")
+    
+    try:
+        df_anomaly, fig = AdvancedAnalytics.detect_anomalies(df, anomaly_cols, contamination=contamination)
+        
+        # Estatísticas de anomalias
+        anomaly_count = (df_anomaly['Anomalia'] == 'Sim').sum()
+        anomaly_percent = (anomaly_count / len(df_anomaly)) * 100
+        
+        # Amostra de anomalias
+        anomalies_sample = df_anomaly[df_anomaly['Anomalia'] == 'Sim'].sample(min(10, anomaly_count)).reset_index(drop=True) if anomaly_count > 0 else pd.DataFrame()
+        
+        content = [
+            html.H5(f"Detecção de Anomalias (Proporção esperada: {contamination:.1%})", className="mb-3"),
+            dbc.Row([
+                dbc.Col(dbc.Card(dbc.CardBody([
+                    html.P("Anomalias Detectadas:", className="text-muted mb-0"),
+                    html.H3(f"{anomaly_count}", className="mt-2")
+                ])), width=6),
+                dbc.Col(dbc.Card(dbc.CardBody([
+                    html.P("Percentual de Anomalias:", className="text-muted mb-0"),
+                    html.H3(f"{anomaly_percent:.2f}%", className="mt-2")
+                ])), width=6)
+            ], className="mb-4"),
+            dcc.Graph(figure=fig),
+            html.H5("Amostra de Anomalias Detectadas:", className="mt-4 mb-2"),
+            format_datatable(anomalies_sample, "anomaly-sample-table") if not anomalies_sample.empty else dbc.Alert("Nenhuma anomalia detectada na amostra.", color="info"),
+            html.Hr(),
+            html.P("Interpretação: As anomalias são pontos de dados que se desviam significativamente do padrão normal. Esses pontos podem representar erros, fraudes, comportamentos incomuns ou eventos raros que merecem atenção especial.", className="text-muted")
+        ]
+        
+        return create_card_layout("🚨 Detecção de Anomalias", content, icon="fas fa-exclamation-triangle")
+    except Exception as e:
+        return create_card_layout("🚨 Detecção de Anomalias", dbc.Alert(f"Erro na detecção de anomalias: {str(e)}", color="danger"), icon="fas fa-exclamation-triangle")
+
+def generate_time_series_decomposition_content(df, date_col, value_col):
+    if not date_col or not value_col:
+        return create_card_layout("📅 Decomposição de Séries Temporais", dbc.Alert("Selecione uma coluna de data e uma coluna de valor.", color="warning"), icon="fas fa-chart-line")
+    
+    try:
+        fig = AdvancedAnalytics.perform_time_series_decomposition(df, date_col, value_col)
+        
+        content = [
+            html.H5(f"Decomposição da Série Temporal: {value_col} por {date_col}", className="mb-3"),
+            dcc.Graph(figure=fig, style={'height': '800px'}),
+            html.Hr(),
+            html.P("Interpretação:", className="fw-bold mt-3"),
+            html.Ul([
+                html.Li("Série Original: Os dados brutos ao longo do tempo."),
+                html.Li("Tendência: O componente de longo prazo que indica a direção geral da série."),
+                html.Li("Sazonalidade: Padrões cíclicos que se repetem em intervalos regulares."),
+                html.Li("Resíduo: O que resta após remover tendência e sazonalidade, representando ruído ou eventos irregulares.")
+            ], className="text-muted")
+        ]
+        
+        return create_card_layout("📅 Decomposição de Séries Temporais", content, icon="fas fa-chart-line")
+    except Exception as e:
+        return create_card_layout("📅 Decomposição de Séries Temporais", dbc.Alert(f"Erro na decomposição da série temporal: {str(e)}", color="danger"), icon="fas fa-chart-line")
+
+def generate_cohort_analysis_content(df, date_col, id_col, value_col, time_unit):
+    if not date_col or not id_col:
+        return create_card_layout("👥 Análise de Coorte", dbc.Alert("Selecione uma coluna de data e uma coluna de ID.", color="warning"), icon="fas fa-users")
+    
+    try:
+        retention_table, fig = AdvancedAnalytics.create_cohort_analysis(df, date_col, id_col, value_col, time_unit)
+        
+        # Formatar tabela de retenção para exibição
+        retention_display = retention_table.copy() * 100  # Converter para percentual
+        retention_display = retention_display.round(1).reset_index()
+        retention_display.columns = [str(col) for col in retention_display.columns]  # Converter todos os nomes de colunas para string
+        
+        content = [
+            html.H5(f"Análise de Coorte: {id_col} por {date_col}", className="mb-3"),
+            dcc.Graph(figure=fig),
+            html.H5("Tabela de Retenção (%):", className="mt-4 mb-2"),
+            format_datatable(retention_display, "cohort-table"),
+            html.Hr(),
+            html.P("Interpretação: A análise de coorte agrupa usuários/clientes que iniciaram no mesmo período e acompanha seu comportamento ao longo do tempo. Cada linha representa uma coorte, e cada coluna representa um período após a entrada. Os valores mostram a taxa de retenção (percentual de usuários que continuam ativos em cada período).", className="text-muted")
+        ]
+        
+        return create_card_layout("👥 Análise de Coorte", content, icon="fas fa-users")
+    except Exception as e:
+        return create_card_layout("👥 Análise de Coorte", dbc.Alert(f"Erro na análise de coorte: {str(e)}", color="danger"), icon="fas fa-users")
 def create_card_layout(title, children, icon="fas fa-info-circle"):
     return dbc.Card(
         [
@@ -265,6 +435,8 @@ def register_callbacks(app, cache_instance):
         analyzer = DataAnalyzer(df)
         cat_opts = [{"label": col, "value": col} for col in analyzer.categorical_columns]
         num_opts = [{"label": col, "value": col} for col in analyzer.numeric_columns]
+        date_opts = [{"label": col, "value": col} for col in df.columns if pd.api.types.is_datetime64_any_dtype(df[col]) or 
+                     (isinstance(df[col].dtype, object) and pd.to_datetime(df[col], errors='coerce').notna().any())]
 
         if analysis_type == "ttest":
             specific_options_children = html.Div([
@@ -285,6 +457,53 @@ def register_callbacks(app, cache_instance):
                 dbc.Label("Variável Categórica 2:", className="mt-2 fw-bold small"),
                 dcc.Dropdown(id="analytics-chisq-col2", options=cat_opts, placeholder="Selecione..."),
             ])
+        elif analysis_type == "cluster":
+            specific_options_children = html.Div([
+                dbc.Label("Colunas Numéricas para Clustering:", className="mt-2 fw-bold small"),
+                dcc.Dropdown(id="analytics-cluster-cols", options=num_opts, placeholder="Selecione...", multi=True, className="mb-2"),
+                dbc.Label("Número de Clusters:", className="mt-2 fw-bold small"),
+                dcc.Slider(id="analytics-cluster-number", min=2, max=10, step=1, value=3, marks={i: str(i) for i in range(2, 11)}),
+            ])
+        elif analysis_type == "pca":
+            specific_options_children = html.Div([
+                dbc.Label("Colunas Numéricas para PCA:", className="mt-2 fw-bold small"),
+                dcc.Dropdown(id="analytics-pca-cols", options=num_opts, placeholder="Selecione...", multi=True, className="mb-2"),
+                dbc.Label("Número de Componentes:", className="mt-2 fw-bold small"),
+                dcc.Slider(id="analytics-pca-components", min=2, max=5, step=1, value=2, marks={i: str(i) for i in range(2, 6)}),
+            ])
+        elif analysis_type == "anomalies":
+            specific_options_children = html.Div([
+                dbc.Label("Colunas Numéricas para Detecção:", className="mt-2 fw-bold small"),
+                dcc.Dropdown(id="analytics-anomaly-cols", options=num_opts, placeholder="Selecione...", multi=True, className="mb-2"),
+                dbc.Label("Proporção Esperada de Anomalias (%):", className="mt-2 fw-bold small"),
+                dcc.Slider(id="analytics-anomaly-contamination", min=1, max=10, step=1, value=5, 
+                            marks={i: f"{i}%" for i in range(1, 11)}),
+            ])
+        elif analysis_type == "time_series":
+            specific_options_children = html.Div([
+                dbc.Label("Coluna de Data:", className="mt-2 fw-bold small"),
+                dcc.Dropdown(id="analytics-ts-date-col", options=date_opts, placeholder="Selecione...", className="mb-2"),
+                dbc.Label("Coluna de Valor:", className="mt-2 fw-bold small"),
+                dcc.Dropdown(id="analytics-ts-value-col", options=num_opts, placeholder="Selecione...", className="mb-2"),
+            ])
+        elif analysis_type == "cohort":
+            specific_options_children = html.Div([
+                dbc.Label("Coluna de Data:", className="mt-2 fw-bold small"),
+                dcc.Dropdown(id="analytics-cohort-date-col", options=date_opts, placeholder="Selecione...", className="mb-2"),
+                dbc.Label("Coluna de ID (Cliente/Usuário):", className="mt-2 fw-bold small"),
+                dcc.Dropdown(id="analytics-cohort-id-col", options=[{"label": col, "value": col} for col in df.columns], 
+                              placeholder="Selecione...", className="mb-2"),
+                dbc.Label("Coluna de Valor (opcional):", className="mt-2 fw-bold small"),
+                dcc.Dropdown(id="analytics-cohort-value-col", options=num_opts, placeholder="Selecione...", className="mb-2", clearable=True),
+                dbc.Label("Unidade de Tempo:", className="mt-2 fw-bold small"),
+                dcc.Dropdown(id="analytics-cohort-time-unit", options=[
+                    {"label": "Dia", "value": "D"},
+                    {"label": "Semana", "value": "W"},
+                    {"label": "Mês", "value": "M"},
+                    {"label": "Trimestre", "value": "Q"},
+                    {"label": "Ano", "value": "Y"},
+                ], value="M", className="mb-2"),
+            ])
         return cat_opts, disable_group_by, specific_options_children
 
     @app.callback(
@@ -295,11 +514,20 @@ def register_callbacks(app, cache_instance):
          State("analytics-group-by-column", "value"),
          State("analytics-ttest-data-col", "value"),
          State("analytics-anova-value-col", "value"),
-         State("analytics-chisq-col1", "value"), State("analytics-chisq-col2", "value")],
+         State("analytics-chisq-col1", "value"), State("analytics-chisq-col2", "value"),
+         State("analytics-cluster-cols", "value"), State("analytics-cluster-number", "value"),
+         State("analytics-pca-cols", "value"), State("analytics-pca-components", "value"),
+         State("analytics-anomaly-cols", "value"), State("analytics-anomaly-contamination", "value"),
+         State("analytics-ts-date-col", "value"), State("analytics-ts-value-col", "value"),
+         State("analytics-cohort-date-col", "value"), State("analytics-cohort-id-col", "value"),
+         State("analytics-cohort-value-col", "value"), State("analytics-cohort-time-unit", "value")],
         prevent_initial_call=True
     )
     def run_selected_analysis(n_clicks, data_key, analysis_type, group_by_col, # MODIFICADO PARA CACHE
-                              ttest_data_col, anova_value_col, chisq_col1, chisq_col2):
+                              ttest_data_col, anova_value_col, chisq_col1, chisq_col2,
+                              cluster_cols, cluster_number, pca_cols, pca_components,
+                              anomaly_cols, anomaly_contamination, ts_date_col, ts_value_col,
+                              cohort_date_col, cohort_id_col, cohort_value_col, cohort_time_unit):
         if not data_key:
             return dbc.Alert("Nenhum dado carregado. Por favor, carregue dados primeiro.", color="warning", className="mt-3")
         
@@ -323,6 +551,16 @@ def register_callbacks(app, cache_instance):
                 return generate_anova_content(analyzer, anova_value_col, group_by_col)
             elif analysis_type == "chi_square":
                 return generate_chisquare_content(analyzer, chisq_col1, chisq_col2)
+            elif analysis_type == "cluster":
+                return generate_cluster_analysis_content(df, cluster_cols, cluster_number)
+            elif analysis_type == "pca":
+                return generate_pca_analysis_content(df, pca_cols, pca_components)
+            elif analysis_type == "anomalies":
+                return generate_anomaly_detection_content(df, anomaly_cols, anomaly_contamination/100)
+            elif analysis_type == "time_series":
+                return generate_time_series_decomposition_content(df, ts_date_col, ts_value_col)
+            elif analysis_type == "cohort":
+                return generate_cohort_analysis_content(df, cohort_date_col, cohort_id_col, cohort_value_col, cohort_time_unit)
             else: return dbc.Alert("Tipo de análise inválido.", color="warning", className="mt-3")
         except Exception as e:
             print(f"Erro na análise '{analysis_type}': {e}"); import traceback; traceback.print_exc()

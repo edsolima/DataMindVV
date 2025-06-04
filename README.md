@@ -260,7 +260,6 @@ logging.basicConfig(level=logging.DEBUG)
 
 Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
 
-## 📞 Suporte
 
 ### Documentação
 - **Plotly Dash**: https://dash.plotly.com/
@@ -276,4 +275,3 @@ Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalh
 
 **Desenvolvido com ❤️ usando Python e Plotly Dash**
 
-*Para mais informações sobre o projeto DeepBI que serviu de inspiração, visite: https://github.com/DeepInsight-AI/DeepBI*

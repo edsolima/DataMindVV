@@ -7,19 +7,19 @@ Esta aplicação é uma plataforma web interativa para análise, visualização 
 ## Instalação
 
 1. **Clone o repositório:**
-   ```bash
+```bash
    git clone <URL_DO_REPOSITORIO>
    cd <PASTA_DO_PROJETO>
-   ```
+```
 2. **Crie um ambiente virtual (opcional, mas recomendado):**
-   ```bash
-   python -m venv venv
+```bash
+python -m venv venv
    source venv/bin/activate  # Linux/Mac
    venv\Scripts\activate    # Windows
    ```
 3. **Instale as dependências:**
-   ```bash
-   pip install -r requirements.txt
+```bash
+pip install -r requirements.txt
    # Para ambiente de desenvolvimento/testes:
    pip install -r requirements-dev.txt
    ```
@@ -69,7 +69,7 @@ Acesse `http://localhost:8050` no navegador.
 ## Testes Automatizados
 
 - Para rodar todos os testes:
-  ```bash
+```bash
   pytest
   ```
 - Testes cobrem utilitários principais e fluxos críticos.

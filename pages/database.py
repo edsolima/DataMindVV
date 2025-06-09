@@ -13,6 +13,30 @@ db_manager = None
 config_manager = None
 query_manager = None
 
+# Definir sqlserver_auth_row antes do layout
+sqlserver_auth_row = html.Div([
+    dbc.Row([
+        dbc.Col(md=12, children=[
+            dbc.Checkbox(id="db-sqlserver-windows-auth", label="Usar autenticação do Windows (Integrated Security)")
+        ])
+    ], className="mb-2")
+], id="sqlserver-auth-row", style={'display': 'none'})
+
+# Definir postgres_ssl_rows antes do layout
+postgres_ssl_rows = html.Div([
+    dbc.Row([
+        dbc.Col(md=6, children=[dbc.Label("SSL Mode", html_for="db-pg-sslmode", className="fw-bold small"), dcc.Dropdown(id="db-pg-sslmode", options=[
+            {"label": m, "value": m} for m in ["disable", "allow", "prefer", "require", "verify-ca", "verify-full"]], value="disable", clearable=False)])
+    ], className="mb-2"),
+    dbc.Row([
+        dbc.Col(md=6, children=[dbc.Label("SSL Cert (caminho)", html_for="db-pg-sslcert", className="fw-bold small"), dbc.Input(id="db-pg-sslcert", placeholder="/caminho/para/cert.crt")]),
+        dbc.Col(md=6, children=[dbc.Label("SSL Key (caminho)", html_for="db-pg-sslkey", className="fw-bold small"), dbc.Input(id="db-pg-sslkey", placeholder="/caminho/para/key.key")]),
+    ], className="mb-2"),
+    dbc.Row([
+        dbc.Col(md=12, children=[dbc.Label("SSL Root Cert (caminho)", html_for="db-pg-sslrootcert", className="fw-bold small"), dbc.Input(id="db-pg-sslrootcert", placeholder="/caminho/para/root.crt")]),
+    ], className="mb-2"),
+], id="postgres-ssl-options", style={"display": "none"})
+
 # Layout (mesmo da última versão, com "database-page-loaded-signal")
 layout = dbc.Container([
     html.Div(id="database-page-loaded-signal", style={'display': 'none'}), 
@@ -64,8 +88,10 @@ layout = dbc.Container([
                                         dbc.Row([
                                             dbc.Col(md=8, children=[dbc.Label("Driver ODBC (SQL Server)", html_for="db-driver-sqlserver", className="fw-bold small"), dbc.Input(id="db-driver-sqlserver", value="ODBC Driver 17 for SQL Server")]),
                                             dbc.Col(md=4, className="d-flex align-items-end pb-2", children=[dbc.Checkbox(id="db-trust-cert-sqlserver", label="Trust Cert?")]),
-                                        ], className="mb-2")
+                                        ], className="mb-2"),
                                     ], style={'display': 'none'}),
+                                    sqlserver_auth_row,
+                                    postgres_ssl_rows,
                                     html.Hr(),
                                     dbc.Row([
                                         dbc.Col(dbc.Button([html.I(className="fas fa-network-wired me-1"),"Testar Conexão"], id="test-connection-btn", color="info", className="w-100 mb-2", n_clicks=0), width=12),
@@ -241,11 +267,12 @@ def register_callbacks(app, db_manager_instance, config_manager_instance, query_
         State("db-type", "value"), State("db-host", "value"), State("db-port", "value"), 
         State("db-database", "value"), State("db-username", "value"), State("db-password", "value"),
         State("db-driver-sqlserver", "value"), State("db-trust-cert-sqlserver", "checked"),
+        State("db-sqlserver-windows-auth", "checked"),
+        State("db-pg-sslmode", "value"), State("db-pg-sslcert", "value"), State("db-pg-sslkey", "value"), State("db-pg-sslrootcert", "value"),
         prevent_initial_call=True
     )
-    def test_connection_callback(n_clicks, db_type, host, port, db, user, pwd, driver, trust_cert):
+    def test_connection_callback(n_clicks, db_type, host, port, db, user, pwd, driver, trust_cert, windows_auth, sslmode, sslcert, sslkey, sslrootcert):
         if not n_clicks or n_clicks == 0: return dash.no_update
-        
         log_info("Testando conexão de banco de dados", extra={
             "db_type": db_type, 
             "host": host, 
@@ -253,17 +280,12 @@ def register_callbacks(app, db_manager_instance, config_manager_instance, query_
             "database": db,
             "username": user
         })
-        
         data = {'type':db_type,'host':host,'port':port,'database':db,'username':user,'password':pwd}
-        if db_type == 'sqlserver': data.update({'driver':driver,'trust_server_certificate':trust_cert})
-        
+        if db_type == 'sqlserver':
+            data.update({'driver':driver,'trust_server_certificate':trust_cert,'windows_auth': windows_auth})
+        if db_type == 'postgresql':
+            data.update({'sslmode': sslmode, 'sslcert': sslcert, 'sslkey': sslkey, 'sslrootcert': sslrootcert})
         ok, msg = config_manager.test_connection_config(data)
-        
-        if ok:
-            log_info("Teste de conexão bem-sucedido", extra={"connection_name": f"{db_type}://{host}:{port}/{db}"})
-        else:
-            log_warning("Teste de conexão falhou", extra={"error_message": msg, "db_type": db_type})
-        
         color, icon = ("success","check-circle") if ok else ("danger","times-circle")
         return dbc.Alert([html.I(className=f"fas fa-{icon} me-1"),msg],color=color,dismissable=True, duration=4000)
 
@@ -283,13 +305,14 @@ def register_callbacks(app, db_manager_instance, config_manager_instance, query_
         State("db-database","value"), State("db-username","value"), State("db-password","value"), 
         State("db-schema","value"), State("db-driver-sqlserver","value"), 
         State("db-trust-cert-sqlserver","checked"),
+        State("db-sqlserver-windows-auth", "checked"),
+        State("db-pg-sslmode", "value"), State("db-pg-sslcert", "value"), State("db-pg-sslkey", "value"), State("db-pg-sslrootcert", "value"),
         prevent_initial_call=True
     )
-    def save_connection_callback(n_clicks, og_name, name, db_type, host, port, db, user, pwd, schema, driver, trust_cert):
+    def save_connection_callback(n_clicks, og_name, name, db_type, host, port, db, user, pwd, schema, driver, trust_cert, windows_auth, sslmode, sslcert, sslkey, sslrootcert):
         if not n_clicks or n_clicks == 0 or not name: 
             num_outputs_before_toast = 14 
             return ([dash.no_update] * num_outputs_before_toast) + [False, "", "", ""]
-        
         log_info("Salvando configuração de conexão", extra={
             "connection_name": name,
             "db_type": db_type,
@@ -297,20 +320,15 @@ def register_callbacks(app, db_manager_instance, config_manager_instance, query_
             "database": db,
             "is_edit": bool(og_name and og_name != name)
         })
-            
         data = {'type':db_type,'host':host,'port':port,'database':db,'username':user,'password':pwd,'schema':schema or None}
-        if db_type == 'sqlserver': data.update({'driver':driver,'trust_server_certificate':trust_cert})
+        if db_type == 'sqlserver':
+            data.update({'driver':driver,'trust_server_certificate':trust_cert,'windows_auth': windows_auth})
+        if db_type == 'postgresql':
+            data.update({'sslmode': sslmode, 'sslcert': sslcert, 'sslkey': sslkey, 'sslrootcert': sslrootcert})
         if og_name and og_name != name: 
             config_manager.delete_connection(og_name)
             log_info("Conexão anterior removida durante edição", extra={"old_name": og_name, "new_name": name})
-        
         ok = config_manager.save_connection(name, data)
-        
-        if ok:
-            log_info("Conexão salva com sucesso", extra={"connection_name": name})
-        else:
-            log_error("Falha ao salvar conexão", extra={"connection_name": name})
-        
         msg,color,icon = (f"Conexão '{name}' salva!", "success", "check-circle") if ok else (f"Falha ao salvar '{name}'.", "danger", "times-circle")
         form_reset_values = ("", "postgresql","",None,"","","","","ODBC Driver 17 for SQL Server",False,"")
         connections_list = config_manager.list_connections()
@@ -596,3 +614,14 @@ def register_callbacks(app, db_manager_instance, config_manager_instance, query_
         except Exception as e:
             log_error(f"Erro download:", exception=e)
         return None
+
+    @app.callback(
+        Output("sqlserver-auth-row", "style"),
+        Output("postgres-ssl-options", "style"),
+        Input("db-type", "value")
+    )
+    def toggle_db_extra_options(db_type):
+        return (
+            {"display": "block"} if db_type == "sqlserver" else {"display": "none"},
+            {"display": "block"} if db_type == "postgresql" else {"display": "none"}
+        )

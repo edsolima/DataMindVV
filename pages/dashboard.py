@@ -21,6 +21,7 @@ layout = dbc.Container([
     dcc.Store(id="dashboard-filtered-data", storage_type="session"),
     dcc.Store(id="dashboard-edit-mode", data=False),
     dcc.Store(id="dashboard-modal-feedback", data={}),
+    dcc.Store(id="dashboard-elements", data=[]),
     dbc.Row([
         dbc.Col([
             html.H2([html.I(className="fas fa-tachometer-alt me-2"), "Dashboard Executivo"], className="mb-4 text-primary"),
@@ -161,7 +162,7 @@ layout = dbc.Container([
                 ]),
                 dbc.ModalFooter([
                     dbc.Button("Cancelar", id="chart-modal-close", className="me-2", color="secondary"),
-                    dbc.Button("Adicionar", id="chart-modal-add", color="primary")
+                    dbc.Button("Adicionar", id="chart-modal-add", color="primary", n_clicks=0)
                 ])
             ], id="chart-config-modal", size="lg", is_open=False),
             
@@ -191,7 +192,7 @@ layout = dbc.Container([
                 ]),
                 dbc.ModalFooter([
                     dbc.Button("Cancelar", id="table-modal-close", className="me-2", color="secondary"),
-                    dbc.Button("Adicionar", id="table-modal-add", color="primary")
+                    dbc.Button("Adicionar", id="table-modal-add", color="primary", n_clicks=0)
                 ])
             ], id="table-config-modal", size="lg", is_open=False),
             
@@ -208,7 +209,7 @@ layout = dbc.Container([
                     ]),
                     dbc.Row([
                         dbc.Col([
-                            dbc.Label("Selecione a coluna:"),
+                            dbc.Label("Selecione a coluna para o KPI:"),
                             dcc.Dropdown(id="kpi-column-selector", placeholder="Selecione a coluna...")
                         ], width=6, className="mb-3"),
                         dbc.Col([
@@ -216,14 +217,13 @@ layout = dbc.Container([
                             dcc.Dropdown(
                                 id="kpi-operation-selector",
                                 options=[
-                                    {"label": "Contagem", "value": "count"},
                                     {"label": "Soma", "value": "sum"},
                                     {"label": "Média", "value": "mean"},
+                                    {"label": "Contagem", "value": "count"},
                                     {"label": "Mínimo", "value": "min"},
-                                    {"label": "Máximo", "value": "max"},
-                                    {"label": "Valores Únicos", "value": "nunique"}
+                                    {"label": "Máximo", "value": "max"}
                                 ],
-                                value="count",
+                                value="sum",
                                 clearable=False
                             )
                         ], width=6, className="mb-3"),
@@ -238,8 +238,7 @@ layout = dbc.Container([
                                     {"label": "Verde", "value": "success"},
                                     {"label": "Vermelho", "value": "danger"},
                                     {"label": "Amarelo", "value": "warning"},
-                                    {"label": "Ciano", "value": "info"},
-                                    {"label": "Cinza", "value": "secondary"}
+                                    {"label": "Roxo", "value": "info"}
                                 ],
                                 value="primary",
                                 clearable=False
@@ -251,12 +250,10 @@ layout = dbc.Container([
                                 id="kpi-icon-selector",
                                 options=[
                                     {"label": "Gráfico", "value": "fas fa-chart-bar"},
-                                    {"label": "Calculadora", "value": "fas fa-calculator"},
+                                    {"label": "Usuários", "value": "fas fa-users"},
                                     {"label": "Dinheiro", "value": "fas fa-dollar-sign"},
-                                    {"label": "Usuário", "value": "fas fa-user"},
                                     {"label": "Calendário", "value": "fas fa-calendar"},
-                                    {"label": "Relógio", "value": "fas fa-clock"},
-                                    {"label": "Porcentagem", "value": "fas fa-percentage"}
+                                    {"label": "Relógio", "value": "fas fa-clock"}
                                 ],
                                 value="fas fa-chart-bar",
                                 clearable=False
@@ -266,17 +263,16 @@ layout = dbc.Container([
                 ]),
                 dbc.ModalFooter([
                     dbc.Button("Cancelar", id="kpi-modal-close", className="me-2", color="secondary"),
-                    dbc.Button("Adicionar", id="kpi-modal-add", color="primary")
+                    dbc.Button("Adicionar", id="kpi-modal-add", color="primary", n_clicks=0)
                 ])
             ], id="kpi-config-modal", size="lg", is_open=False),
             
             # Área de conteúdo do dashboard
-            dcc.Loading(id="loading-dashboard-content", type="default",
-                children=html.Div(id="dashboard-content-area")
+            dcc.Loading(
+                id="loading-dashboard-content",
+                type="default",
+                children=html.Div(id="dashboard-content-area", className="mt-4")
             ),
-            
-            # Store para elementos do dashboard
-            dcc.Store(id="dashboard-elements", data=[])
         ])
     ])
 ], fluid=True)
@@ -285,16 +281,16 @@ layout = dbc.Container([
 def create_kpi_card(title, value, icon="fas fa-chart-bar", color="primary", note=""):
     return dbc.Card(
         dbc.CardBody([
-            dbc.Row([
-                dbc.Col([
+        dbc.Row([
+            dbc.Col([
                     html.Div([
                         html.I(className=f"{icon} fa-lg text-white"),
                     ], className=f"d-flex align-items-center justify-content-center rounded-circle bg-{color}", style={"width": "48px", "height": "48px"})
                 ], width="auto", className="me-3"),
                 dbc.Col([
                     html.H3(value, className=f"card-title text-{color} mb-1 fw-bold"),
-                    html.P(title, className="card-text text-muted mb-0 small text-uppercase fw-bold"),
-                    html.P(note, className="card-text text-muted small fst-italic") if note else None
+                html.P(title, className="card-text text-muted mb-0 small text-uppercase fw-bold"),
+                html.P(note, className="card-text text-muted small fst-italic") if note else None
                 ], className="d-flex flex-column justify-content-center")
             ], align="center", className="h-100")
         ]), className="shadow-sm h-100 border-0"
@@ -303,9 +299,9 @@ def create_kpi_card(title, value, icon="fas fa-chart-bar", color="primary", note
 # Função para criar um chart card moderno (agora recebe edit_mode)
 def create_chart_card(title, graph_id, edit_mode=False, icon="fas fa-chart-line"):
     delete_btn = html.Button(
-        html.I(className="fas fa-trash"),
-        id={"type": "delete-chart", "index": graph_id},
-        className="btn btn-sm btn-outline-danger ms-2",
+                        html.I(className="fas fa-trash"),
+                        id={"type": "delete-chart", "index": graph_id},
+                        className="btn btn-sm btn-outline-danger ms-2",
         n_clicks=0,
         style={"display": "inline-block" if edit_mode else "none"}
     )
@@ -324,9 +320,9 @@ def create_chart_card(title, graph_id, edit_mode=False, icon="fas fa-chart-line"
 # Função para criar um table card moderno (agora recebe edit_mode)
 def create_table_card(title, table_id, edit_mode=False):
     delete_btn = html.Button(
-        html.I(className="fas fa-trash"),
-        id={"type": "delete-table", "index": table_id},
-        className="btn btn-sm btn-outline-danger ms-2",
+                        html.I(className="fas fa-trash"),
+                        id={"type": "delete-table", "index": table_id},
+                        className="btn btn-sm btn-outline-danger ms-2",
         n_clicks=0,
         style={"display": "inline-block" if edit_mode else "none"}
     )
@@ -353,68 +349,231 @@ def create_empty_dashboard_layout():
 def create_dashboard_layout(df_exists, data_source_name, data_source_type, elements=None, edit_mode=False):
     if not df_exists:
         return create_empty_dashboard_layout()
-    # Remover alerta de fonte de dados e textos excessivos
-    if not elements or len(elements) == 0:
-        return dbc.Container([
-            dbc.Alert([
-                html.H4([html.I(className="fas fa-lightbulb me-2"), "Dashboard Vazio"]),
-                html.P("Use os botões acima para adicionar gráficos, tabelas ou KPIs.")
-            ], color="info", className="text-center m-3 p-4")
-        ], fluid=True)
+    
+    if not elements:
+        elements = []
+    
     grid_items = []
     item_layouts = []
-    used_positions = set()
-    for idx, element in enumerate(elements):
-        element_id = element.get('id', str(idx))
-        element_type = element.get('type')
-        element_title = element.get('title', f"Elemento {idx+1}")
-        # Encontrar próxima posição livre no grid (3 colunas por linha)
-        for pos in range(100):
-            pos_x = (pos % 3) * 4
-            pos_y = (pos // 3) * 3
-            if (pos_x, pos_y) not in used_positions:
-                used_positions.add((pos_x, pos_y))
-                break
-        if element_type == 'chart':
-            grid_items.append(
-                dgl.DraggableWrapper(
-                    children=[create_chart_card(element_title, element_id, edit_mode=edit_mode)],
-                    handleText="Mover Gráfico",
-                    handleBackground="#17a2b8",
-                    handleColor="white"
-                )
+
+    for i, elem in enumerate(elements):
+        # Definir tamanho base do elemento
+        w = 6  # Largura padrão (metade da tela)
+        h = 4  # Altura padrão
+        
+        # Ajustar tamanho baseado no tipo de elemento
+        if elem['type'] == 'kpi':
+            w = 3  # KPIs são menores
+            h = 2
+        elif elem['type'] == 'table':
+            w = 12 # Tabelas ocupam toda a largura
+            h = 6
+        
+        # ID único para o item no layout do grid
+        item_id = str(elem.get('id', i)) # Usar o ID do elemento se disponível
+
+        # Adicionar posição e tamanho ao layout do item
+        item_layouts.append({
+            'i': item_id,
+            'x': (i * w) % 12,  # Posição X baseada no índice
+            'y': (i * h) // 12, # Posição Y baseada no índice
+            'w': w,
+            'h': h,
+            'minW': 3,  # Largura mínima
+            'minH': 2,  # Altura mínima
+            'maxW': 12, # Largura máxima
+            'maxH': 12, # Altura máxima
+            'isDraggable': edit_mode, # Parâmetros para cada item
+            'isResizable': edit_mode  # Parâmetros para cada item
+        })
+
+        # Criar o componente real envolto em DraggableWrapper
+        component_to_add = create_element_component(elem, edit_mode)
+        
+        grid_items.append(
+            dgl.DraggableWrapper(
+                children=[component_to_add],
+                handleText="Mover", # Texto genérico da alça de arrasto
+                handleBackground="#f8f9fa", # Cor de fundo da alça
+                handleColor="#495057" # Cor do texto da alça
             )
-        elif element_type == 'table':
-            grid_items.append(
-                dgl.DraggableWrapper(
-                    children=[create_table_card(element_title, element_id, edit_mode=edit_mode)],
-                    handleText="Mover Tabela",
-                    handleBackground="#6c757d",
-                    handleColor="white"
-                )
-            )
-        elif element_type == 'kpi':
-            grid_items.append(
-                dgl.DraggableWrapper(
-                    children=[html.Div(id={"type": "kpi", "index": element_id}, className="h-100")],
-                    handleText="Mover KPI",
-                    handleBackground="#007bff",
-                    handleColor="white"
-                )
-            )
-        # Usar o próprio id do elemento como chave única no grid
-        item_layouts.append({'i': str(element_id), 'x': pos_x, 'y': pos_y, 'w': 4, 'h': 3})
-    grid_layout = dgl.DashGridLayout(
-        id='dashboard-grid-layout',
-        items=grid_items,
-        rowHeight=150,
-        cols={'lg': 12, 'md': 10, 'sm': 6, 'xs': 4, 'xxs': 2},
-        style={'minHeight': '800px'},
-        showRemoveButton=False,
-        showResizeHandles=False,
-        itemLayout=item_layouts
+        )
+    
+    # Criar grid container com configurações responsivas
+    grid_container = dgl.DashGridLayout(
+        id="dashboard-grid-layout",
+        items=grid_items, # Passa a lista de componentes envoltos
+        itemLayout=item_layouts, # Passa as definições de layout para cada item
+        className="dashboard-grid",
+        style={
+            'background': '#f8f9fa',
+            'padding': '10px',
+            'borderRadius': '5px',
+            'minHeight': '500px'
+        },
+        verticalCompact=True,
+        preventCollision=False,
+        useCSSTransforms=True,
+        margin=[10, 10],
+        containerPadding=[10, 10],
+        rowHeight=100,
+        breakpoints={'lg': 1200, 'md': 996, 'sm': 768, 'xs': 480, 'xxs': 0},
+        cols={'lg': 12, 'md': 10, 'sm': 6, 'xs': 4, 'xxs': 2}
     )
-    return dbc.Container([grid_layout], fluid=True)
+    
+    # Adicionar CSS personalizado para melhorar a responsividade
+    custom_css = html.Style('''
+        .dashboard-grid {
+            transition: all 0.3s ease;
+        }
+        .dashboard-grid .react-grid-item {
+            transition: all 0.3s ease;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .dashboard-grid .react-grid-item:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .dashboard-grid .react-grid-item.react-grid-placeholder {
+            background: #e9ecef;
+            border: 2px dashed #6c757d;
+            border-radius: 5px;
+        }
+        /* A classe drag-handle deve ser aplicada ao elemento dentro do componente que atua como a alça */
+        .drag-handle {
+            cursor: grab; /* Alterado para grab para melhor UX */
+            padding: 5px;
+            background: #f8f9fa; /* Consistente com o fundo do cabeçalho do cartão */
+            border-radius: 3px;
+        }
+        .dashboard-grid .react-grid-item.react-draggable-dragging {
+            transition: none;
+            z-index: 3;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                margin: 0;
+                padding: 5px;
+            }
+            .dashboard-grid .react-grid-item {
+                margin: 5px;
+            }
+        }
+    ''')
+    
+    return html.Div([
+        custom_css,
+        grid_container
+    ], className="dashboard-container")
+
+def create_element_component(elem, edit_mode):
+    """Cria um componente para o elemento do dashboard com controles de edição"""
+    if elem['type'] == 'chart':
+        return create_chart_card(elem['title'], elem['id'], edit_mode)
+    elif elem['type'] == 'table':
+        return create_table_card(elem['title'], elem['id'], edit_mode)
+    elif elem['type'] == 'kpi':
+        return create_kpi_card(
+            elem['title'],
+            elem.get('value', '0'),
+            elem.get('icon', 'fas fa-chart-bar'),
+            elem.get('color', 'primary'),
+            elem.get('note', '')
+        )
+    return None
+
+def create_chart_card(title, graph_id, edit_mode=False, icon="fas fa-chart-line"):
+    """Cria um card para um gráfico com controles de edição"""
+    card = dbc.Card([
+        dbc.CardHeader([
+            html.Div([
+                html.I(className=f"{icon} me-2"),
+                html.Span(title, className="card-title")
+            ], className="d-flex align-items-center drag-handle"),
+            html.Div([
+                dbc.Button(
+                    html.I(className="fas fa-expand"),
+                    color="link",
+                    className="btn-sm me-2",
+                    id={"type": "expand-chart", "index": graph_id}
+                ),
+                dbc.Button(
+                    html.I(className="fas fa-trash-alt"),
+                    color="link",
+                    className="btn-sm text-danger",
+                    id={"type": "delete-chart", "index": graph_id}
+                ) if edit_mode else None
+            ], className="ms-auto") if edit_mode else None
+        ], className="d-flex align-items-center"),
+        dbc.CardBody([
+            dcc.Graph(
+                id={"type": "graph", "index": graph_id},
+                config={'displayModeBar': True, 'responsive': True},
+                style={'height': '100%', 'width': '100%'}
+            )
+        ], className="p-0")
+    ], className="h-100")
+    
+    return card
+
+def create_table_card(title, table_id, edit_mode=False):
+    """Cria um card para uma tabela com controles de edição"""
+    card = dbc.Card([
+        dbc.CardHeader([
+            html.Div([
+                html.I(className="fas fa-table me-2"),
+                html.Span(title, className="card-title")
+            ], className="d-flex align-items-center drag-handle"),
+            html.Div([
+                dbc.Button(
+                    html.I(className="fas fa-expand"),
+                    color="link",
+                    className="btn-sm me-2",
+                    id={"type": "expand-table", "index": table_id}
+                ),
+                dbc.Button(
+                    html.I(className="fas fa-trash-alt"),
+                    color="link",
+                    className="btn-sm text-danger",
+                    id={"type": "delete-table", "index": table_id}
+                ) if edit_mode else None
+            ], className="ms-auto") if edit_mode else None
+        ], className="d-flex align-items-center"),
+        dbc.CardBody([
+            html.Div(
+                id={"type": "table", "index": table_id},
+                className="table-responsive"
+            )
+        ], className="p-0")
+    ], className="h-100")
+    
+    return card
+
+def create_kpi_card(title, value, icon="fas fa-chart-bar", color="primary", note=""):
+    """Cria um card para um KPI"""
+    card = dbc.Card([
+        dbc.CardBody([
+            html.Div([
+                html.Div([
+                    html.I(className=f"{icon} fa-2x mb-2"),
+                    html.H4(value, className="mb-0"),
+                    html.Small(title, className="text-muted")
+                ], className="text-center")
+            ], className="drag-handle")
+        ], className="p-3")
+    ], className=f"bg-{color} text-white h-100")
+    
+    return card
+
+def create_empty_dashboard_layout():
+    """Cria um layout vazio para quando não há dados"""
+    return dbc.Alert(
+        "Nenhum dado disponível para exibir no dashboard. Por favor, carregue dados primeiro.",
+        color="info",
+        className="text-center"
+    )
 
 # MODIFICADO PARA CACHE: Aceita cache_instance
 def register_callbacks(app, cache_instance):
@@ -538,26 +697,26 @@ def register_callbacks(app, cache_instance):
         Output("dashboard-elements", "data"),
         Output("dashboard-modal-feedback", "data"),
         [Input("chart-modal-add", "n_clicks"),
-         Input("table-modal-add", "n_clicks"),
+            Input("table-modal-add", "n_clicks"),
          Input("kpi-modal-add", "n_clicks")],
         [State("dashboard-elements", "data"),
-         # Estados para gráfico
-         State("chart-title-input", "value"),
-         State("chart-x-axis-selector", "value"),
-         State("chart-y-axis-selector", "value"),
-         State("chart-type-selector", "value"),
-         State("chart-group-by-selector", "value"),
-         State("chart-agg-operation", "value"),
-         # Estados para tabela
-         State("table-title-input", "value"),
-         State("table-columns-selector", "value"),
-         State("table-rows-input", "value"),
-         # Estados para KPI
-         State("kpi-title-input", "value"),
-         State("kpi-column-selector", "value"),
-         State("kpi-operation-selector", "value"),
-         State("kpi-color-selector", "value"),
-         State("kpi-icon-selector", "value")
+            # Estados para gráfico
+            State("chart-title-input", "value"),
+            State("chart-x-axis-selector", "value"),
+            State("chart-y-axis-selector", "value"),
+            State("chart-type-selector", "value"),
+            State("chart-group-by-selector", "value"),
+            State("chart-agg-operation", "value"),
+            # Estados para tabela
+            State("table-title-input", "value"),
+            State("table-columns-selector", "value"),
+            State("table-rows-input", "value"),
+            # Estados para KPI
+            State("kpi-title-input", "value"),
+            State("kpi-column-selector", "value"),
+            State("kpi-operation-selector", "value"),
+            State("kpi-color-selector", "value"),
+            State("kpi-icon-selector", "value")
         ]
     )
     def add_dashboard_element(chart_clicks, table_clicks, kpi_clicks, 
@@ -634,7 +793,7 @@ def register_callbacks(app, cache_instance):
             })
             return elements, {}
         return elements, {}
-    
+        
     # Callback para remover elementos (só no modo edição)
     @app.callback(
         Output("dashboard-elements", "data", allow_duplicate=True),

@@ -33,18 +33,26 @@ class DatabaseManager:
         database = connection_data.get('database')
         username = connection_data.get('username')
         password = connection_data.get('password')
-
         if db_type == 'postgresql':
             port = port or 5432
-            return f"postgresql+psycopg2://{username}:{password}@{host}:{port}/{database}?client_encoding=utf8"
+            # Montar parâmetros SSL se fornecidos
+            ssl_params = []
+            for param in ['sslmode', 'sslcert', 'sslkey', 'sslrootcert']:
+                val = connection_data.get(param)
+                if val:
+                    ssl_params.append(f"{param}={val}")
+            ssl_query = ('&' + '&'.join(ssl_params)) if ssl_params else ''
+            return f"postgresql+psycopg2://{username}:{password}@{host}:{port}/{database}?client_encoding=utf8{ssl_query}"
         elif db_type == 'sqlserver':
             port = port or 1433
-            # O driver ODBC para SQL Server pode variar. "ODBC Driver 17 for SQL Server" é comum.
-            # Outros podem ser "SQL Server Native Client 11.0" ou apenas "SQL Server"
-            # Adicione TrustServerCertificate=yes para desenvolvimento se necessário, mas não para produção.
             driver = connection_data.get('driver', 'ODBC Driver 17 for SQL Server').replace(' ', '+')
-            conn_str = f"mssql+pyodbc://{username}:{password}@{host}:{port}/{database}?driver={driver}&charset=utf8"
-            if connection_data.get('trust_server_certificate', False): # Adicionar opção para TrustServerCertificate
+            windows_auth = connection_data.get('windows_auth', False)
+            if windows_auth:
+                # Autenticação do Windows: sem usuário/senha, Trusted_Connection=yes
+                conn_str = f"mssql+pyodbc://@{host}:{port}/{database}?driver={driver};Trusted_Connection=yes"
+            else:
+                conn_str = f"mssql+pyodbc://{username}:{password}@{host}:{port}/{database}?driver={driver}&charset=utf8"
+            if connection_data.get('trust_server_certificate', False):
                 conn_str += "&TrustServerCertificate=yes"
             return conn_str
         elif db_type == 'mysql':

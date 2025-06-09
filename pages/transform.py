@@ -9,6 +9,7 @@ import uuid # Para gerar chaves de cache únicas
 # A função load_dataframe_from_store não será mais usada aqui para carregar o DF principal,
 # pois ele virá do cache. Mas pode ser mantida em utils se for usada em outros contextos.
 # from utils.dataframe_utils import load_dataframe_from_store 
+from utils.logger import log_error
 
 # Variável global para a instância do cache, será definida em register_callbacks
 cache = None
@@ -278,5 +279,5 @@ def register_callbacks(app, cache_instance):
                 return dash.no_update, dbc.Alert(final_feedback,color=alert_color,duration=4000, className="small"),False,"","","" # Não mostrar toast se nada aconteceu
         
         except Exception as e:
-            err_msg=f"Erro: {e}"; print(f"Erro transformação: {e}"); import traceback; traceback.print_exc()
+            err_msg=f"Erro: {e}"; log_error(f"Erro transformação:", exception=e); import traceback; traceback.print_exc()
             return dash.no_update,dbc.Alert(err_msg,color="danger"),True,err_msg,"Erro Transformação","danger"

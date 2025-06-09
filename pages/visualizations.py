@@ -10,6 +10,7 @@ import json
 
 # Importar classes de visualizações e análises avançadas
 from utils.advanced_visualizations import AdvancedVisualizations
+from utils.logger import log_error
 
 # A função load_dataframe_from_store de utils.dataframe_utils não será mais usada aqui
 # para carregar o DataFrame principal, pois ele virá do cache do servidor.
@@ -399,7 +400,8 @@ def register_callbacks(app, cache_instance):
         except Exception as e:
             fig = go.Figure().update_layout(annotations=[{'text':f'Erro: {str(e)}','showarrow':False,'font_size':12}])
             feedback_msg_content = dbc.Alert(f"Erro ao gerar gráfico: {e}",color="danger",duration=10000)
-            print(f"Erro viz: {e}");import traceback;traceback.print_exc()
+            log_error(f"Erro viz:", exception=e)
+            import traceback;traceback.print_exc()
         return fig, feedback_msg_content
 
     @app.callback(Output("viz-filters-panel-area","children"),[Input("server-side-data-key","data")]) # MODIFICADO PARA CACHE

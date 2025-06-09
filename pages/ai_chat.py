@@ -8,29 +8,54 @@ import uuid
 from datetime import datetime
 from typing import List, Dict, Optional, Any
 import re # For parsing chart JSON
+import numpy as np
 
 # Plotly for chart generation
 import plotly.express as px
 import plotly.graph_objects as go
 
 from utils.rag_module import prepare_dataframe_for_chat, query_data_with_llm # Ensure these are the updated versions
+from utils.logger import log_info, log_error, log_warning, log_debug
 
 cache = None
 
 # Helper to parse chart parameters from LLM response
 def extract_chart_params_from_response(text_response: str) -> Optional[Dict]:
     # [cite: 15] LLM returns JSON for chart
-    match = re.search(r"CHART_PARAMS_JSON:\s*(\{.*?\})", text_response, re.DOTALL | re.IGNORECASE)
-    if match:
-        json_str = match.group(1)
-        try:
-            params = json.loads(json_str)
-            # Basic validation
-            if isinstance(params, dict) and "chart_type" in params and "x_column" in params:
-                print(f"AI_CHAT: Parsed chart params: {params}")
-                return params
-        except json.JSONDecodeError as e:
-            print(f"AI_CHAT: Error decoding chart JSON: {e}. JSON string: '{json_str}'")
+    
+    # Tentar múltiplos padrões de extração para maior robustez
+    patterns = [
+        r"CHART_PARAMS_JSON:\s*(\{.*?\})",
+        r"```json\s*(\{.*?\})\s*```",
+        r'\{[^{}]*"chart_type"[^{}]*\}',
+        r'chart_params["\"]?\s*[:=]\s*(\{.*?\})'
+    ]
+    
+    for pattern in patterns:
+        match = re.search(pattern, text_response, re.DOTALL | re.IGNORECASE)
+        if match:
+            json_str = match.group(1)
+            try:
+                params = json.loads(json_str)
+                # Validação aprimorada
+                if isinstance(params, dict) and "chart_type" in params:
+                    # Validar tipos de gráfico suportados
+                    supported_charts = ["bar", "line", "scatter", "pie", "histogram", "boxplot", "heatmap", "area", "violin"]
+                    if params["chart_type"].lower() in supported_charts:
+                        log_info("Parâmetros de gráfico extraídos com sucesso", extra={
+                            "chart_type": params.get("chart_type"),
+                            "x_column": params.get("x_column"),
+                            "y_column": params.get("y_column"),
+                            "pattern_used": pattern
+                        })
+                        return params
+                    else:
+                        log_warning("Tipo de gráfico não suportado", extra={"chart_type": params.get("chart_type")})
+            except json.JSONDecodeError as e:
+                log_debug("Erro ao decodificar JSON de gráfico", extra={"error": str(e), "json_string": json_str[:100]})
+                continue
+    
+    log_debug("Nenhum parâmetro de gráfico válido encontrado na resposta")
     return None
 
 # Helper to generate Plotly charts with improved column interpretation
@@ -42,16 +67,36 @@ def generate_plotly_chart(chart_params: Dict, df: pd.DataFrame) -> Optional[go.F
         color_col = chart_params.get("color_column")
         title = chart_params.get("title", f"{chart_type.capitalize()} of {x_col}" + (f" by {y_col}" if y_col else ""))
         
-        # Verificar se as colunas existem no DataFrame
+        # Verificar se as colunas existem no DataFrame com sugestões inteligentes
         if not x_col or x_col not in df.columns:
-            print(f"AI_CHAT: X-column '{x_col}' not found in DataFrame.")
-            return None
+            # Tentar encontrar coluna similar
+            similar_cols = [col for col in df.columns if x_col.lower() in col.lower() or col.lower() in x_col.lower()]
+            if similar_cols:
+                x_col = similar_cols[0]
+                log_info("Coluna X substituída por similar", extra={"original": chart_params.get("x_column"), "substituted": x_col})
+            else:
+                log_error("Coluna X não encontrada no DataFrame", extra={"x_column": x_col, "available_columns": list(df.columns)})
+                return None
+                
         if y_col and y_col not in df.columns:
-            print(f"AI_CHAT: Y-column '{y_col}' not found in DataFrame.")
-            return None # Or proceed if y_col is optional for the chart type
+            # Tentar encontrar coluna similar
+            similar_cols = [col for col in df.columns if y_col.lower() in col.lower() or col.lower() in y_col.lower()]
+            if similar_cols:
+                y_col = similar_cols[0]
+                log_info("Coluna Y substituída por similar", extra={"original": chart_params.get("y_column"), "substituted": y_col})
+            else:
+                log_warning("Coluna Y não encontrada no DataFrame", extra={"y_column": y_col, "available_columns": list(df.columns)})
+                y_col = None  # Continuar sem y_col se possível
+                
         if color_col and color_col not in df.columns:
-            print(f"AI_CHAT: Color-column '{color_col}' not found in DataFrame. Ignoring.")
-            color_col = None
+            # Tentar encontrar coluna similar
+            similar_cols = [col for col in df.columns if color_col.lower() in col.lower() or col.lower() in color_col.lower()]
+            if similar_cols:
+                color_col = similar_cols[0]
+                log_info("Coluna de cor substituída por similar", extra={"original": chart_params.get("color_column"), "substituted": color_col})
+            else:
+                log_debug("Coluna de cor não encontrada, ignorando", extra={"color_column": color_col})
+                color_col = None
             
         # Detectar automaticamente tipos de colunas para melhor visualização
         column_types = {}
@@ -111,7 +156,10 @@ def generate_plotly_chart(chart_params: Dict, df: pd.DataFrame) -> Optional[go.F
             if y_col: # y_col são valores, x_col são nomes
                 # Agregar dados se necessário
                 if len(df[x_col].unique()) > 10:  # Muitas categorias
-                    print(f"AI_CHAT: Many categories ({len(df[x_col].unique())}) for pie chart. Showing top 10.")
+                    log_info("Muitas categorias para gráfico de pizza, limitando a top 10", extra={
+                        "total_categories": len(df[x_col].unique()),
+                        "chart_type": "pie"
+                    })
                     agg_df = df.groupby(x_col)[y_col].sum().reset_index()
                     agg_df = agg_df.sort_values(y_col, ascending=False).head(10)
                     # Adicionar categoria 'Outros' se necessário
@@ -157,7 +205,12 @@ def generate_plotly_chart(chart_params: Dict, df: pd.DataFrame) -> Optional[go.F
                 fig = px.box(df, y=x_col, x=y_col, color=color_col, title=title, 
                             points='outliers')
             else:
-                print("AI_CHAT: Boxplot requires at least one numeric column.")
+                log_warning("Boxplot requer pelo menos uma coluna numérica", extra={
+                    "x_column": x_col,
+                    "y_column": y_col,
+                    "x_type": column_types.get(x_col),
+                    "y_type": column_types.get(y_col)
+                })
                 return None
                 
         elif chart_type == "heatmap":
@@ -169,7 +222,7 @@ def generate_plotly_chart(chart_params: Dict, df: pd.DataFrame) -> Optional[go.F
                     pivot_df = df.pivot_table(index=y_col, columns=x_col, values=z_col, aggfunc='mean')
                     fig = px.imshow(pivot_df, title=title, aspect="auto", labels=dict(color=z_col))
                 else:
-                    print(f"AI_CHAT: Z-column '{z_col}' must be numeric for heatmap.")
+                    log_warning("Coluna Z deve ser numérica para heatmap", extra={"z_column": z_col, "z_type": str(df[z_col].dtype)})
                     return None
             else: # Default para matriz de correlação de colunas numéricas
                 numeric_df = df.select_dtypes(include=['number'])
@@ -179,7 +232,10 @@ def generate_plotly_chart(chart_params: Dict, df: pd.DataFrame) -> Optional[go.F
                                    text_auto=True, aspect="auto", color_continuous_scale='RdBu_r',
                                    zmin=-1, zmax=1)
                 else:
-                    print("AI_CHAT: Not enough numeric data for correlation heatmap.")
+                    log_warning("Dados numéricos insuficientes para heatmap de correlação", extra={
+                        "numeric_columns": len(numeric_df.columns),
+                        "total_columns": len(df.columns)
+                    })
                     return None
                     
         elif chart_type == "area":
@@ -206,10 +262,15 @@ def generate_plotly_chart(chart_params: Dict, df: pd.DataFrame) -> Optional[go.F
                 fig = px.violin(df, y=x_col, x=y_col, color=color_col, title=title, 
                                box=True, points="outliers")
             else:
-                print("AI_CHAT: Violin plot requires at least one numeric column.")
+                log_warning("Violin plot requer pelo menos uma coluna numérica", extra={
+                    "x_column": x_col,
+                    "y_column": y_col,
+                    "x_type": column_types.get(x_col),
+                    "y_type": column_types.get(y_col)
+                })
                 return None
         else:
-            print(f"AI_CHAT: Tipo de gráfico não suportado: {chart_type}")
+            log_warning("Tipo de gráfico não suportado", extra={"chart_type": chart_type})
             return None
 
         if fig:
@@ -233,7 +294,7 @@ def generate_plotly_chart(chart_params: Dict, df: pd.DataFrame) -> Optional[go.F
         return fig
 
     except Exception as e:
-        print(f"AI_CHAT: Erro ao gerar gráfico Plotly: {e}")
+        log_error("Erro ao gerar gráfico Plotly", extra={"error": str(e), "chart_params": chart_params})
         import traceback
         traceback.print_exc()
         return None
@@ -266,13 +327,13 @@ layout = dbc.Container([
 
                     dbc.Label("Provedor LLM:", html_for="ai-chat-llm-provider", className="fw-bold small"),
                     dcc.Dropdown(id="ai-chat-llm-provider", options=[
-                        {"label": "Ollama (Local)", "value": "ollama"},
+                        {"label": "Ollama (Local)", "value": "llama3.2:latest"},
                         {"label": "Groq API", "value": "groq"},
-                    ], value="ollama", clearable=False, className="mb-2"),
+                    ], value="llama3.2:latest", clearable=False, className="mb-2"),
 
                     html.Div(id="ai-chat-ollama-options", children=[
                         dbc.Label("Modelo Ollama:", html_for="ai-chat-ollama-model", className="fw-bold small"),
-                        dbc.Input(id="ai-chat-ollama-model", placeholder="Ex: llama3, mistral", value="llama3", className="mb-2"),
+                        dbc.Input(id="ai-chat-ollama-model", placeholder="Ex: llama3.2:latest, mistral", value="llama3.2:latest", className="mb-2"),
                     ]),
 
                     html.Div(id="ai-chat-groq-options", style={'display':'none'}, children=[
@@ -383,7 +444,6 @@ def chat_history_to_html(chat_history_list: List[Dict]) -> List:
 def register_callbacks(app, cache_instance):
     global cache
     cache = cache_instance
-    print(f"AI_CHAT.PY - register_callbacks CALLED. Cache object ID: {id(cache)}")
 
     @app.callback(
         [Output("ai-chat-groq-options", "style"), Output("ai-chat-ollama-options", "style")],
@@ -407,12 +467,17 @@ def register_callbacks(app, cache_instance):
     )
     def update_current_data_status(pathname, data_key, table_name, source_type, current_index_status):
         if pathname != "/ai-chat":
-            # print("AI_CHAT - update_current_data_status: Not on AI Chat page, preventing update.")
+            log_debug("Não está na página AI Chat, prevenindo atualização")
             raise dash.exceptions.PreventUpdate
 
         ctx = callback_context
         triggered_id = ctx.triggered[0]['prop_id'].split('.')[0] if ctx.triggered else "None"
-        # print(f"AI_CHAT - update_current_data_status: Triggered by {triggered_id}. Data_Key: {data_key}")
+        log_debug("Atualizando status dos dados atuais", extra={
+            "triggered_by": triggered_id,
+            "data_key": data_key,
+            "table_name": table_name,
+            "source_type": source_type
+        })
 
 
         data_info_children = dbc.Alert("Nenhum dado carregado. Vá para 'Dados' ou 'Upload'.",color="info",className="small")
@@ -433,12 +498,21 @@ def register_callbacks(app, cache_instance):
             initial_info_open = False; prepare_btn_disabled = False
             is_prepared = False
 
+            log_info("Dados válidos carregados para AI Chat", extra={
+                "table_name": table_name,
+                "rows": len(df),
+                "columns": len(df.columns),
+                "source_type": source_type,
+                "data_key": data_key
+            })
+
             # Check if the current data_key matches the one in store and if summary_cache_key is valid
             if current_index_status and \
                current_index_status.get("original_data_key") == data_key and \
                current_index_status.get("summary_cache_key") and \
                cache.has(current_index_status.get("summary_cache_key")): # check if cache still has the RAG index
                 is_prepared = True
+                log_debug("Dados já preparados para RAG", extra={"summary_cache_key": current_index_status.get("summary_cache_key")})
 
             if is_prepared:
                 status_msg_display = current_index_status.get('status_message', 'Dados preparados e prontos para chat!')
@@ -456,6 +530,7 @@ def register_callbacks(app, cache_instance):
             data_info_children = dbc.Alert(msg,color="warning",className="small")
             index_status_to_set.update({"summary_cache_key":None,"status_message":msg,"original_data_key":data_key}) # Update status for this data_key
             send_btn_disabled = True
+            log_warning("Dados inválidos ou não encontrados", extra={"data_key": data_key, "df_valid": df_is_valid})
 
         return data_info_children, prepare_btn_disabled, initial_info_open, send_btn_disabled, index_status_to_set
 
@@ -471,22 +546,40 @@ def register_callbacks(app, cache_instance):
     )
     def handle_prepare_data_for_chat(n_clicks, data_key, current_index_status):
         if not data_key:
+            log_warning("Tentativa de preparar dados sem data_key válido")
             return dbc.Alert("Nenhum dado principal para preparar.", color="warning"), dash.no_update, True
         df = cache.get(data_key)
         if df is None or df.empty:
+            log_error("Dados do cache inválidos para preparação RAG", extra={"data_key": data_key})
             return dbc.Alert("Dados do cache inválidos ou não encontrados. Recarregue.", color="danger"), \
                    {"summary_cache_key":None,"status_message":"Falha ao carregar do cache.","original_data_key":data_key}, True
+
+        log_info("Iniciando preparação de dados para RAG", extra={
+            "data_key": data_key,
+            "rows": len(df),
+            "columns": len(df.columns),
+            "memory_usage_mb": df.memory_usage(deep=True).sum() / 1024 / 1024
+        })
 
         # Call RAG module's prepare function
         # Using force_complete_processing=True as per rag_module.py's updated prepare_dataframe_for_chat default
         success, message, summary_key = prepare_dataframe_for_chat(data_key, df, cache, force_complete_processing=True)
 
         if success and summary_key:
+            log_info("Dados preparados com sucesso para RAG", extra={
+                "summary_key": summary_key,
+                "data_key": data_key,
+                "message": message
+            })
             alert_msg = dbc.Alert(message, color="success", duration=4000, className="small")
             # Update store with new summary_key and original_data_key
             new_index_status = {"summary_cache_key": summary_key, "status_message": "Dados preparados!", "original_data_key": data_key}
             return alert_msg, new_index_status, False # Enable send button
         else:
+            log_error("Falha ao preparar dados para RAG", extra={
+                "data_key": data_key,
+                "error_message": message
+            })
             alert_msg = dbc.Alert(f"Falha ao preparar dados: {message}", color="danger", className="small")
             # Keep original_data_key, but clear summary_key
             failed_index_status = {"summary_cache_key": None, "status_message": f"Falha: {message}", "original_data_key": data_key}
@@ -518,6 +611,7 @@ def register_callbacks(app, cache_instance):
                                 data_key_for_charting): # data_key from server_side_data_store
 
         if not user_question or not user_question.strip():
+            log_debug("Pergunta vazia recebida no chat")
             # If empty, just return current history, don't add new entries
             return chat_history_to_html(chat_history_list), "", chat_history_list, pending_suggestion, generated_charts_list
 
@@ -525,10 +619,22 @@ def register_callbacks(app, cache_instance):
         original_data_key = index_status.get("original_data_key") if isinstance(index_status, dict) else None
         current_timestamp = datetime.now().strftime("%H:%M:%S")
 
+        log_info("Nova interação de chat iniciada", extra={
+            "user_question": user_question[:100] + "..." if len(user_question) > 100 else user_question,
+            "llm_provider": llm_provider,
+            "model": groq_model if llm_provider == "groq" else ollama_model,
+            "summary_key": summary_key,
+            "original_data_key": original_data_key
+        })
+
         # Ensure data is prepared before proceeding
         if not summary_key or not cache.has(summary_key) or \
            not original_data_key or not cache.has(original_data_key): # Also check original_data_key in cache
             error_msg = "Dados não preparados ou sumário expirado. Clique em 'Preparar Dados Atuais para Chat'."
+            log_warning("Tentativa de chat sem dados preparados", extra={
+                "summary_key_exists": bool(summary_key and cache.has(summary_key)),
+                "original_data_key_exists": bool(original_data_key and cache.has(original_data_key))
+            })
             chat_history_list.append({"role": "user", "content": user_question, "timestamp": current_timestamp})
             chat_history_list.append({"role": "assistant", "content": error_msg, "type": "error", "timestamp": current_timestamp})
             return chat_history_to_html(chat_history_list), "", chat_history_list, None, generated_charts_list # Clear pending suggestion
@@ -538,8 +644,15 @@ def register_callbacks(app, cache_instance):
         # Add loading message for assistant
         chat_history_list.append({"role": "assistant", "content": "Analisando e respondendo...", "type": "loading", "timestamp": current_timestamp})
 
-        # Determine if this is a chart confirmation (simplified)
-        is_chart_confirmation = user_question.strip().lower() in ["sim", "yes", "ok", "gerar gráfico", "pode gerar"] and pending_suggestion
+        # Determine if this is a chart confirmation (enhanced)
+        confirmation_keywords = ["sim", "yes", "ok", "gerar gráfico", "pode gerar", "confirmo", "aceito", "vamos", "faça"]
+        is_chart_confirmation = any(keyword in user_question.strip().lower() for keyword in confirmation_keywords) and pending_suggestion
+
+        log_debug("Análise de confirmação de gráfico", extra={
+            "is_chart_confirmation": is_chart_confirmation,
+            "has_pending_suggestion": bool(pending_suggestion),
+            "user_question_lower": user_question.strip().lower()
+        })
 
         new_pending_suggestion = None # Reset for this turn unless a new one is made
 
@@ -548,8 +661,13 @@ def register_callbacks(app, cache_instance):
                 chart_params = pending_suggestion # Use the stored suggestion
                 ai_response_text = f"Ok, tentando gerar o gráfico sugerido: {chart_params.get('title', 'gráfico')}"
                 error_msg_llm = None
+                log_info("Confirmação de gráfico recebida", extra={"chart_params": chart_params})
             else:
                 # Regular query or new chart request
+                log_debug("Enviando pergunta para LLM", extra={
+                    "provider": llm_provider,
+                    "model": groq_model if llm_provider == "groq" else ollama_model
+                })
                 ai_response_text, error_msg_llm = query_data_with_llm(
                     summary_key, cache, user_question, llm_provider,
                     ollama_model_name=ollama_model,
@@ -557,6 +675,9 @@ def register_callbacks(app, cache_instance):
                 )
                 # Try to extract chart params from this new response
                 chart_params = extract_chart_params_from_response(ai_response_text) if not error_msg_llm else None
+                
+                if chart_params:
+                    log_info("Parâmetros de gráfico detectados na resposta LLM", extra={"chart_params": chart_params})
 
 
             # Remove loading message
@@ -564,17 +685,30 @@ def register_callbacks(app, cache_instance):
             response_timestamp = datetime.now().strftime("%H:%M:%S")
 
             if error_msg_llm:
+                log_error("Erro na resposta do LLM", extra={"error": error_msg_llm})
                 chat_history_list.append({"role":"assistant","content":error_msg_llm,"type":"error","timestamp":response_timestamp})
             else:
+                log_info("Resposta do LLM recebida com sucesso", extra={
+                    "response_length": len(ai_response_text),
+                    "has_chart_params": bool(chart_params)
+                })
                 chat_history_list.append({"role":"assistant","content":ai_response_text,"type":"ai","timestamp":response_timestamp})
                 if chart_params and not is_chart_confirmation : # If LLM suggested & parsed a new chart, store it as pending
                     new_pending_suggestion = chart_params
+                    log_debug("Nova sugestão de gráfico armazenada", extra={"suggestion": chart_params})
                     # Optionally, add a small text like "I can generate this chart for you. Say 'yes' or similar."
                     # For now, the main text might contain the suggestion phrase.
 
             # If chart_params are available (either from new extraction or confirmed suggestion)
             # And we have a valid data_key_for_charting
             if chart_params and data_key_for_charting:
+                log_info("Tentando gerar gráfico", extra={
+                    "chart_type": chart_params.get("chart_type"),
+                    "x_column": chart_params.get("x_column"),
+                    "y_column": chart_params.get("y_column"),
+                    "data_key": data_key_for_charting
+                })
+                
                 df_for_chart = cache.get(data_key_for_charting)
                 if df_for_chart is not None and not df_for_chart.empty:
                     plotly_fig = generate_plotly_chart(chart_params, df_for_chart)
@@ -582,6 +716,13 @@ def register_callbacks(app, cache_instance):
                         # Add chart to conversation
                         chart_entry_ts = datetime.now().strftime("%H:%M:%S")
                         chart_title = chart_params.get("title", "Gráfico Gerado")
+                        
+                        log_info("Gráfico gerado com sucesso", extra={
+                            "chart_title": chart_title,
+                            "chart_type": chart_params.get("chart_type"),
+                            "data_points": len(df_for_chart)
+                        })
+                        
                         chat_history_list.append({
                             "role": "assistant",
                             "content": plotly_fig, # The actual Plotly Figure object
@@ -595,10 +736,12 @@ def register_callbacks(app, cache_instance):
                         new_pending_suggestion = None # Clear suggestion once plotted
                     else:
                         err_msg_chart = f"Desculpe, não consegui gerar o gráfico com os parâmetros: {chart_params}"
+                        log_warning("Falha ao gerar gráfico", extra={"chart_params": chart_params})
                         chat_history_list.append({"role":"assistant","content":err_msg_chart,"type":"error","timestamp":datetime.now().strftime("%H:%M:%S")})
 
                 else:
                     err_msg_df = "Não foi possível carregar os dados para gerar o gráfico."
+                    log_error("Dados não encontrados para geração de gráfico", extra={"data_key": data_key_for_charting})
                     chat_history_list.append({"role":"assistant","content":err_msg_df,"type":"error","timestamp":datetime.now().strftime("%H:%M:%S")})
 
 
@@ -608,7 +751,14 @@ def register_callbacks(app, cache_instance):
             err_str=f"Erro durante o processamento do chat: {e}"
             response_timestamp=datetime.now().strftime("%H:%M:%S")
             chat_history_list.append({"role":"assistant","content":err_str,"type":"error","timestamp":response_timestamp})
-            print(f"AI_CHAT: Erro chat IA: {e}"); import traceback; traceback.print_exc()
+            
+            log_error("Erro crítico durante processamento do chat", extra={
+                "error": str(e),
+                "user_question": user_question,
+                "llm_provider": llm_provider,
+                "summary_key": summary_key,
+                "traceback": __import__('traceback').format_exc()
+            })
 
         return chat_history_to_html(chat_history_list), "", chat_history_list, new_pending_suggestion, generated_charts_list
 
@@ -622,6 +772,11 @@ def register_callbacks(app, cache_instance):
         prevent_initial_call=True
     )
     def toggle_and_populate_charts_gallery(n_clicks_btn, generated_charts_data, is_open_state):
+        log_debug("Callback da galeria de gráficos acionado", extra={
+            "n_clicks": n_clicks_btn,
+            "charts_count": len(generated_charts_data) if generated_charts_data else 0,
+            "is_open": is_open_state
+        })
         ctx = callback_context
         triggered_id = ctx.triggered[0]['prop_id'].split('.')[0] if ctx.triggered else None
 

@@ -1,28 +1,28 @@
 # test_llama_import.py
 try:
     from llama_index.readers.dataframe import PandasDataFrameReader
-    print("SUCESSO: PandasDataFrameReader importado de llama_index.readers.dataframe")
-    print(f"Localização: {PandasDataFrameReader.__file__}")
+    log_info("SUCESSO: PandasDataFrameReader importado de llama_index.readers.dataframe")
+    log_info(f"Localização: {PandasDataFrameReader.__file__}")
 except ImportError as e1:
-    print(f"FALHA ao importar de llama_index.readers.dataframe: {e1}")
-    print("Tentando caminho alternativo/antigo...")
+    log_error("FALHA ao importar de llama_index.readers.dataframe:", exception=e1)
+    log_info("Tentando caminho alternativo/antigo...")
     try:
         from llama_index.core.readers.base import PandasDataFrameReader # Caminho mais antigo ou interno
-        print("SUCESSO: PandasDataFrameReader importado de llama_index.core.readers.base")
-        print(f"Localização: {PandasDataFrameReader.__file__}")
+        log_info("SUCESSO: PandasDataFrameReader importado de llama_index.core.readers.base")
+        log_info(f"Localização: {PandasDataFrameReader.__file__}")
     except ImportError as e2:
-        print(f"FALHA ao importar de llama_index.core.readers.base também: {e2}")
-        print("Verifique se 'pip install llama-index --upgrade' foi executado no ambiente correto.")
+        log_error("FALHA ao importar de llama_index.core.readers.base também:", exception=e2)
+        log_info("Verifique se 'pip install llama-index --upgrade' foi executado no ambiente correto.")
 
 print("\nVerificando importações para Ollama no LlamaIndex:")
 try:
     from llama_index.llms.ollama import Ollama as OllamaLLMLlamaIndex
-    print("SUCESSO: OllamaLLMLlamaIndex importado.")
+    log_info("SUCESSO: OllamaLLMLlamaIndex importado.")
 except ImportError as e:
-    print(f"FALHA ao importar OllamaLLMLlamaIndex: {e}")
+    log_error("FALHA ao importar OllamaLLMLlamaIndex:", exception=e)
 
 try:
     from llama_index.embeddings.ollama import OllamaEmbedding
-    print("SUCESSO: OllamaEmbedding importado.")
+    log_info("SUCESSO: OllamaEmbedding importado.")
 except ImportError as e:
-    print(f"FALHA ao importar OllamaEmbedding: {e}")
+    log_error("FALHA ao importar OllamaEmbedding:", exception=e)

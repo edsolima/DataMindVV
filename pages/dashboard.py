@@ -7,18 +7,20 @@ import plotly.graph_objects as go
 import plotly.express as px
 import numpy as np
 import json 
+import dash_dynamic_grid_layout as dgl
+import uuid
+from dash.exceptions import PreventUpdate
 
-from utils.data_analyzer import DataAnalyzer
-# A função load_dataframe_from_store de utils.dataframe_utils não é mais estritamente necessária aqui
-# se todos os dados vierem do cache. No entanto, pode ser útil se você tiver
-# outros fluxos de dados JSON que precisam ser convertidos em DataFrames.
-# from utils.dataframe_utils import load_dataframe_from_store 
+from utils.logger import log_info, log_error, log_warning, log_debug
 
 # Variável global para a instância do cache
 cache = None
 
-# Layout for dashboard page (permanece o mesmo da sua última versão)
+# Layout for dashboard page
 layout = dbc.Container([
+    dcc.Store(id="dashboard-filtered-data", storage_type="session"),
+    dcc.Store(id="dashboard-edit-mode", data=False),
+    dcc.Store(id="dashboard-modal-feedback", data={}),
     dbc.Row([
         dbc.Col([
             html.H2([html.I(className="fas fa-tachometer-alt me-2"), "Dashboard Executivo"], className="mb-4 text-primary"),
@@ -64,67 +66,355 @@ layout = dbc.Container([
                             dbc.Button([html.I(className="fas fa-sync-alt me-1"), "Aplicar Filtros e Atualizar"], 
                                        id="refresh-dashboard-btn", color="primary", className="w-100 mt-md-2", n_clicks=0)
                         ], md=3, className="d-flex align-items-md-end"),
+                        dbc.Col([
+                            html.Br(),
+                            dbc.Button([html.I(className="fas fa-edit me-1"), "Modo de Edição"],
+                                      id="dashboard-edit-mode-btn", color="secondary", className="w-100 mt-md-2", n_clicks=0)
+                        ], md=3, className="d-flex align-items-md-end"),
                     ]),
                 ])
             ], className="mb-4 shadow-sm"),
             
+            # Botões para adicionar elementos
+            dbc.Card([
+                dbc.CardHeader(html.H5([html.I(className="fas fa-plus-circle me-2"),"Adicionar Elementos"], className="mb-0")),
+                dbc.CardBody([
+                    dbc.Row([
+                        dbc.Col([
+                            dbc.Button([html.I(className="fas fa-chart-bar me-1"), "Adicionar Gráfico"], 
+                                     id="add-chart-btn", color="success", className="w-100", n_clicks=0)
+                        ], md=4),
+                        dbc.Col([
+                            dbc.Button([html.I(className="fas fa-table me-1"), "Adicionar Tabela"], 
+                                     id="add-table-btn", color="info", className="w-100", n_clicks=0)
+                        ], md=4),
+                        dbc.Col([
+                            dbc.Button([html.I(className="fas fa-calculator me-1"), "Adicionar KPI"], 
+                                     id="add-kpi-btn", color="warning", className="w-100", n_clicks=0)
+                        ], md=4),
+                    ])
+                ])
+            ], className="mb-4 shadow-sm"),
+            
             dcc.Interval(id="dashboard-interval-component", interval=60000, n_intervals=0, disabled=True),
+            
+            # Modal para configurar gráfico
+            dbc.Modal([
+                dbc.ModalHeader(dbc.ModalTitle("Configurar Gráfico")),
+                dbc.Alert(id="chart-modal-feedback", children="", color="danger", className="mb-2"),
+                dbc.ModalBody([
+                    dbc.Row([
+                        dbc.Col([
+                            dbc.Label("Título do Gráfico:"),
+                            dbc.Input(id="chart-title-input", type="text", placeholder="Digite um título para o gráfico")
+                        ], width=12, className="mb-3"),
+                    ]),
+                    dbc.Row([
+                        dbc.Col([
+                            dbc.Label("Selecione a coluna para o eixo X:"),
+                            dcc.Dropdown(id="chart-x-axis-selector", placeholder="Selecione coluna para eixo X...")
+                        ], width=6, className="mb-3"),
+                        dbc.Col([
+                            dbc.Label("Selecione a coluna para o eixo Y:"),
+                            dcc.Dropdown(id="chart-y-axis-selector", placeholder="Selecione coluna para eixo Y...")
+                        ], width=6, className="mb-3"),
+                    ]),
+                    dbc.Row([
+                        dbc.Col([
+                            dbc.Label("Tipo de gráfico:"),
+                            dcc.Dropdown(
+                                id="chart-type-selector",
+                                options=[
+                                    {"label": "Dispersão", "value": "scatter"},
+                                    {"label": "Linha", "value": "line"},
+                                    {"label": "Barra", "value": "bar"},
+                                    {"label": "Histograma", "value": "histogram"},
+                                    {"label": "Box Plot", "value": "box"},
+                                    {"label": "Pizza", "value": "pie"}
+                                ],
+                                value="bar",
+                                clearable=False
+                            )
+                        ], width=6, className="mb-3"),
+                        dbc.Col([
+                            dbc.Label("Agrupar por (opcional):"),
+                            dcc.Dropdown(id="chart-group-by-selector", placeholder="Selecione coluna para agrupar...")
+                        ], width=6, className="mb-3"),
+                    ]),
+                    dbc.Row([
+                        dbc.Col([
+                            dbc.Label("Operação de agregação:"),
+                            dcc.Dropdown(
+                                id="chart-agg-operation",
+                                options=[
+                                    {"label": "Soma", "value": "sum"},
+                                    {"label": "Média", "value": "mean"},
+                                    {"label": "Contagem", "value": "count"},
+                                    {"label": "Mínimo", "value": "min"},
+                                    {"label": "Máximo", "value": "max"}
+                                ],
+                                value="count",
+                                clearable=False
+                            )
+                        ], width=6, className="mb-3"),
+                    ])
+                ]),
+                dbc.ModalFooter([
+                    dbc.Button("Cancelar", id="chart-modal-close", className="me-2", color="secondary"),
+                    dbc.Button("Adicionar", id="chart-modal-add", color="primary")
+                ])
+            ], id="chart-config-modal", size="lg", is_open=False),
+            
+            # Modal para configurar tabela
+            dbc.Modal([
+                dbc.ModalHeader(dbc.ModalTitle("Configurar Tabela")),
+                dbc.Alert(id="table-modal-feedback", children="", color="danger", className="mb-2"),
+                dbc.ModalBody([
+                    dbc.Row([
+                        dbc.Col([
+                            dbc.Label("Título da Tabela:"),
+                            dbc.Input(id="table-title-input", type="text", placeholder="Digite um título para a tabela")
+                        ], width=12, className="mb-3"),
+                    ]),
+                    dbc.Row([
+                        dbc.Col([
+                            dbc.Label("Selecione as colunas para exibir:"),
+                            dcc.Dropdown(id="table-columns-selector", multi=True, placeholder="Selecione as colunas...")
+                        ], width=12, className="mb-3"),
+                    ]),
+                    dbc.Row([
+                        dbc.Col([
+                            dbc.Label("Número de linhas a exibir:"),
+                            dbc.Input(id="table-rows-input", type="number", min=1, max=100, step=1, value=10)
+                        ], width=6, className="mb-3"),
+                    ])
+                ]),
+                dbc.ModalFooter([
+                    dbc.Button("Cancelar", id="table-modal-close", className="me-2", color="secondary"),
+                    dbc.Button("Adicionar", id="table-modal-add", color="primary")
+                ])
+            ], id="table-config-modal", size="lg", is_open=False),
+            
+            # Modal para configurar KPI
+            dbc.Modal([
+                dbc.ModalHeader(dbc.ModalTitle("Configurar KPI")),
+                dbc.Alert(id="kpi-modal-feedback", children="", color="danger", className="mb-2"),
+                dbc.ModalBody([
+                    dbc.Row([
+                        dbc.Col([
+                            dbc.Label("Título do KPI:"),
+                            dbc.Input(id="kpi-title-input", type="text", placeholder="Digite um título para o KPI")
+                        ], width=12, className="mb-3"),
+                    ]),
+                    dbc.Row([
+                        dbc.Col([
+                            dbc.Label("Selecione a coluna:"),
+                            dcc.Dropdown(id="kpi-column-selector", placeholder="Selecione a coluna...")
+                        ], width=6, className="mb-3"),
+                        dbc.Col([
+                            dbc.Label("Operação:"),
+                            dcc.Dropdown(
+                                id="kpi-operation-selector",
+                                options=[
+                                    {"label": "Contagem", "value": "count"},
+                                    {"label": "Soma", "value": "sum"},
+                                    {"label": "Média", "value": "mean"},
+                                    {"label": "Mínimo", "value": "min"},
+                                    {"label": "Máximo", "value": "max"},
+                                    {"label": "Valores Únicos", "value": "nunique"}
+                                ],
+                                value="count",
+                                clearable=False
+                            )
+                        ], width=6, className="mb-3"),
+                    ]),
+                    dbc.Row([
+                        dbc.Col([
+                            dbc.Label("Cor do KPI:"),
+                            dcc.Dropdown(
+                                id="kpi-color-selector",
+                                options=[
+                                    {"label": "Azul", "value": "primary"},
+                                    {"label": "Verde", "value": "success"},
+                                    {"label": "Vermelho", "value": "danger"},
+                                    {"label": "Amarelo", "value": "warning"},
+                                    {"label": "Ciano", "value": "info"},
+                                    {"label": "Cinza", "value": "secondary"}
+                                ],
+                                value="primary",
+                                clearable=False
+                            )
+                        ], width=6, className="mb-3"),
+                        dbc.Col([
+                            dbc.Label("Ícone:"),
+                            dcc.Dropdown(
+                                id="kpi-icon-selector",
+                                options=[
+                                    {"label": "Gráfico", "value": "fas fa-chart-bar"},
+                                    {"label": "Calculadora", "value": "fas fa-calculator"},
+                                    {"label": "Dinheiro", "value": "fas fa-dollar-sign"},
+                                    {"label": "Usuário", "value": "fas fa-user"},
+                                    {"label": "Calendário", "value": "fas fa-calendar"},
+                                    {"label": "Relógio", "value": "fas fa-clock"},
+                                    {"label": "Porcentagem", "value": "fas fa-percentage"}
+                                ],
+                                value="fas fa-chart-bar",
+                                clearable=False
+                            )
+                        ], width=6, className="mb-3"),
+                    ])
+                ]),
+                dbc.ModalFooter([
+                    dbc.Button("Cancelar", id="kpi-modal-close", className="me-2", color="secondary"),
+                    dbc.Button("Adicionar", id="kpi-modal-add", color="primary")
+                ])
+            ], id="kpi-config-modal", size="lg", is_open=False),
+            
+            # Área de conteúdo do dashboard
             dcc.Loading(id="loading-dashboard-content", type="default",
                 children=html.Div(id="dashboard-content-area")
-            )
+            ),
+            
+            # Store para elementos do dashboard
+            dcc.Store(id="dashboard-elements", data=[])
         ])
     ])
 ], fluid=True)
 
+# Função para criar um KPI card moderno
 def create_kpi_card(title, value, icon="fas fa-chart-bar", color="primary", note=""):
-    return dbc.Col([
-        dbc.Card(dbc.CardBody([
+    return dbc.Card(
+        dbc.CardBody([
             dbc.Row([
-                dbc.Col(html.I(className=f"{icon} fa-2x text-{color} mb-2 mb-md-0"), width="auto", className="d-none d-md-block"),
                 dbc.Col([
-                    html.H3(value, className=f"card-title text-{color} mb-1"),
+                    html.Div([
+                        html.I(className=f"{icon} fa-lg text-white"),
+                    ], className=f"d-flex align-items-center justify-content-center rounded-circle bg-{color}", style={"width": "48px", "height": "48px"})
+                ], width="auto", className="me-3"),
+                dbc.Col([
+                    html.H3(value, className=f"card-title text-{color} mb-1 fw-bold"),
                     html.P(title, className="card-text text-muted mb-0 small text-uppercase fw-bold"),
                     html.P(note, className="card-text text-muted small fst-italic") if note else None
-                ])
-            ], align="center")
-        ]), className="shadow-sm h-100")
-    ], md=3, className="mb-3")
+                ], className="d-flex flex-column justify-content-center")
+            ], align="center", className="h-100")
+        ]), className="shadow-sm h-100 border-0"
+    )
 
-def create_chart_card(title, graph_id, icon="fas fa-chart-line"):
-    return dbc.Col([
-        dbc.Card([
-            dbc.CardHeader(html.H5([html.I(className=f"{icon} me-2"), title], className="mb-0")),
-            dbc.CardBody(dcc.Loading(dcc.Graph(id=graph_id, style={"height": "350px"})))
-        ], className="shadow-sm h-100")
-    ], md=6, className="mb-3")
+# Função para criar um chart card moderno (agora recebe edit_mode)
+def create_chart_card(title, graph_id, edit_mode=False, icon="fas fa-chart-line"):
+    delete_btn = html.Button(
+        html.I(className="fas fa-trash"),
+        id={"type": "delete-chart", "index": graph_id},
+        className="btn btn-sm btn-outline-danger ms-2",
+        n_clicks=0,
+        style={"display": "inline-block" if edit_mode else "none"}
+    )
+    return dbc.Card([
+        dbc.CardHeader([
+            html.Div([
+                html.H5([
+                    html.I(className=f"{icon} me-2 text-info"), title
+                ], className="mb-0 d-inline fw-bold"),
+                html.Div([delete_btn], className="float-end")
+            ], className="d-flex align-items-center justify-content-between")
+        ], className="bg-white border-0"),
+        dbc.CardBody(dcc.Loading(dcc.Graph(id={"type": "graph", "index": graph_id}, style={"height": "350px"})), className="p-2")
+    ], className="shadow-sm h-100 border-0")
 
+# Função para criar um table card moderno (agora recebe edit_mode)
+def create_table_card(title, table_id, edit_mode=False):
+    delete_btn = html.Button(
+        html.I(className="fas fa-trash"),
+        id={"type": "delete-table", "index": table_id},
+        className="btn btn-sm btn-outline-danger ms-2",
+        n_clicks=0,
+        style={"display": "inline-block" if edit_mode else "none"}
+    )
+    return dbc.Card([
+        dbc.CardHeader([
+            html.Div([
+                html.H5([
+                    html.I(className="fas fa-table me-2 text-info"), title
+                ], className="mb-0 d-inline fw-bold"),
+                html.Div([delete_btn], className="float-end")
+            ], className="d-flex align-items-center justify-content-between")
+        ], className="bg-white border-0"),
+        dbc.CardBody(dcc.Loading(html.Div(id={"type": "table", "index": table_id})), className="p-2")
+    ], className="shadow-sm h-100 border-0")
+
+# Função para criar um layout vazio
 def create_empty_dashboard_layout():
     return dbc.Alert([
         html.H4([html.I(className="fas fa-info-circle me-2"), "Dashboard Vazio"]),
         html.P("Nenhum dado carregado. Por favor, carregue dados para visualizar o dashboard.")
     ], color="info", className="text-center m-3 p-4")
 
-def create_dashboard_layout(df_exists, data_source_name, data_source_type):
-    if not df_exists: return create_empty_dashboard_layout()
-    kpi_row_1 = dbc.Row(id="kpi-row-1-content", className="mb-3") 
-    chart_row_1 = dbc.Row([
-        create_chart_card("Distribuição de Coluna Numérica", "dashboard-dist-plot"),
-        create_chart_card("Contagem de Categoria", "dashboard-cat-plot"),
-    ], className="mb-3")
-    chart_row_2 = dbc.Row([
-        create_chart_card("Série Temporal (se aplicável)", "dashboard-time-series-plot"),
-        create_chart_card("Correlação entre Colunas", "dashboard-corr-plot"),
-    ], className="mb-3")
-    detail_table_row = dbc.Row([
-        dbc.Col(dbc.Card([
-            dbc.CardHeader(html.H5([html.I(className="fas fa-table me-2"), "Amostra dos Dados Filtrados"])),
-            dbc.CardBody(dcc.Loading(html.Div(id="dashboard-detail-table")))
-        ], className="shadow-sm"), md=12)
-    ], className="mb-3")
-    return dbc.Container([
-        dbc.Alert(f"Exibindo dados de: {data_source_type} - {data_source_name}", color="primary", className="mb-3 fs-6"),
-        kpi_row_1, chart_row_1, chart_row_2, detail_table_row,
-    ], fluid=True)
+# Função para criar o layout do dashboard com grid dinâmico (recebe edit_mode)
+def create_dashboard_layout(df_exists, data_source_name, data_source_type, elements=None, edit_mode=False):
+    if not df_exists:
+        return create_empty_dashboard_layout()
+    # Remover alerta de fonte de dados e textos excessivos
+    if not elements or len(elements) == 0:
+        return dbc.Container([
+            dbc.Alert([
+                html.H4([html.I(className="fas fa-lightbulb me-2"), "Dashboard Vazio"]),
+                html.P("Use os botões acima para adicionar gráficos, tabelas ou KPIs.")
+            ], color="info", className="text-center m-3 p-4")
+        ], fluid=True)
+    grid_items = []
+    item_layouts = []
+    used_positions = set()
+    for idx, element in enumerate(elements):
+        element_id = element.get('id', str(idx))
+        element_type = element.get('type')
+        element_title = element.get('title', f"Elemento {idx+1}")
+        # Encontrar próxima posição livre no grid (3 colunas por linha)
+        for pos in range(100):
+            pos_x = (pos % 3) * 4
+            pos_y = (pos // 3) * 3
+            if (pos_x, pos_y) not in used_positions:
+                used_positions.add((pos_x, pos_y))
+                break
+        if element_type == 'chart':
+            grid_items.append(
+                dgl.DraggableWrapper(
+                    children=[create_chart_card(element_title, element_id, edit_mode=edit_mode)],
+                    handleText="Mover Gráfico",
+                    handleBackground="#17a2b8",
+                    handleColor="white"
+                )
+            )
+        elif element_type == 'table':
+            grid_items.append(
+                dgl.DraggableWrapper(
+                    children=[create_table_card(element_title, element_id, edit_mode=edit_mode)],
+                    handleText="Mover Tabela",
+                    handleBackground="#6c757d",
+                    handleColor="white"
+                )
+            )
+        elif element_type == 'kpi':
+            grid_items.append(
+                dgl.DraggableWrapper(
+                    children=[html.Div(id={"type": "kpi", "index": element_id}, className="h-100")],
+                    handleText="Mover KPI",
+                    handleBackground="#007bff",
+                    handleColor="white"
+                )
+            )
+        # Usar o próprio id do elemento como chave única no grid
+        item_layouts.append({'i': str(element_id), 'x': pos_x, 'y': pos_y, 'w': 4, 'h': 3})
+    grid_layout = dgl.DashGridLayout(
+        id='dashboard-grid-layout',
+        items=grid_items,
+        rowHeight=150,
+        cols={'lg': 12, 'md': 10, 'sm': 6, 'xs': 4, 'xxs': 2},
+        style={'minHeight': '800px'},
+        showRemoveButton=False,
+        showResizeHandles=False,
+        itemLayout=item_layouts
+    )
+    return dbc.Container([grid_layout], fluid=True)
 
 # MODIFICADO PARA CACHE: Aceita cache_instance
 def register_callbacks(app, cache_instance):
@@ -140,19 +430,46 @@ def register_callbacks(app, cache_instance):
 
     @app.callback(
         [Output("dashboard-filter-column", "options"), Output("dashboard-filter-column", "disabled"),
-         Output("dashboard-date-column-selector", "options"), Output("dashboard-date-column-selector", "disabled")],
+         Output("dashboard-date-column-selector", "options"), Output("dashboard-date-column-selector", "disabled"),
+         Output("chart-x-axis-selector", "options"), Output("chart-y-axis-selector", "options"),
+         Output("chart-group-by-selector", "options"), Output("table-columns-selector", "options"),
+         Output("kpi-column-selector", "options")],
         [Input("server-side-data-key", "data")] 
     )
     def populate_filter_dropdowns(data_key): 
-        if not data_key: return [], True, [], True
+        if not data_key: 
+            empty_opts = []
+            return empty_opts, True, empty_opts, True, empty_opts, empty_opts, empty_opts, empty_opts, empty_opts
+        
         df = cache.get(data_key) 
-        if df is None or df.empty: return [], True, [], True
+        if df is None or df.empty: 
+            empty_opts = []
+            return empty_opts, True, empty_opts, True, empty_opts, empty_opts, empty_opts, empty_opts, empty_opts
         
         cat_cols = df.select_dtypes(include=['object', 'category']).columns.tolist()
         date_cols = df.select_dtypes(include=[np.datetime64]).columns.tolist() 
+        num_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+        
+        # Opções para os diferentes dropdowns
         cat_opts = [{"label":c,"value":c} for c in cat_cols]
         date_opts = [{"label":c,"value":c} for c in date_cols]
-        return cat_opts, not bool(cat_opts), date_opts, not bool(date_opts)
+        
+        # Para eixos X e Y, podemos usar colunas numéricas e categóricas
+        all_cols = num_cols + cat_cols + date_cols
+        all_cols_opts = [{"label":c,"value":c} for c in all_cols]
+        
+        # Para agrupar, usamos apenas colunas categóricas
+        group_opts = cat_opts
+        
+        return (
+            cat_opts, not bool(cat_opts),  # Filtro categórico
+            date_opts, not bool(date_opts),  # Filtro de data
+            all_cols_opts,  # Eixo X
+            all_cols_opts,  # Eixo Y
+            group_opts,  # Agrupar por
+            all_cols_opts,  # Colunas da tabela
+            all_cols_opts   # Coluna do KPI
+        )
 
     @app.callback(
         [Output("dashboard-filter-value", "options"), Output("dashboard-filter-value", "disabled")],
@@ -169,117 +486,470 @@ def register_callbacks(app, cache_instance):
 
     @app.callback(Output("dashboard-date-range", "disabled"), [Input("dashboard-date-column-selector", "value")])
     def toggle_date_picker_range(col): return not bool(col)
+    
+    @app.callback(
+        Output("dashboard-edit-mode", "data"),
+        Output("dashboard-edit-mode-btn", "children"),
+        Output("dashboard-edit-mode-btn", "color"),
+        Input("dashboard-edit-mode-btn", "n_clicks"),
+        State("dashboard-edit-mode", "data")
+    )
+    def toggle_edit_mode(n_clicks, edit_mode):
+        if n_clicks is None:
+            return False, [html.I(className="fas fa-edit me-1"), "Modo de Edição"], "secondary"
+        new_mode = not edit_mode if edit_mode is not None else True
+        btn_text = [html.I(className="fas fa-check me-1"), "Modo de Edição Ativo"] if new_mode else [html.I(className="fas fa-edit me-1"), "Modo de Edição"]
+        btn_color = "danger" if new_mode else "secondary"
+        return new_mode, btn_text, btn_color
+    
+    # Callbacks para abrir/fechar modais
+    @app.callback(
+        Output("chart-config-modal", "is_open"),
+        [Input("add-chart-btn", "n_clicks"), Input("chart-modal-add", "n_clicks")],
+        [State("chart-config-modal", "is_open")]
+    )
+    def toggle_chart_modal(n_add, n_confirm, is_open):
+        if n_add or n_confirm:
+            return not is_open
+        return is_open
+    
+    @app.callback(
+        Output("table-config-modal", "is_open"),
+        [Input("add-table-btn", "n_clicks"), Input("table-modal-close", "n_clicks"), Input("table-modal-add", "n_clicks")],
+        [State("table-config-modal", "is_open")]
+    )
+    def toggle_table_modal(n_add, n_close, n_confirm, is_open):
+        if n_add or n_close or n_confirm:
+            return not is_open
+        return is_open
+    
+    @app.callback(
+        Output("kpi-config-modal", "is_open"),
+        [Input("add-kpi-btn", "n_clicks"), Input("kpi-modal-close", "n_clicks"), Input("kpi-modal-add", "n_clicks")],
+        [State("kpi-config-modal", "is_open")]
+    )
+    def toggle_kpi_modal(n_add, n_close, n_confirm, is_open):
+        if n_add or n_close or n_confirm:
+            return not is_open
+        return is_open
+    
+    # Callback para adicionar elementos ao dashboard, agora com validação
+    @app.callback(
+        Output("dashboard-elements", "data"),
+        Output("dashboard-modal-feedback", "data"),
+        [Input("chart-modal-add", "n_clicks"),
+         Input("table-modal-add", "n_clicks"),
+         Input("kpi-modal-add", "n_clicks")],
+        [State("dashboard-elements", "data"),
+         # Estados para gráfico
+         State("chart-title-input", "value"),
+         State("chart-x-axis-selector", "value"),
+         State("chart-y-axis-selector", "value"),
+         State("chart-type-selector", "value"),
+         State("chart-group-by-selector", "value"),
+         State("chart-agg-operation", "value"),
+         # Estados para tabela
+         State("table-title-input", "value"),
+         State("table-columns-selector", "value"),
+         State("table-rows-input", "value"),
+         # Estados para KPI
+         State("kpi-title-input", "value"),
+         State("kpi-column-selector", "value"),
+         State("kpi-operation-selector", "value"),
+         State("kpi-color-selector", "value"),
+         State("kpi-icon-selector", "value")
+        ]
+    )
+    def add_dashboard_element(chart_clicks, table_clicks, kpi_clicks, 
+                             elements, 
+                             chart_title, chart_x, chart_y, chart_type, chart_group, chart_agg,
+                             table_title, table_columns, table_rows,
+                             kpi_title, kpi_column, kpi_operation, kpi_color, kpi_icon):
+        ctx = callback_context
+        if not ctx.triggered:
+            raise PreventUpdate
+        trigger_id = ctx.triggered[0]['prop_id'].split('.')[0]
+        elements = elements or []
+        feedback = {}
+        # Prevenir duplicidade (mesmo título e tipo)
+        def is_duplicate(title, tipo):
+            return any(e.get('title') == title and e.get('type') == tipo for e in elements)
+        if trigger_id == "chart-modal-add":
+            if not chart_x or not chart_title:
+                feedback = {"modal": "chart", "msg": "Preencha o título e selecione a coluna do eixo X."}
+                return elements, feedback
+            if is_duplicate(chart_title, 'chart'):
+                feedback = {"modal": "chart", "msg": "Já existe um gráfico com esse título."}
+                return elements, feedback
+            element_id = f"chart-{str(uuid.uuid4())[:8]}"
+            elements.append({
+                'id': element_id,
+                'type': 'chart',
+                'title': chart_title,
+                'config': {
+                    'x': chart_x,
+                    'y': chart_y,
+                    'type': chart_type,
+                    'group_by': chart_group,
+                    'agg_operation': chart_agg
+                }
+            })
+            return elements, {}
+        elif trigger_id == "table-modal-add":
+            if not table_columns or not table_title:
+                feedback = {"modal": "table", "msg": "Preencha o título e selecione as colunas."}
+                return elements, feedback
+            if is_duplicate(table_title, 'table'):
+                feedback = {"modal": "table", "msg": "Já existe uma tabela com esse título."}
+                return elements, feedback
+            element_id = f"table-{str(uuid.uuid4())[:8]}"
+            elements.append({
+                'id': element_id,
+                'type': 'table',
+                'title': table_title,
+                'config': {
+                    'columns': table_columns,
+                    'rows': table_rows
+                }
+            })
+            return elements, {}
+        elif trigger_id == "kpi-modal-add":
+            if not kpi_column or not kpi_title:
+                feedback = {"modal": "kpi", "msg": "Preencha o título e selecione a coluna."}
+                return elements, feedback
+            if is_duplicate(kpi_title, 'kpi'):
+                feedback = {"modal": "kpi", "msg": "Já existe um KPI com esse título."}
+                return elements, feedback
+            element_id = f"kpi-{str(uuid.uuid4())[:8]}"
+            elements.append({
+                'id': element_id,
+                'type': 'kpi',
+                'title': kpi_title,
+                'config': {
+                    'column': kpi_column,
+                    'operation': kpi_operation,
+                    'color': kpi_color,
+                    'icon': kpi_icon
+                }
+            })
+            return elements, {}
+        return elements, {}
+    
+    # Callback para remover elementos (só no modo edição)
+    @app.callback(
+        Output("dashboard-elements", "data", allow_duplicate=True),
+        [Input({"type": "delete-chart", "index": dash.ALL}, "n_clicks"),
+         Input({"type": "delete-table", "index": dash.ALL}, "n_clicks")],
+        [State("dashboard-elements", "data"),
+         State({"type": "delete-chart", "index": dash.ALL}, "id"),
+         State({"type": "delete-table", "index": dash.ALL}, "id"),
+         State("dashboard-edit-mode", "data")],
+        prevent_initial_call=True
+    )
+    def remove_dashboard_element(chart_clicks, table_clicks, elements, chart_ids, table_ids, edit_mode):
+        ctx = callback_context
+        if not ctx.triggered or not elements or not edit_mode:
+            return elements
+        triggered_id = ctx.triggered[0]["prop_id"]
+        elements_list = elements.copy()
+        if ".n_clicks" in triggered_id:
+            element_id = json.loads(triggered_id.split(".")[0])["index"]
+            elements_list = [e for e in elements_list if e.get('id') != element_id]
+        return elements_list
         
     @app.callback(
         Output("dashboard-content-area", "children"),
-        [Input("refresh-dashboard-btn", "n_clicks"), Input("dashboard-interval-component", "n_intervals")],
-        [State("server-side-data-key", "data"), State("active-connection-name", "data"), 
-         State("active-table-name", "data"), State("data-source-type", "data")]
+        [Input("refresh-dashboard-btn", "n_clicks"),
+         Input("dashboard-interval-component", "n_intervals"),
+         Input("dashboard-elements", "data"),
+         Input("dashboard-edit-mode", "data")],
+        [State("server-side-data-key", "data"),
+         State("active-connection-name", "data"),
+         State("active-table-name", "data"),
+         State("data-source-type", "data")]
     )
-    def generate_initial_dashboard_layout(n_clicks, n_intervals, data_key, conn, table, src_type): 
+    def update_dashboard_layout(n_clicks, n_intervals, elements, edit_mode, data_key, conn, table, src_type):
         if not data_key: return create_empty_dashboard_layout()
-        df_check = cache.get(data_key) 
+        df_check = cache.get(data_key)
         data_exists = df_check is not None and not df_check.empty
         name = f"{conn} - {table}" if src_type=='database' else table if src_type=='upload' else "N/A"
-        return create_dashboard_layout(data_exists, name, src_type)
+        return create_dashboard_layout(data_exists, name, src_type, elements, edit_mode=edit_mode)
+
+    # Callback para renderizar gráficos
+    @app.callback(
+        Output({"type": "graph", "index": dash.ALL}, "figure"),
+        [Input("refresh-dashboard-btn", "n_clicks"),
+         Input("dashboard-interval-component", "n_intervals")],
+        [State("dashboard-filtered-data", "data"),
+         State("dashboard-elements", "data"),
+         State({"type": "graph", "index": dash.ALL}, "id")]
+    )
+    def update_charts(n_clicks, n_intervals, filtered_data_json, elements, graph_ids):
+        if not filtered_data_json or not elements or not graph_ids:
+            return [go.Figure() for _ in graph_ids]
+        try:
+            df = pd.read_json(filtered_data_json, orient='split')
+        except Exception:
+            return [go.Figure() for _ in graph_ids]
+        if df is None or df.empty:
+            return [go.Figure() for _ in graph_ids]
+        figures = []
+        for graph_id in graph_ids:
+            element_id = graph_id["index"]
+            element = next((e for e in elements if e.get('id') == element_id and e.get('type') == 'chart'), None)
+            if not element:
+                figures.append(go.Figure())
+                continue
+            config = element.get('config', {})
+            x_col = config.get('x')
+            y_col = config.get('y')
+            chart_type = config.get('type', 'bar')
+            group_by = config.get('group_by')
+            agg_operation = config.get('agg_operation', 'count')
+            title = element.get('title', 'Gráfico')
+            fig = go.Figure()
+            try:
+                if x_col and x_col in df.columns:
+                    if chart_type == "scatter":
+                        if y_col and y_col in df.columns:
+                            if group_by and group_by in df.columns:
+                                fig = px.scatter(df, x=x_col, y=y_col, color=group_by, title=title, template="plotly_white")
+                            else:
+                                fig = px.scatter(df, x=x_col, y=y_col, title=title, template="plotly_white")
+                    elif chart_type == "line":
+                        if y_col and y_col in df.columns:
+                            if group_by and group_by in df.columns:
+                                fig = px.line(df, x=x_col, y=y_col, color=group_by, title=title, template="plotly_white")
+                            else:
+                                fig = px.line(df, x=x_col, y=y_col, title=title, template="plotly_white")
+                    elif chart_type == "bar":
+                        if y_col and y_col in df.columns:
+                            if group_by and group_by in df.columns:
+                                agg_df = df.groupby([x_col, group_by]).agg({y_col: agg_operation}).reset_index()
+                                fig = px.bar(agg_df, x=x_col, y=y_col, color=group_by, title=title, template="plotly_white")
+                            else:
+                                agg_df = df.groupby(x_col).agg({y_col: agg_operation}).reset_index()
+                                fig = px.bar(agg_df, x=x_col, y=y_col, title=title, template="plotly_white")
+                    elif chart_type == "histogram":
+                        fig = px.histogram(df, x=x_col, title=title, template="plotly_white")
+                    elif chart_type == "box":
+                        if y_col and y_col in df.columns:
+                            if group_by and group_by in df.columns:
+                                fig = px.box(df, x=group_by, y=y_col, title=title, template="plotly_white")
+                            else:
+                                fig = px.box(df, y=y_col, title=title, template="plotly_white")
+                    elif chart_type == "pie":
+                        if y_col and y_col in df.columns:
+                            agg_df = df.groupby(x_col).agg({y_col: agg_operation}).reset_index()
+                            fig = px.pie(agg_df, names=x_col, values=y_col, title=title, template="plotly_white")
+                    fig.update_layout(title_x=0.5, margin=dict(t=50,b=20,l=20,r=20))
+            except Exception as e:
+                log_error("Erro ao criar gráfico", extra={
+                    "element_id": element_id,
+                    "error": str(e),
+                    "chart_type": chart_type if 'chart_type' in locals() else None,
+                    "df_shape": df.shape if 'df' in locals() else None
+                })
+                fig.update_layout(annotations=[{'text':f'Erro ao criar gráfico: {str(e)}','showarrow':False, 'font_size':10}])
+            figures.append(fig)
+        return figures
+    
+    # Callback para renderizar tabelas
+    @app.callback(
+        Output({"type": "table", "index": dash.ALL}, "children"),
+        [Input("refresh-dashboard-btn", "n_clicks"),
+         Input("dashboard-interval-component", "n_intervals")],
+        [State("dashboard-filtered-data", "data"),
+         State("dashboard-elements", "data"),
+         State({"type": "table", "index": dash.ALL}, "id")]
+    )
+    def update_tables(n_clicks, n_intervals, filtered_data_json, elements, table_ids):
+        if not filtered_data_json or not elements or not table_ids:
+            return [html.Div("Sem dados") for _ in table_ids]
+        try:
+            df = pd.read_json(filtered_data_json, orient='split')
+        except Exception:
+            return [html.Div("Sem dados") for _ in table_ids]
+        if df is None or df.empty:
+            return [html.Div("Nenhum dado corresponde aos filtros") for _ in table_ids]
+        tables = []
+        for table_id in table_ids:
+            element_id = table_id["index"]
+            element = next((e for e in elements if e.get('id') == element_id and e.get('type') == 'table'), None)
+            if not element:
+                tables.append(html.Div("Configuração de tabela não encontrada"))
+                continue
+            config = element.get('config', {})
+            columns = config.get('columns', [])
+            rows = config.get('rows', 10)
+            try:
+                if columns and all(col in df.columns for col in columns):
+                    table_df = df[columns].head(rows)
+                else:
+                    table_df = df.head(rows)
+                table = dash_table.DataTable(
+                    data=table_df.to_dict('records'), 
+                    columns=[{"name":str(i),"id":str(i)} for i in table_df.columns],
+                    page_size=rows, 
+                    style_table={'overflowX':'auto','minHeight':'300px'},
+                    style_cell={'textAlign':'left','padding':'8px','fontSize':'0.9em'},
+                    style_header={'backgroundColor':'#e9ecef','fontWeight':'bold'}, 
+                    fixed_rows={'headers':True}
+                )
+                tables.append(table)
+            except Exception as e:
+                log_error("Erro ao criar tabela", extra={
+                    "element_id": element_id,
+                    "error": str(e),
+                    "df_shape": df.shape if 'df' in locals() else None
+                })
+                tables.append(html.Div(f"Erro ao criar tabela: {str(e)}"))
+        return tables
+    
+    # Callback para renderizar KPIs
+    @app.callback(
+        Output({"type": "kpi", "index": dash.ALL}, "children"),
+        [Input("refresh-dashboard-btn", "n_clicks"),
+         Input("dashboard-interval-component", "n_intervals")],
+        [State("dashboard-filtered-data", "data"),
+         State("dashboard-elements", "data"),
+         State({"type": "kpi", "index": dash.ALL}, "id")]
+    )
+    def update_kpis(n_clicks, n_intervals, filtered_data_json, elements, kpi_ids):
+        if not filtered_data_json or not elements or not kpi_ids:
+            return [create_kpi_card("N/D", "-", "fas fa-ban", "light") for _ in kpi_ids]
+        try:
+            df = pd.read_json(filtered_data_json, orient='split')
+        except Exception:
+            return [create_kpi_card("N/D", "-", "fas fa-ban", "light") for _ in kpi_ids]
+        if df is None or df.empty:
+            return [create_kpi_card("Sem dados nos filtros", "0", "fas fa-filter", "light") for _ in kpi_ids]
+        kpis = []
+        for kpi_id in kpi_ids:
+            element_id = kpi_id["index"]
+            element = next((e for e in elements if e.get('id') == element_id and e.get('type') == 'kpi'), None)
+            if not element:
+                kpis.append(create_kpi_card("Configuração não encontrada", "-", "fas fa-question", "light"))
+                continue
+            config = element.get('config', {})
+            column = config.get('column')
+            operation = config.get('operation', 'count')
+            color = config.get('color', 'primary')
+            icon = config.get('icon', 'fas fa-chart-bar')
+            title = element.get('title', 'KPI')
+            try:
+                if column and column in df.columns:
+                    if operation == 'count':
+                        value = len(df)
+                        formatted_value = f"{value:,}"
+                    elif operation == 'sum' and pd.api.types.is_numeric_dtype(df[column]):
+                        value = df[column].sum()
+                        formatted_value = f"{value:,.2f}"
+                    elif operation == 'mean' and pd.api.types.is_numeric_dtype(df[column]):
+                        value = df[column].mean()
+                        formatted_value = f"{value:,.2f}"
+                    elif operation == 'min' and pd.api.types.is_numeric_dtype(df[column]):
+                        value = df[column].min()
+                        formatted_value = f"{value:,.2f}" if isinstance(value, (int, float)) else str(value)
+                    elif operation == 'max' and pd.api.types.is_numeric_dtype(df[column]):
+                        value = df[column].max()
+                        formatted_value = f"{value:,.2f}" if isinstance(value, (int, float)) else str(value)
+                    elif operation == 'nunique':
+                        value = df[column].nunique()
+                        formatted_value = f"{value:,}"
+                    else:
+                        formatted_value = "N/A"
+                else:
+                    formatted_value = "N/A"
+                kpis.append(create_kpi_card(title, formatted_value, icon, color))
+            except Exception as e:
+                log_error("Erro ao criar KPI", extra={
+                    "element_id": element_id,
+                    "error": str(e),
+                    "kpi_type": operation if 'operation' in locals() else None,
+                    "df_shape": df.shape if 'df' in locals() else None
+                })
+                kpis.append(create_kpi_card(title, "Erro", "fas fa-exclamation-circle", "danger"))
+        return kpis
 
     @app.callback(
-        [Output("kpi-row-1-content", "children"), 
-         Output("dashboard-dist-plot", "figure"), Output("dashboard-cat-plot", "figure"),
-         Output("dashboard-time-series-plot", "figure"), Output("dashboard-corr-plot", "figure"),
-         Output("dashboard-detail-table", "children")],
-        [Input("refresh-dashboard-btn", "n_clicks"), Input("dashboard-interval-component", "n_intervals")],
-        [State("server-side-data-key", "data"), State("dashboard-filter-column", "value"), 
-         State("dashboard-filter-value", "value"), State("dashboard-date-column-selector", "value"),
-         State("dashboard-date-range", "start_date"), State("dashboard-date-range", "end_date")]
+        Output("dashboard-filtered-data", "data"),
+        Input("server-side-data-key", "data"),
+        Input("dashboard-filter-column", "value"),
+        Input("dashboard-filter-value", "value"),
+        Input("dashboard-date-column-selector", "value"),
+        Input("dashboard-date-range", "start_date"),
+        Input("dashboard-date-range", "end_date"),
     )
-    def update_dashboard_elements(n_refresh_clicks, n_intervals, data_key, 
-                                 filter_col, filter_vals, date_col, start_dt, end_dt):
-        ctx = callback_context
-        if not ctx.triggered and (n_refresh_clicks == 0 and n_intervals == 0):
-             raise dash.exceptions.PreventUpdate
-
-        kpi_placeholder_list = [create_kpi_card("N/D", "-", icon="fas fa-ban", color="light")] * 4
-        fig_placeholder = go.Figure().update_layout(annotations=[{'text':'Sem Dados','showarrow':False, 'font_size':12}])
-        table_placeholder = dbc.Alert("Sem dados para tabela.", color="info", className="text-center")
-
-        if not data_key: 
-            return kpi_placeholder_list, fig_placeholder, fig_placeholder, fig_placeholder, fig_placeholder, table_placeholder
-
-        df_original = cache.get(data_key) 
-        if df_original is None or df_original.empty:
-            kpi_empty_list = [create_kpi_card("Vazio", "0", icon="fas fa-folder-open", color="light")]*4
-            fig_empty = go.Figure().update_layout(annotations=[{'text':'Dados Vazios ou Expirados do Cache','showarrow':False, 'font_size':12}])
-            return kpi_empty_list, fig_empty, fig_empty, fig_empty, fig_empty, dbc.Alert("Dados não encontrados no cache ou vazios.", color="warning", className="text-center")
-
-        df = df_original.copy()
+    def filter_dashboard_data(data_key, filter_col, filter_vals, date_col, start_dt, end_dt):
+        if not data_key:
+            return {}
+        
+        df = cache.get(data_key)
+        if df is None or df.empty:
+            return {}
+        
+        # Aplicar filtros
+        df_filtered = df.copy()
         if filter_col and filter_vals and filter_col in df.columns:
-            df = df[df[filter_col].isin(filter_vals)]
+            df_filtered = df_filtered[df_filtered[filter_col].isin(filter_vals)]
         if date_col and start_dt and end_dt and date_col in df.columns:
             try:
-                df[date_col] = pd.to_datetime(df[date_col], errors='coerce')
-                df.dropna(subset=[date_col], inplace=True)
+                df_filtered[date_col] = pd.to_datetime(df_filtered[date_col], errors='coerce')
+                df_filtered.dropna(subset=[date_col], inplace=True)
                 start_dt_obj = pd.to_datetime(start_dt, errors='coerce')
                 end_dt_obj = pd.to_datetime(end_dt, errors='coerce')
                 if pd.NaT not in [start_dt_obj, end_dt_obj]:
-                    df = df[(df[date_col] >= start_dt_obj) & (df[date_col] <= end_dt_obj)]
-            except Exception as e_date_filter:
-                print(f"Erro ao aplicar filtro de data no dashboard: {e_date_filter}")
+                    df_filtered = df_filtered[(df_filtered[date_col] >= start_dt_obj) & (df_filtered[date_col] <= end_dt_obj)]
+            except Exception as e:
+                log_error("Erro ao aplicar filtro de data em KPIs", extra={
+                    "error": str(e),
+                    "date_col": date_col if 'date_col' in locals() else None,
+                    "start_date": start_dt if 'start_dt' in locals() else None,
+                    "end_date": end_dt if 'end_dt' in locals() else None,
+                    "df_shape": df.shape if 'df' in locals() else None
+                })
         
-        if df.empty: 
-            kpi_filtered_list = [create_kpi_card("Filtrado", "0", icon="fas fa-filter", color="light")]*4
-            fig_filtered = go.Figure().update_layout(annotations=[{'text':'Nenhum dado com filtros','showarrow':False, 'font_size':12}])
-            return kpi_filtered_list, fig_filtered, fig_filtered, fig_filtered, fig_filtered, dbc.Alert("Nenhum dado corresponde aos filtros aplicados.", color="warning", className="text-center")
+        # Salvar o DataFrame filtrado como JSON (usando df.to_json) para o dcc.Store
+        return df_filtered.to_json(orient='split')
 
-        analyzer = DataAnalyzer(df)
-        
-        kpi_components = [
-            create_kpi_card("Linhas Filtradas", f"{len(df):,}", "fas fa-stream", "primary"),
-            create_kpi_card("Colunas", f"{len(df.columns)}", "fas fa-columns", "info"),
-        ]
-        if analyzer.numeric_columns:
-             kpi_components.append(create_kpi_card(f"Média de '{analyzer.numeric_columns[0]}'", f"{df[analyzer.numeric_columns[0]].mean():.2f}", "fas fa-calculator", "success"))
-        else: kpi_components.append(create_kpi_card("Média Numérica", "N/A", "fas fa-calculator", "light"))
-        if analyzer.categorical_columns:
-             kpi_components.append(create_kpi_card(f"Únicos em '{analyzer.categorical_columns[0]}'", f"{df[analyzer.categorical_columns[0]].nunique()}", "fas fa-tags", "secondary"))
-        else: kpi_components.append(create_kpi_card("Categorias Únicas", "N/A", "fas fa-tags", "light"))
-
-        fig_dist, fig_cat, fig_ts, fig_corr = go.Figure(), go.Figure(), go.Figure(), go.Figure()
-        # Colocar placeholders mais informativos
-        for fig_empty_pl in [fig_dist, fig_cat, fig_ts, fig_corr]:
-            fig_empty_pl.update_layout(annotations=[{'text':'Aguardando dados/configuração','showarrow':False, 'font_size':10}])
-
-        if analyzer.numeric_columns:
-            fig_dist = px.histogram(df, x=analyzer.numeric_columns[0], title=f"Dist. de {analyzer.numeric_columns[0]}", marginal="box", template="plotly_white")
-            fig_dist.update_layout(bargap=0.1, title_x=0.5, margin=dict(t=50,b=20,l=20,r=20))
-        if analyzer.categorical_columns:
-            top_n = df[analyzer.categorical_columns[0]].value_counts().nlargest(10)
-            fig_cat = px.bar(top_n, x=top_n.index, y=top_n.values, title=f"Top 10 - {analyzer.categorical_columns[0]}", template="plotly_white")
-            fig_cat.update_layout(title_x=0.5, margin=dict(t=50,b=20,l=20,r=20))
-        if analyzer.datetime_columns and analyzer.numeric_columns:
-            try:
-                # Certificar que a coluna de data está como datetime
-                df[analyzer.datetime_columns[0]] = pd.to_datetime(df[analyzer.datetime_columns[0]], errors='coerce')
-                df_ts_resample = df.dropna(subset=[analyzer.datetime_columns[0]]) # Remover NaT antes de resample
-                if not df_ts_resample.empty:
-                    # Tentar inferir frequência para resample ou usar uma genérica como 'D' ou 'M'
-                    inferred_freq = pd.infer_freq(df_ts_resample.set_index(analyzer.datetime_columns[0]).index)
-                    resample_freq = inferred_freq if inferred_freq else 'M' # Default para Mensal se não puder inferir
-                    
-                    df_ts = df_ts_resample.set_index(analyzer.datetime_columns[0]).resample(resample_freq)[analyzer.numeric_columns[0]].sum().reset_index()
-                    fig_ts = px.line(df_ts, x=analyzer.datetime_columns[0], y=analyzer.numeric_columns[0], title=f"Série Temporal de {analyzer.numeric_columns[0]} (Soma por {resample_freq})", markers=True, template="plotly_white")
-                    fig_ts.update_layout(title_x=0.5, margin=dict(t=50,b=20,l=20,r=20))
-            except Exception as e_ts: print(f"Erro TS no dashboard: {e_ts}")
-        if len(analyzer.numeric_columns) >= 2:
-            corr_m = df[analyzer.numeric_columns].corr()
-            fig_corr = px.imshow(corr_m, text_auto=".2f", aspect="auto", title="Correlação", color_continuous_scale='RdBu_r', template="plotly_white", color_continuous_midpoint=0) 
-            fig_corr.update_layout(title_x=0.5, margin=dict(t=50,b=20,l=20,r=20))
-        
-        detail_table_df = df.head(15)
-        detail_table = dash_table.DataTable(
-            data=detail_table_df.to_dict('records'), columns=[{"name":str(i),"id":str(i)} for i in detail_table_df.columns],
-            page_size=10, style_table={'overflowX':'auto','minHeight':'300px'},
-            style_cell={'textAlign':'left','padding':'8px','fontSize':'0.9em'},
-            style_header={'backgroundColor':'#e9ecef','fontWeight':'bold'}, fixed_rows={'headers':True}
-        )
-        return kpi_components, fig_dist, fig_cat, fig_ts, fig_corr, detail_table
+    # Exibir feedback visual nos modais
+    @app.callback(
+        Output("chart-config-modal", "children", allow_duplicate=True),
+        Input("dashboard-modal-feedback", "data"),
+        prevent_initial_call=True
+    )
+    def show_chart_modal_feedback(feedback):
+        if feedback and feedback.get("modal") == "chart":
+            return [
+                dbc.ModalHeader(dbc.ModalTitle("Configurar Gráfico")),
+                dbc.Alert(feedback["msg"], color="danger", className="mb-2"),
+                dash.no_update
+            ]
+        return dash.no_update
+    @app.callback(
+        Output("table-config-modal", "children", allow_duplicate=True),
+        Input("dashboard-modal-feedback", "data"),
+        prevent_initial_call=True
+    )
+    def show_table_modal_feedback(feedback):
+        if feedback and feedback.get("modal") == "table":
+            return [
+                dbc.ModalHeader(dbc.ModalTitle("Configurar Tabela")),
+                dbc.Alert(feedback["msg"], color="danger", className="mb-2"),
+                dash.no_update
+            ]
+        return dash.no_update
+    @app.callback(
+        Output("kpi-config-modal", "children", allow_duplicate=True),
+        Input("dashboard-modal-feedback", "data"),
+        prevent_initial_call=True
+    )
+    def show_kpi_modal_feedback(feedback):
+        if feedback and feedback.get("modal") == "kpi":
+            return [
+                dbc.ModalHeader(dbc.ModalTitle("Configurar KPI")),
+                dbc.Alert(feedback["msg"], color="danger", className="mb-2"),
+                dash.no_update
+            ]
+        return dash.no_update

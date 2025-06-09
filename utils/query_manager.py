@@ -2,77 +2,98 @@
 import os
 import yaml
 from typing import Dict, List, Optional
+from utils.logger import log_info, log_error
 
 class QueryManager:
+    """
+    Gerencia queries SQL customizadas salvas pelo usuário, incluindo salvar, carregar, listar e deletar queries,
+    além de fornecer exemplos de queries padrão para uso rápido.
+    """
     def __init__(self):
+        """
+        Inicializa o QueryManager, garantindo que o diretório e o arquivo de queries existam.
+        """
         self.query_file = "config/saved_queries.yml"
         self.ensure_directories()
-        print("QueryManager initialized.")
+        log_info("QueryManager initialized.")
         
     def ensure_directories(self):
-        """Ensure necessary directories exist for saved queries"""
+        """
+        Garante que o diretório de configuração e o arquivo de queries existam.
+        """
         os.makedirs("config", exist_ok=True)
         if not os.path.exists(self.query_file):
             with open(self.query_file, 'w') as f:
                 yaml.dump({}, f) # Cria arquivo vazio se não existir
-            print(f"Saved queries file created at {self.query_file}")
-
+            log_info(f"Saved queries file created at {self.query_file}")
 
     def save_query(self, name: str, query_string: str, description: str = "") -> bool:
-        """Save a custom SQL query"""
+        """
+        Salva uma query SQL customizada com nome e descrição.
+        """
         try:
             queries = self.load_queries()
             queries[name] = {'query': query_string, 'description': description}
             with open(self.query_file, 'w') as f:
                 yaml.dump(queries, f, default_flow_style=False, sort_keys=False)
-            print(f"Query '{name}' saved.")
+            log_info(f"Query '{name}' saved.")
             return True
         except Exception as e:
-            print(f"Error saving query '{name}': {e}")
+            log_error(f"Error saving query '{name}':", exception=e)
             return False
 
     def load_queries(self) -> Dict[str, Dict]:
-        """Load all saved queries"""
+        """
+        Carrega todas as queries salvas do arquivo YAML.
+        Retorna um dicionário com nome da query como chave.
+        """
         queries = {}
         if os.path.exists(self.query_file):
             try:
                 with open(self.query_file, 'r') as f:
                     loaded_data = yaml.safe_load(f)
-                    if loaded_data and isinstance(loaded_data, dict): # Verificar se o arquivo não está vazio ou malformado
+                    if loaded_data and isinstance(loaded_data, dict):
                         queries = loaded_data
             except Exception as e:
-                print(f"Error loading queries from {self.query_file}: {e}")
-                # Retornar vazio em caso de erro
+                log_error(f"Error loading queries from {self.query_file}:", exception=e)
         return queries
 
     def get_query(self, name: str) -> Optional[Dict]:
-        """Get a specific saved query"""
+        """
+        Retorna uma query salva específica pelo nome.
+        """
         queries = self.load_queries()
         return queries.get(name)
 
     def delete_query(self, name: str) -> bool:
-        """Delete a saved query"""
+        """
+        Remove uma query salva pelo nome.
+        """
         try:
             queries = self.load_queries()
             if name in queries:
                 del queries[name]
                 with open(self.query_file, 'w') as f:
                     yaml.dump(queries, f, default_flow_style=False, sort_keys=False)
-                print(f"Query '{name}' deleted.")
+                log_info(f"Query '{name}' deleted.")
                 return True
-            print(f"Query '{name}' not found for deletion.")
+            log_info(f"Query '{name}' not found for deletion.")
             return False
         except Exception as e:
-            print(f"Error deleting query '{name}': {e}")
+            log_error(f"Error deleting query '{name}':", exception=e)
             return False
 
     def list_query_names(self) -> List[str]:
-        """List all saved query names"""
+        """
+        Lista todos os nomes de queries salvas.
+        """
         queries = self.load_queries()
         return list(queries.keys())
 
     def get_standard_queries(self) -> Dict[str, Dict]:
-        """Returns a dictionary of common standard queries."""
+        """
+        Retorna um dicionário de queries SQL padrão para uso rápido e exemplos.
+        """
         # {table_name} e {column_name} são placeholders a serem substituídos
         return {
             "Select All From Table": {

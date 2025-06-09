@@ -8,6 +8,7 @@ import uuid
 import base64
 from utils.database_manager import DatabaseManager
 from utils.config_manager import ConfigManager
+from utils.logger import log_error
 
 cache = None
 db_manager = None 
@@ -343,7 +344,8 @@ def register_callbacks(app, cache_instance, db_manager_instance, config_manager_
             try:
                 df_db_table = db_manager.execute_query(query)
             except Exception as e:
-                return dbc.Alert(f"Erro ao carregar '{db_table_name}' do banco de dados ativo: {e}", color="danger"), "", {'display':'none'}, True, "", None
+                err_msg = f"Erro ao carregar '{db_table_name}' do banco de dados ativo: {e}"; log_error(err_msg, exception=e); import traceback; traceback.print_exc()
+                return dbc.Alert(err_msg, color="danger"), "", {'display':'none'}, True, "", None
         else:
             # Usar outro banco de dados
             if not second_connection_data or not second_connection_data.get("conn_string"):
@@ -365,7 +367,8 @@ def register_callbacks(app, cache_instance, db_manager_instance, config_manager_
             try:
                 df_db_table = temp_db_manager.execute_query(query)
             except Exception as e:
-                return dbc.Alert(f"Erro ao carregar '{db_table_name}' do segundo banco de dados: {e}", color="danger"), "", {'display':'none'}, True, "", None
+                err_msg = f"Erro ao carregar '{db_table_name}' do segundo banco de dados: {e}"; log_error(err_msg, exception=e); import traceback; traceback.print_exc()
+                return dbc.Alert(err_msg, color="danger"), "", {'display':'none'}, True, "", None
 
         if df_db_table is None or df_db_table.empty:
             return dbc.Alert(f"Tabela '{db_table_name}' vazia ou erro.", color="warning"), "", {'display':'none'}, True, "", None
@@ -441,7 +444,7 @@ def register_callbacks(app, cache_instance, db_manager_instance, config_manager_
 
             return preview_with_download, info, {'display':'block'}, False, dbc.Alert("Preview gerado. Você pode baixar os dados ou salvá-los como DataFrame principal.", color="success", duration=5000), temp_join_key
         except Exception as e:
-            err_msg = f"Erro ao executar Join: {e}"; print(err_msg); import traceback; traceback.print_exc()
+            err_msg = f"Erro ao executar Join: {e}"; log_error(err_msg, exception=e); import traceback; traceback.print_exc()
             return dbc.Alert(err_msg, color="danger"), "", {'display':'none'}, True, "", None
 
     @app.callback(

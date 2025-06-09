@@ -1,0 +1,4 @@
+2025-06-08 22:10:44 | BI_APP | ERROR | logger:error:81 | DATABASE_PAGE - ERRO IMEDIATO: Chave e4f55606-dbd0-4898-b7c7-620ce1da3ea6 existe no cache (False), mas get() retornou None!
+2025-06-08 22:11:01 | BI_APP | ERROR | logger:error:81 | DATABASE_PAGE - ERRO IMEDIATO: Chave 1f15c794-4701-45d5-88af-b55deb07391d existe no cache (False), mas get() retornou None!
+2025-06-08 22:18:34 | BI_APP | ERROR | logger:error:81 | DATABASE_PAGE - ERRO IMEDIATO: Chave 03901736-24a5-4547-94e2-15268687e99e existe no cache (False), mas get() retornou None!
+2025-06-08 22:54:31 | BI_APP | ERROR | logger:error:81 | Erro ao criar gráfico

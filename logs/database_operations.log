@@ -1,0 +1,30 @@
+2025-06-08 13:41:04,784 - database_manager - INFO - Logging system initialized for DatabaseManager
+2025-06-08 13:47:00,171 - database_manager - INFO - Logging system initialized for DatabaseManager
+2025-06-08 14:23:53,210 - database_manager - INFO - Logging system initialized for DatabaseManager
+2025-06-08 14:35:00,637 - database_manager - INFO - Logging system initialized for DatabaseManager
+2025-06-08 14:39:22,705 - database_manager - INFO - Logging system initialized for DatabaseManager
+2025-06-08 14:44:02,814 - database_manager - INFO - Logging system initialized for DatabaseManager
+2025-06-08 14:45:19,258 - database_manager - INFO - Logging system initialized for DatabaseManager
+2025-06-08 14:45:43,886 - database_manager - INFO - Logging system initialized for DatabaseManager
+2025-06-08 14:47:58,849 - database_manager - INFO - Logging system initialized for DatabaseManager
+2025-06-08 14:51:21,844 - database_manager - INFO - Logging system initialized for DatabaseManager
+2025-06-08 14:51:25,289 - database_manager - INFO - DatabaseManager initialized.
+2025-06-08 14:53:04,983 - database_manager - INFO - Creating connection string for postgresql://Verton:****@localhost:5432/postgres
+2025-06-08 14:53:04,984 - database_manager - INFO - Connecting to database: postgresql+psycopg2:****@localhost:5432/postgres?client_encoding=utf8
+2025-06-08 14:53:05,167 - database_manager - INFO - Successfully connected to database via: localhost:5432/postgres?client_encoding=utf8 (took 0.18s)
+2025-06-08 14:53:05,168 - database_manager - INFO - Getting tables from postgresql+psycopg2 database
+2025-06-08 14:53:05,180 - database_manager - INFO - Retrieved 34 tables (took 0.01s)
+2025-06-08 14:53:17,218 - database_manager - INFO - Getting sample (100 rows) from table: sc_view_contratos
+2025-06-08 14:53:17,219 - database_manager - INFO - Sampling query: SELECT * FROM sc_view_contratos LIMIT 100
+2025-06-08 14:53:17,240 - database_manager - INFO - Table sample loaded for sc_view_contratos: 100 rows (took 0.02s)
+2025-06-08 14:53:53,377 - database_manager - INFO - Executing query: SELECT * FROM sc_view_contratos LIMIT 1000;
+2025-06-08 14:53:53,386 - database_manager - INFO - Query executed successfully: 1000 rows returned (took 0.01s)
+2025-06-08 15:42:27,350 - database_manager - INFO - Creating connection string for postgresql://Verton:****@localhost:5432/postgres
+2025-06-08 15:42:27,354 - database_manager - INFO - Getting tables from postgresql+psycopg2 database
+2025-06-08 15:42:27,360 - database_manager - INFO - Retrieved 34 tables (took 0.01s)
+2025-06-08 15:49:50,208 - database_manager - INFO - Creating connection string for postgresql://Verton:****@localhost:5432/postgres
+2025-06-08 15:49:50,210 - database_manager - INFO - Getting tables from postgresql+psycopg2 database
+2025-06-08 15:49:50,217 - database_manager - INFO - Retrieved 34 tables (took 0.01s)
+2025-06-08 15:49:59,406 - database_manager - INFO - Creating connection string for postgresql://Verton:****@localhost:5432/postgres
+2025-06-08 15:49:59,408 - database_manager - INFO - Getting tables from postgresql+psycopg2 database
+2025-06-08 15:49:59,413 - database_manager - INFO - Retrieved 34 tables (took 0.00s)

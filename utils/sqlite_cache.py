@@ -4,6 +4,7 @@ import pickle
 import sqlite3
 import time
 from flask_caching.backends.base import BaseCache
+from utils.logger import log_info, log_error
 
 class SQLiteCache(BaseCache):
     """
@@ -15,6 +16,10 @@ class SQLiteCache(BaseCache):
     """
     
     def __init__(self, config):
+        """
+        Inicializa o SQLiteCache com as configurações fornecidas.
+        Cria o banco de dados e a tabela de cache se necessário.
+        """
         super(SQLiteCache, self).__init__(config)
         self.config = config
         self.default_timeout = config.get('CACHE_DEFAULT_TIMEOUT', 300)
@@ -29,7 +34,10 @@ class SQLiteCache(BaseCache):
         self._initialize_db()
     
     def _initialize_db(self):
-        """Inicializa o banco de dados SQLite com a tabela necessária."""
+        """
+        Inicializa o banco de dados SQLite com a tabela necessária para o cache.
+        Cria índices para performance.
+        """
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         
@@ -48,14 +56,19 @@ class SQLiteCache(BaseCache):
         conn.commit()
         conn.close()
         
-        print(f"SQLiteCache inicializado em: {self.db_path}")
+        log_info(f"SQLiteCache inicializado em: {self.db_path}")
     
     def _get_conn(self):
-        """Retorna uma conexão com o banco de dados SQLite."""
+        """
+        Retorna uma conexão com o banco de dados SQLite.
+        """
         return sqlite3.connect(self.db_path)
     
     def get(self, key):
-        """Recupera um item do cache."""
+        """
+        Recupera um item do cache pelo key.
+        Retorna o valor desserializado ou None se não existir ou estiver expirado.
+        """
         key = str(key)
         conn = self._get_conn()
         cursor = conn.cursor()
@@ -66,7 +79,7 @@ class SQLiteCache(BaseCache):
                 (key,)
             )
             result = cursor.fetchone()
-            
+            log_info(f"[SQLiteCache:get] db_path={self.db_path} | key={key} | select_result={'None' if result is None else 'OK'} | file_size={os.path.getsize(self.db_path) if os.path.exists(self.db_path) else 'N/A'} bytes")
             if result is None:
                 return None
             
@@ -80,14 +93,17 @@ class SQLiteCache(BaseCache):
             return pickle.loads(value)
         
         except Exception as e:
-            print(f"Erro ao recuperar do cache SQLite: {e}")
+            log_error(f"Erro ao recuperar do cache SQLite:", exception=e)
             return None
         
         finally:
             conn.close()
     
     def set(self, key, value, timeout=None):
-        """Armazena um item no cache."""
+        """
+        Armazena um item no cache com a chave e timeout especificados.
+        Serializa o valor com pickle.
+        """
         key = str(key)
         timeout = self.default_timeout if timeout is None else timeout
         
@@ -98,7 +114,7 @@ class SQLiteCache(BaseCache):
         try:
             value_pickle = pickle.dumps(value, protocol=pickle.HIGHEST_PROTOCOL)
         except Exception as e:
-            print(f"Erro ao serializar valor para cache SQLite: {e}")
+            log_error(f"Erro ao serializar valor para cache SQLite:", exception=e)
             return False
         
         conn = self._get_conn()
@@ -110,10 +126,12 @@ class SQLiteCache(BaseCache):
                 (key, value_pickle, expiry)
             )
             conn.commit()
+            file_size = os.path.getsize(self.db_path) if os.path.exists(self.db_path) else 'N/A'
+            log_info(f"[SQLiteCache:set] db_path={self.db_path} | key={key} | file_size={file_size} bytes | value_type={type(value)}")
             return True
         
         except Exception as e:
-            print(f"Erro ao armazenar no cache SQLite: {e}")
+            log_error(f"Erro ao armazenar no cache SQLite:", exception=e)
             conn.rollback()
             return False
         
@@ -121,7 +139,9 @@ class SQLiteCache(BaseCache):
             conn.close()
     
     def delete(self, key):
-        """Remove um item do cache."""
+        """
+        Remove um item do cache pelo key.
+        """
         key = str(key)
         conn = self._get_conn()
         cursor = conn.cursor()
@@ -132,7 +152,7 @@ class SQLiteCache(BaseCache):
             return True
         
         except Exception as e:
-            print(f"Erro ao excluir do cache SQLite: {e}")
+            log_error(f"Erro ao excluir do cache SQLite:", exception=e)
             conn.rollback()
             return False
         
@@ -140,11 +160,16 @@ class SQLiteCache(BaseCache):
             conn.close()
     
     def has(self, key):
-        """Verifica se um item existe no cache e não expirou."""
+        """
+        Verifica se um item existe no cache e não está expirado.
+        Retorna True se existir, False caso contrário.
+        """
         return self.get(key) is not None
     
     def clear(self):
-        """Limpa todos os itens do cache."""
+        """
+        Limpa todos os itens do cache.
+        """
         conn = self._get_conn()
         cursor = conn.cursor()
         
@@ -154,7 +179,7 @@ class SQLiteCache(BaseCache):
             return True
         
         except Exception as e:
-            print(f"Erro ao limpar cache SQLite: {e}")
+            log_error(f"Erro ao limpar cache SQLite:", exception=e)
             conn.rollback()
             return False
         
@@ -162,7 +187,9 @@ class SQLiteCache(BaseCache):
             conn.close()
     
     def cleanup(self):
-        """Remove todos os itens expirados do cache."""
+        """
+        Remove todos os itens expirados do cache.
+        """
         conn = self._get_conn()
         cursor = conn.cursor()
         
@@ -175,7 +202,7 @@ class SQLiteCache(BaseCache):
             return True
         
         except Exception as e:
-            print(f"Erro na limpeza do cache SQLite: {e}")
+            log_error(f"Erro na limpeza do cache SQLite:", exception=e)
             conn.rollback()
             return False
         

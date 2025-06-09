@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from typing import Optional, Dict, List, Tuple 
 import plotly.graph_objects as go # <--- IMPORTADO AQUI
+from utils.logger import log_info, log_warning, log_error
 
 # Modelos Locais
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
@@ -13,6 +14,15 @@ from statsmodels.tsa.holtwinters import ExponentialSmoothing
 # import os
 
 def run_local_exponential_smoothing(series: pd.Series, horizon: int) -> Tuple[pd.DataFrame, str]:
+    """
+    Executa previsão usando Suavização Exponencial (Holt-Winters) localmente.
+    Tenta inferir frequência, ajustar sazonalidade e retorna DataFrame com previsões e intervalos de confiança.
+    Parâmetros:
+        series (pd.Series): Série temporal indexada por datas.
+        horizon (int): Número de períodos a prever.
+    Retorna:
+        Tuple[pd.DataFrame, str]: DataFrame com previsões e mensagem de feedback.
+    """
     if not isinstance(series.index, pd.DatetimeIndex):
         series.index = pd.to_datetime(series.index, errors='coerce')
         if series.index.isnull().any():
@@ -22,7 +32,7 @@ def run_local_exponential_smoothing(series: pd.Series, horizon: int) -> Tuple[pd
     if inferred_freq:
         series = series.asfreq(inferred_freq)
     else: 
-        print(f"Aviso: Não foi possível inferir frequência para a série temporal '{series.name}'. Resultados podem variar.")
+        log_warning(f"Aviso: Não foi possível inferir frequência para a série temporal '{series.name}'. Resultados podem variar.")
 
     series = series.dropna()
     if len(series) < 3: 
@@ -53,11 +63,11 @@ def run_local_exponential_smoothing(series: pd.Series, horizon: int) -> Tuple[pd
                     forecast_df['yhat_lower'] = summary_frame['pi_lower']
                     forecast_df['yhat_upper'] = summary_frame['pi_upper']
         except Exception as e_ci:
-            print(f"Não foi possível gerar intervalo de confiança para ExpSmoothing: {e_ci}")
+            log_warning(f"Não foi possível gerar intervalo de confiança para ExpSmoothing:", exception=e_ci)
 
         return forecast_df, f"Previsão com Suavização Exponencial (Trend: {trend_param}, Sazonal: {seasonal_param or 'Nenhum'})."
     except Exception as e:
-        print(f"Erro no Exponential Smoothing: {e}")
+        log_error(f"Erro no Exponential Smoothing:", exception=e)
         try: 
             model_simple = ExponentialSmoothing(series, trend="add", initialization_method="estimated").fit()
             forecast_values = model_simple.forecast(horizon)
@@ -67,6 +77,15 @@ def run_local_exponential_smoothing(series: pd.Series, horizon: int) -> Tuple[pd
             return pd.DataFrame(), f"Falha na Suavização Exponencial: {e_simple}"
 
 def run_local_auto_arima(series: pd.Series, horizon: int) -> Tuple[pd.DataFrame, str]:
+    """
+    Executa previsão usando AutoARIMA localmente (pmdarima).
+    Tenta inferir frequência, ajustar sazonalidade e retorna DataFrame com previsões e intervalos de confiança.
+    Parâmetros:
+        series (pd.Series): Série temporal indexada por datas.
+        horizon (int): Número de períodos a prever.
+    Retorna:
+        Tuple[pd.DataFrame, str]: DataFrame com previsões e mensagem de feedback.
+    """
     try: import pmdarima as pm
     except ImportError: return pd.DataFrame(), "Biblioteca 'pmdarima' não instalada (pip install pmdarima)."
 
@@ -76,7 +95,7 @@ def run_local_auto_arima(series: pd.Series, horizon: int) -> Tuple[pd.DataFrame,
     
     inferred_freq = pd.infer_freq(series.index)
     if inferred_freq: series = series.asfreq(inferred_freq)
-    else: print(f"Aviso: Não foi possível inferir frequência para AutoARIMA da série '{series.name}'.")
+    else: log_warning(f"Aviso: Não foi possível inferir frequência para AutoARIMA da série '{series.name}'.")
     
     series = series.dropna()
     if len(series) < 10: 
@@ -104,7 +123,7 @@ def run_local_auto_arima(series: pd.Series, horizon: int) -> Tuple[pd.DataFrame,
                  future_index = future_index[1:] if len(future_index) > 1 else future_index 
         
         if future_index is None or len(future_index) != horizon: 
-            print("Fallback para índice de previsão numérico ou baseado em timedelta.")
+            log_info("Fallback para índice de previsão numérico ou baseado em timedelta.")
             try:
                 time_diff = series.index[-1] - series.index[-2] if len(series.index) >=2 else pd.Timedelta(days=1)
                 future_index = pd.date_range(start=last_date + time_diff, periods=horizon, freq=time_diff)
@@ -117,6 +136,19 @@ def run_local_auto_arima(series: pd.Series, horizon: int) -> Tuple[pd.DataFrame,
         return pd.DataFrame(), f"Erro no AutoARIMA: {e}"
 
 def run_forecast(df_original: pd.DataFrame, date_col: str, value_col: str, model_choice: str, horizon: int, api_key: Optional[str] = None) -> Tuple[pd.DataFrame, go.Figure, str]:
+    """
+    Função principal para rodar previsão de séries temporais a partir de um DataFrame.
+    Faz limpeza, validação, escolhe modelo e retorna DataFrame de previsão, figura Plotly e feedback.
+    Parâmetros:
+        df_original (pd.DataFrame): DataFrame original com dados.
+        date_col (str): Nome da coluna de datas.
+        value_col (str): Nome da coluna de valores.
+        model_choice (str): Modelo a ser utilizado ('auto_arima_local', 'exponential_smoothing_local').
+        horizon (int): Número de períodos a prever.
+        api_key (str, opcional): Chave de API para modelos externos.
+    Retorna:
+        Tuple[pd.DataFrame, go.Figure, str]: Previsão, gráfico e mensagem de feedback.
+    """
     df = df_original.copy(); fig = go.Figure(); feedback = ""; forecast_df_final = pd.DataFrame()
     series_for_plot = pd.Series(dtype='float64') 
 
@@ -137,7 +169,7 @@ def run_forecast(df_original: pd.DataFrame, date_col: str, value_col: str, model
         if inferred_freq:
             series = series.asfreq(inferred_freq)
         else: 
-            print(f"Aviso: Não foi possível inferir frequência para '{series.name}'. Alguns modelos podem ter problemas.")
+            log_warning(f"Aviso: Não foi possível inferir frequência para '{series.name}'. Alguns modelos podem ter problemas.")
 
         if model_choice == "auto_arima_local": forecast_df_final, feedback = run_local_auto_arima(series, horizon)
         elif model_choice == "exponential_smoothing_local": forecast_df_final, feedback = run_local_exponential_smoothing(series, horizon)
@@ -147,7 +179,8 @@ def run_forecast(df_original: pd.DataFrame, date_col: str, value_col: str, model
             feedback = f"Modelo {model_choice} não produziu uma previsão. {feedback}" if feedback else f"Modelo {model_choice} não produziu uma previsão."
     
     except Exception as e:
-        print(f"Erro em run_forecast: {e}"); import traceback; traceback.print_exc()
+        log_error(f"Erro em run_forecast:", exception=e)
+        import traceback; traceback.print_exc()
         feedback = f"Erro ao gerar previsão: {str(e)}"
     
     if not series_for_plot.empty:

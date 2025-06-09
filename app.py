@@ -15,6 +15,7 @@ from pages import database, upload, transform, visualizations, analytics, dashbo
 from utils.config_manager import ConfigManager
 from utils.database_manager import DatabaseManager
 from utils.query_manager import QueryManager
+from utils.logger import log_info, log_error, log_warning, log_debug
 
 # Initialize the Dash app
 app = dash.Dash(
@@ -32,20 +33,27 @@ from utils.sqlite_cache import SQLiteCache
 project_root = os.path.dirname(os.path.abspath(__file__))
 sqlite_cache_path = os.path.join(project_root, 'cache.sqlite')
 
-# Inicializar o cache
-cache = Cache()
-
-# Configuração do cache usando SimpleCache
+# Configuração do cache usando SQLiteCache como padrão
 CACHE_CONFIG = {
-    'CACHE_TYPE': 'SimpleCache',  # Usar o backend SimpleCache
-    'CACHE_DEFAULT_TIMEOUT': 3600,  # Tempo padrão de expiração em segundos (1 hora)
-    'CACHE_THRESHOLD': 1000  # Número máximo de itens no cache
+    'CACHE_TYPE': 'null',  # Usar tipo nulo, pois o backend real é injetado manualmente
+    'CACHE_DEFAULT_TIMEOUT': 3600,
+    'CACHE_SQLITE_PATH': sqlite_cache_path
 }
 
-# Inicializar o cache
+# Inicializar o cache com SQLiteCache
 cache = Cache()
+cache._cache = SQLiteCache({
+    'CACHE_DEFAULT_TIMEOUT': 3600,
+    'CACHE_SQLITE_PATH': sqlite_cache_path
+})
+# Redirecionar métodos principais para o backend customizado
+cache.set = cache._cache.set
+cache.get = cache._cache.get
+cache.has = cache._cache.has
+cache.delete = cache._cache.delete
+cache.clear = cache._cache.clear
 cache.init_app(app.server, config=CACHE_CONFIG)
-print("Cache SimpleCache inicializado.")
+log_info("Cache SQLiteCache inicializado", extra={"cache_type": "SQLiteCache", "sqlite_path": sqlite_cache_path})
 
 
 config_manager = ConfigManager()
@@ -105,13 +113,13 @@ app.layout = dbc.Container([
     Input("server-side-data-key", "data")
 )
 def display_current_data_key_for_debug(data_key):
-    # print(f"APP.PY - DEBUG: server-side-data-key foi ATUALIZADA para: {data_key}") # Log já estava aqui, pode ser útil
+    log_debug("Server-side data key atualizada", extra={"data_key": data_key})
     return f"Current data key in dcc.Store: {data_key}"
 
 
 @app.callback(Output("page-content", "children"), Input("app-url", "pathname"))
 def display_page(pathname):
-    # print(f"APP.PY - display_page: Navegando para {pathname}") # DEBUG
+    log_info("Navegação de página", extra={"page_path": pathname})
     if pathname == "/database": return database.layout
     elif pathname == "/upload": return upload.layout
     elif pathname == "/transform": return transform.layout 
@@ -153,11 +161,9 @@ def display_page(pathname):
     State("data-source-type", "data")
 )
 def update_data_loaded_status(data_key, conn_name, table_name, source_type):
-    # print(f"APP.PY - update_data_loaded_status: TRIGGERED. data_key = {data_key}") 
+    log_debug("Atualizando status de dados carregados", extra={"data_key": data_key, "conn_name": conn_name, "table_name": table_name, "source_type": source_type})
     if data_key:
-        # print(f"APP.PY - update_data_loaded_status: Verificando cache.has('{data_key}') = {cache.has(data_key)}")
-        df_from_cache = cache.get(data_key) 
-        # print(f"APP.PY - update_data_loaded_status: df_from_cache é None? {df_from_cache is None}. Tipo: {type(df_from_cache)}")
+        df_from_cache = cache.get(data_key)
         
         if df_from_cache is not None and isinstance(df_from_cache, pd.DataFrame): # pd está definido agora
             try:
@@ -167,16 +173,16 @@ def update_data_loaded_status(data_key, conn_name, table_name, source_type):
                 if source_type == 'database' and conn_name and table_name: status_text += f": {conn_name} ({table_name})"
                 elif source_type == 'upload' and table_name: status_text += f": {table_name}"
                 elif table_name: status_text += f" (Origem: {table_name})"
-                # print(f"APP.PY - update_data_loaded_status: SUCESSO. Status: {status_text}")
+                log_info("Status de dados atualizado com sucesso", extra={"status_text": status_text, "num_rows": num_rows, "num_cols": num_cols})
                 return status_text, "success", "white" 
             except Exception as e:
-                print(f"APP.PY - Error updating status badge (processando df do cache): {e}")
+                log_error("Erro ao atualizar badge de status", extra={"error": str(e), "data_key": data_key}, exc_info=True)
                 return "Dados Carregados (erro ao processar)", "warning", "dark"
         else: 
-            # print(f"APP.PY - Status badge: data_key '{data_key}' ENCONTRADA NO DCC.STORE, mas os dados NÃO ESTÃO NO CACHE DO SERVIDOR ou são inválidos.")
+            log_warning("Dados não encontrados no cache", extra={"data_key": data_key})
             return "Dados não disponíveis (cache)", "warning", "dark" 
             
-    # print(f"APP.PY - update_data_loaded_status: NENHUM data_key no dcc.Store.")
+    log_debug("Nenhuma chave de dados no store")
     return "Nenhum Dado Carregado", "secondary", "white"
 
 # Registrar Callbacks 
@@ -194,7 +200,8 @@ ai_chat.register_callbacks(app, cache)
 if __name__ == "__main__":
     use_reloader_flag = True # Padrão para desenvolvimento
     if CACHE_CONFIG['CACHE_TYPE'] == 'simple':
-        print("AVISO: Usando SimpleCache. Para consistência do cache durante o teste, o reloader será desabilitado.")
+        log_warning("Usando SimpleCache - reloader desabilitado para consistência do cache")
         use_reloader_flag = False
     
+    log_info("Iniciando aplicação Dash", extra={"host": "0.0.0.0", "port": 8050, "debug": True, "use_reloader": use_reloader_flag})
     app.run(debug=True, host="0.0.0.0", port=8050, use_reloader=use_reloader_flag)

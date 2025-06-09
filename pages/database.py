@@ -5,7 +5,8 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 import json
 from datetime import datetime 
-import uuid 
+import uuid
+from utils.logger import log_info, log_error, log_warning, log_debug
 
 cache = None # Será definido em register_callbacks
 db_manager = None
@@ -123,7 +124,20 @@ layout = dbc.Container([
                                             dcc.Dropdown(id="saved-query-dropdown", placeholder="Carregar query salva...", clearable=True, className="mb-2")
                                         ]),
                                     ]),
-                                    dbc.Textarea(id="sql-query-input", placeholder="SELECT * FROM sua_tabela WHERE condicao = 'valor';\n-- Lembre-se de usar LIMIT para queries em tabelas grandes!", rows=8, className="mb-2 form-control-sm", style={'fontFamily': 'monospace', 'fontSize':'0.9em'}),
+                                    html.Div([
+                                        dbc.Row([
+                                            dbc.Col([
+                                                dbc.Button([html.I(className="fas fa-expand me-1"), "Expandir Editor"], id="expand-sql-editor-btn", color="outline-secondary", size="sm", className="mb-2")
+                                            ], width="auto"),
+                                            dbc.Col([
+                                                dbc.Button([html.I(className="fas fa-magic me-1"), "Formatar SQL"], id="format-sql-btn", color="outline-info", size="sm", className="mb-2")
+                                            ], width="auto"),
+                                            dbc.Col([
+                                                dbc.Button([html.I(className="fas fa-history me-1"), "Histórico"], id="sql-history-btn", color="outline-warning", size="sm", className="mb-2")
+                                            ], width="auto")
+                                        ], className="mb-2")
+                                    ]),
+                                    dbc.Textarea(id="sql-query-input", placeholder="SELECT * FROM sua_tabela WHERE condicao = 'valor';\n-- Lembre-se de usar LIMIT para queries em tabelas grandes!\n-- Use Ctrl+Enter para executar rapidamente", rows=8, className="mb-2 form-control-sm", style={'fontFamily': 'Consolas, Monaco, monospace', 'fontSize':'0.9em', 'lineHeight': '1.4'}),
                                     dbc.Row([
                                         dbc.Col(md=7, children=[dbc.Input(id="save-query-name", placeholder="Nome para salvar a query (ex: Vendas Trimestrais)")]),
                                         dbc.Col(md=5, children=[dbc.Button([html.I(className="fas fa-save me-1"), "Salvar Query"], id="save-query-btn", color="info", className="w-100", n_clicks=0)]),
@@ -201,7 +215,7 @@ def render_saved_queries(query_mngr): # Renomeado para clareza
     return dbc.ListGroup(items, flush=True, className="mt-2")
 
 def register_callbacks(app, db_manager_instance, config_manager_instance, query_manager_instance, cache_instance): # Nomes completos para clareza
-    global cache, db_manager, config_manager, query_manager 
+    global cache, db_manager, config_manager, query_manager
     cache = cache_instance
     db_manager = db_manager_instance
     config_manager = config_manager_instance
@@ -231,9 +245,25 @@ def register_callbacks(app, db_manager_instance, config_manager_instance, query_
     )
     def test_connection_callback(n_clicks, db_type, host, port, db, user, pwd, driver, trust_cert):
         if not n_clicks or n_clicks == 0: return dash.no_update
+        
+        log_info("Testando conexão de banco de dados", extra={
+            "db_type": db_type, 
+            "host": host, 
+            "port": port, 
+            "database": db,
+            "username": user
+        })
+        
         data = {'type':db_type,'host':host,'port':port,'database':db,'username':user,'password':pwd}
         if db_type == 'sqlserver': data.update({'driver':driver,'trust_server_certificate':trust_cert})
+        
         ok, msg = config_manager.test_connection_config(data)
+        
+        if ok:
+            log_info("Teste de conexão bem-sucedido", extra={"connection_name": f"{db_type}://{host}:{port}/{db}"})
+        else:
+            log_warning("Teste de conexão falhou", extra={"error_message": msg, "db_type": db_type})
+        
         color, icon = ("success","check-circle") if ok else ("danger","times-circle")
         return dbc.Alert([html.I(className=f"fas fa-{icon} me-1"),msg],color=color,dismissable=True, duration=4000)
 
@@ -259,11 +289,28 @@ def register_callbacks(app, db_manager_instance, config_manager_instance, query_
         if not n_clicks or n_clicks == 0 or not name: 
             num_outputs_before_toast = 14 
             return ([dash.no_update] * num_outputs_before_toast) + [False, "", "", ""]
+        
+        log_info("Salvando configuração de conexão", extra={
+            "connection_name": name,
+            "db_type": db_type,
+            "host": host,
+            "database": db,
+            "is_edit": bool(og_name and og_name != name)
+        })
             
         data = {'type':db_type,'host':host,'port':port,'database':db,'username':user,'password':pwd,'schema':schema or None}
         if db_type == 'sqlserver': data.update({'driver':driver,'trust_server_certificate':trust_cert})
-        if og_name and og_name != name: config_manager.delete_connection(og_name)
+        if og_name and og_name != name: 
+            config_manager.delete_connection(og_name)
+            log_info("Conexão anterior removida durante edição", extra={"old_name": og_name, "new_name": name})
+        
         ok = config_manager.save_connection(name, data)
+        
+        if ok:
+            log_info("Conexão salva com sucesso", extra={"connection_name": name})
+        else:
+            log_error("Falha ao salvar conexão", extra={"connection_name": name})
+        
         msg,color,icon = (f"Conexão '{name}' salva!", "success", "check-circle") if ok else (f"Falha ao salvar '{name}'.", "danger", "times-circle")
         form_reset_values = ("", "postgresql","",None,"","","","","ODBC Driver 17 for SQL Server",False,"")
         connections_list = config_manager.list_connections()
@@ -307,12 +354,20 @@ def register_callbacks(app, db_manager_instance, config_manager_instance, query_
                 # Checar se o n_clicks correspondente é > 0 (ou não None se começando de 0)
                 idx = next((i for i, item_id_dict in enumerate(ctx.inputs_list[0]) if item_id_dict['id'] == triggered_id_dict), -1)
                 if idx != -1 and del_clicks_list and del_clicks_list[idx] is not None and del_clicks_list[idx] > 0 : # Verifica se o clique específico é válido
+                    log_info("Deletando conexão", extra={"connection_name": conn_name})
                     success = config_manager.delete_connection(conn_name)
+                    
+                    if success:
+                        log_info("Conexão deletada com sucesso", extra={"connection_name": conn_name})
+                    else:
+                        log_error("Falha ao deletar conexão", extra={"connection_name": conn_name})
+                    
                     toast_msg,toast_hdr,toast_icon = (f"'{conn_name}' deletada.","Deletar","success") if success else (f"Falha deletar '{conn_name}'.","Deletar","danger")
                     toast_open=True; action_taken=True
             elif action_type == 'edit-connection-btn':
                 idx = next((i for i, item_id_dict in enumerate(ctx.inputs_list[1]) if item_id_dict['id'] == triggered_id_dict), -1)
                 if idx != -1 and edit_clicks_list and edit_clicks_list[idx] is not None and edit_clicks_list[idx] > 0:
+                    log_info("Carregando conexão para edição", extra={"connection_name": conn_name})
                     data = config_manager.get_connection(conn_name)
                     if data:
                         form_vals_list = [conn_name,data.get('type','postgresql'),data.get('host',''),data.get('port',''),data.get('database',''),data.get('username',''),data.get('password',''),data.get('schema',''),data.get('driver','ODBC Driver 17 for SQL Server'),data.get('trust_server_certificate',False),conn_name]
@@ -320,6 +375,7 @@ def register_callbacks(app, db_manager_instance, config_manager_instance, query_
             elif action_type == 'select-as-active-conn-btn':
                 idx = next((i for i, item_id_dict in enumerate(ctx.inputs_list[2]) if item_id_dict['id'] == triggered_id_dict), -1)
                 if idx != -1 and select_clicks_list and select_clicks_list[idx] is not None and select_clicks_list[idx] > 0 :
+                    log_info("Selecionando conexão como ativa", extra={"connection_name": conn_name})
                     selected_active_conn_val = conn_name
                     toast_msg,toast_hdr,toast_icon = f"'{conn_name}' selecionada.","Ativa","info"; toast_open=True; action_taken=True
         if not action_taken: raise dash.exceptions.PreventUpdate
@@ -374,11 +430,11 @@ def register_callbacks(app, db_manager_instance, config_manager_instance, query_
             else: # db_manager.connect() retornou False
                 return error_return_tuple
         except ValueError as ve: # Erro ao criar connection string
-            print(f"ValueError em connect_to_db_and_list_tables (create_connection_string): {ve}")
+            log_error(f"ValueError em connect_to_db_and_list_tables (create_connection_string):", exception=ve)
             msg = f"Erro na configuração da conexão: {str(ve)}"
             return dbc.Alert(msg, color="danger", duration=4000), [], None, True, True, True, True, None, None, None, None, None, True, msg, "Erro de Configuração", "danger"
         except Exception as e: # Outras exceções de db_manager.connect() ou db_manager.get_tables()
-            print(f"Erro inesperado em connect_to_db_and_list_tables: {e}")
+            log_error(f"Erro inesperado em connect_to_db_and_list_tables:", exception=e)
             import traceback; traceback.print_exc()
             msg = f"Erro inesperado: {str(e)}"
             return dbc.Alert(msg, color="danger", duration=4000), [], None, True, True, True, True, None, None, None, None, None, True, msg, "Erro Crítico", "danger"
@@ -411,12 +467,12 @@ def register_callbacks(app, db_manager_instance, config_manager_instance, query_
         if not df.empty:
             data_key_to_store = str(uuid.uuid4())
             cache.set(data_key_to_store, df, timeout=3600)
-            print(f"DATABASE_PAGE - Dados salvos no cache com chave: {data_key_to_store}. Cache.has('{data_key_to_store}') = {cache.has(data_key_to_store)}")
+            log_info(f"DATABASE_PAGE - Dados salvos no cache com chave: {data_key_to_store}. Cache.has('{data_key_to_store}') = {cache.has(data_key_to_store)}")
             retrieved_df_check = cache.get(data_key_to_store)
             if retrieved_df_check is not None:
-                print(f"DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: {len(retrieved_df_check)}")
+                log_info(f"DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: {len(retrieved_df_check)}")
             else:
-                print(f"DATABASE_PAGE - ERRO IMEDIATO: Chave {data_key_to_store} existe no cache ({cache.has(data_key_to_store)}), mas get() retornou None!")
+                log_error(f"DATABASE_PAGE - ERRO IMEDIATO: Chave {data_key_to_store} existe no cache ({cache.has(data_key_to_store)}), mas get() retornou None!")
             dt=dash_table.DataTable(data=df.to_dict('records'),columns=[{"name":str(i),"id":str(i)} for i in df.columns],page_size=10,style_table={'overflowX':'auto','maxHeight':'350px','overflowY':'auto','minWidth':'100%'},style_cell={'textAlign':'left','padding':'5px','minWidth':'100px','maxWidth':'200px','whiteSpace':'normal','fontSize':'0.85rem'},style_header={'backgroundColor':'#e9ecef','fontWeight':'bold','borderBottom':'1px solid #dee2e6'},fixed_rows={'headers':True})
             msg=f"{len(df)} linhas de '{table_name}'."; 
             return dt,html.H5(f"Amostra de '{table_name}' ({len(df)} l.):"),{'display':'inline-block'},data_key_to_store,table_name,True,msg,"Amostra","success"
@@ -512,12 +568,12 @@ def register_callbacks(app, db_manager_instance, config_manager_instance, query_
         if df is not None and not df.empty:
             data_key_to_store = str(uuid.uuid4())
             cache.set(data_key_to_store, df, timeout=3600)
-            print(f"DATABASE_PAGE - Dados salvos no cache com chave: {data_key_to_store}. Cache.has('{data_key_to_store}') = {cache.has(data_key_to_store)}")
+            log_info(f"DATABASE_PAGE - Dados salvos no cache com chave: {data_key_to_store}. Cache.has('{data_key_to_store}') = {cache.has(data_key_to_store)}")
             retrieved_df_check = cache.get(data_key_to_store)
             if retrieved_df_check is not None:
-                print(f"DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: {len(retrieved_df_check)}")
+                log_info(f"DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: {len(retrieved_df_check)}")
             else:
-                print(f"DATABASE_PAGE - ERRO IMEDIATO: Chave {data_key_to_store} existe no cache ({cache.has(data_key_to_store)}), mas get() retornou None!")
+                log_error(f"DATABASE_PAGE - ERRO IMEDIATO: Chave {data_key_to_store} existe no cache ({cache.has(data_key_to_store)}), mas get() retornou None!")
             dt=dash_table.DataTable(data=df.to_dict('records'),columns=[{"name":str(i),"id":str(i)} for i in df.columns],page_size=10,style_table={'overflowX':'auto','maxHeight':'350px','overflowY':'auto','minWidth':'100%'},style_cell={'textAlign':'left','padding':'5px','minWidth':'100px','maxWidth':'200px','whiteSpace':'normal','fontSize':'0.85rem'},style_header={'backgroundColor':'#e9ecef','fontWeight':'bold','borderBottom':'1px solid #dee2e6'},fixed_rows={'headers':True},export_format="csv")
             msg=f"Query executada, {len(df)} linhas."
             return dt,html.H5(f"Resultado ({len(df)} l.):"),{'display':'inline-block'},data_key_to_store,"Custom Query",True,msg,"Query","success",dbc.Alert(msg,color="success",className="mt-2 small", duration=4000)
@@ -537,5 +593,6 @@ def register_callbacks(app, db_manager_instance, config_manager_instance, query_
             ts=datetime.now().strftime("%Y%m%d_%H%M%S")
             prefix=str(tbl_name).replace(" ","_").replace(".","_").replace("/","_") if tbl_name else "dados"
             return dcc.send_data_frame(df.to_csv,f"{prefix}_{ts}.csv",index=False)
-        except Exception as e:print(f"Erro download: {e}")
+        except Exception as e:
+            log_error(f"Erro download:", exception=e)
         return None

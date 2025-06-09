@@ -8,6 +8,7 @@ import textwrap
 import hashlib
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
+from utils.logger import log_info, log_error, log_warning, log_debug
 
 # LlamaIndex
 LLAMA_INDEX_AVAILABLE = False
@@ -33,24 +34,26 @@ try:
     OllamaEmbedding = LlamaOllamaEmbedding
 
     LLAMA_INDEX_AVAILABLE = True
-    print("RAG_MODULE: Componentes principais do LlamaIndex carregados.")
+    log_info("Componentes principais do LlamaIndex carregados com sucesso")
 except ImportError as e_li:
-    print(f"AVISO RAG_MODULE: Bibliotecas LlamaIndex não instaladas ou com erro ({e_li}).")
+    log_warning("Bibliotecas LlamaIndex não instaladas ou com erro", extra={"error": str(e_li)})
 
 # LLMs (Ollama e Groq imports)
 OLLAMA_AVAILABLE = False
 try:
     import ollama
     OLLAMA_AVAILABLE = True
+    log_info("Biblioteca Ollama carregada com sucesso")
 except ImportError:
-    print("AVISO RAG_MODULE: Biblioteca 'ollama' não instalada.")
+    log_warning("Biblioteca 'ollama' não instalada")
 
 GROQ_AVAILABLE = False
 try:
     from groq import Groq
     GROQ_AVAILABLE = True
+    log_info("Biblioteca Groq carregada com sucesso")
 except ImportError:
-    print("AVISO RAG_MODULE: Biblioteca 'groq' não instalada.")
+    log_warning("Biblioteca 'groq' não instalada")
 
 RAG_INDEX_CACHE_PREFIX = "rag_index_for_"
 SUMMARY_CACHE_PREFIX = "summary_for_"
@@ -99,7 +102,12 @@ def create_smart_chunks(df: pd.DataFrame, chunk_size: int = 50, overlap: int = 5
         if end >= total_rows:
             break
 
-    print(f"RAG_MODULE - DataFrame dividido em {len(chunks)} chunks de ~{chunk_size} linhas cada")
+    log_info("DataFrame dividido em chunks", extra={
+        "total_chunks": len(chunks),
+        "chunk_size": chunk_size,
+        "total_rows": total_rows,
+        "overlap": overlap
+    })
     return chunks
 
 def convert_numpy_to_python(obj):
@@ -121,6 +129,13 @@ def create_comprehensive_summary(df: pd.DataFrame, original_data_key: str) -> Li
     """
     Cria documentos abrangentes SEM LIMITAÇÃO DE DADOS: sumário + chunks completos + análises especiais
     """
+    log_info("Iniciando criação de sumário abrangente", extra={
+        "data_key": original_data_key,
+        "rows": len(df),
+        "columns": len(df.columns),
+        "memory_usage_mb": df.memory_usage(deep=True).sum() / 1024 / 1024
+    })
+    
     documents = []
 
     # 1. Documento de sumário geral COMPLETO
@@ -141,6 +156,12 @@ def create_comprehensive_summary(df: pd.DataFrame, original_data_key: str) -> Li
         chunk_size = 500
     else:
         chunk_size = 1000
+    
+    log_debug("Estratégia de chunking definida", extra={
+        "chunk_size": chunk_size,
+        "total_rows": len(df),
+        "strategy": "adaptive_based_on_size"
+    })
 
     chunks = create_smart_chunks(df, chunk_size=chunk_size, overlap=min(20, chunk_size//10))
 
@@ -234,10 +255,21 @@ def create_comprehensive_summary(df: pd.DataFrame, original_data_key: str) -> Li
             documents.append(col_doc)
 
         except Exception as e:
-            print(f"Erro ao analisar coluna {col}: {e}")
+            log_warning("Erro ao analisar coluna", extra={
+                "column_name": str(col),
+                "error": str(e),
+                "data_key": original_data_key
+            })
             continue
 
-    print(f"RAG_MODULE - Criados {len(documents)} documentos COMPLETOS (1 sumário + {len(chunks)} chunks completos + {len(df.columns)} análises de colunas)")
+    log_info("Documentos RAG criados com sucesso", extra={
+        "total_documents": len(documents),
+        "summary_docs": 1,
+        "chunk_docs": len(chunks),
+        "column_analysis_docs": len(df.columns),
+        "data_key": original_data_key,
+        "strategy": "comprehensive"
+    })
     return documents
 
 def prepare_dataframe_for_chat_optimized(
@@ -248,37 +280,72 @@ def prepare_dataframe_for_chat_optimized(
     use_cache: bool = True,
     strategy: str = "comprehensive"
 ) -> Tuple[bool, str, Optional[str]]:
+    
+    log_info("Iniciando preparação de dados para chat", extra={
+        "data_key": original_data_key,
+        "rows": len(df) if df is not None else 0,
+        "columns": len(df.columns) if df is not None else 0,
+        "embedding_model": ollama_embedding_model,
+        "use_cache": use_cache,
+        "strategy": strategy
+    })
 
     if not LLAMA_INDEX_AVAILABLE:
-        print("RAG_MODULE: LlamaIndex não disponível. Gerando sumário textual simples.")
+        log_warning("LlamaIndex não disponível, usando sumário textual simples")
         if df is None or df.empty:
             return False, "DataFrame vazio.", None
         try:
             summary_text = get_dataframe_simple_summary(df)
             summary_key = f"{SUMMARY_CACHE_PREFIX}{original_data_key}"
             cache_instance.set(summary_key, summary_text, timeout=3600)
+            log_info("Sumário textual simples criado", extra={
+                "summary_key": summary_key,
+                "summary_length": len(summary_text)
+            })
             return True, "Sumário textual simples preparado!", summary_key
         except Exception as e_sum:
+            log_error("Erro ao gerar sumário textual", extra={
+                "error": str(e_sum),
+                "data_key": original_data_key
+            })
             return False, f"Erro ao gerar sumário textual: {e_sum}", None
 
     df_hash = get_dataframe_hash(df)
     index_cache_key = f"{RAG_INDEX_CACHE_PREFIX}{original_data_key}_{df_hash}_{strategy}"
 
     if use_cache and cache_instance.has(index_cache_key):
-        print(f"RAG_MODULE - Índice encontrado no cache: {index_cache_key}")
+        log_info("Índice RAG encontrado no cache", extra={
+            "cache_key": index_cache_key,
+            "data_key": original_data_key,
+            "strategy": strategy
+        })
         return True, "Dados já indexados encontrados no cache!", index_cache_key
 
-    print(f"RAG_MODULE - Iniciando indexação (estratégia: {strategy}) para: {original_data_key} ({len(df)} linhas)")
+    log_info("Iniciando indexação RAG", extra={
+        "data_key": original_data_key,
+        "rows": len(df),
+        "strategy": strategy,
+        "embedding_model": ollama_embedding_model
+    })
 
     try:
         if not OLLAMA_AVAILABLE: # Should be LLAMA_INDEX_AVAILABLE for embedding model too
+            log_error("Biblioteca Ollama não disponível para embedding")
             return False, "Biblioteca 'ollama' (para embedding) não disponível.", None
 
         try:
             Settings.embed_model = OllamaEmbedding(model_name=ollama_embedding_model)
             Settings.llm = None # LLM for query is set later
-            print(f"RAG_MODULE - Modelo de Embedding configurado: {ollama_embedding_model}")
+            log_info("Modelo de embedding configurado", extra={
+                "embedding_model": ollama_embedding_model,
+                "data_key": original_data_key
+            })
         except Exception as e_settings:
+            log_error("Erro ao configurar embedding LlamaIndex", extra={
+                "error": str(e_settings),
+                "embedding_model": ollama_embedding_model,
+                "data_key": original_data_key
+            })
             return False, f"Erro ao configurar embedding LlamaIndex: {e_settings}", None
 
         if strategy == "comprehensive":
@@ -302,7 +369,12 @@ def prepare_dataframe_for_chat_optimized(
             sample_size = min(1000, max(1, len(df) // 10)) # Ensure sample_size is at least 1
             if len(df) > sample_size :
                 sample_df = df.sample(n=sample_size, random_state=42) if sample_size > 0 else df.head(1) # Handle tiny dfs
-                print(f"RAG_MODULE - ATENÇÃO: Criando amostra de {len(sample_df)} registros de {len(df)} totais")
+                log_warning("Criando amostra de dados para indexação", extra={
+                    "sample_size": len(sample_df),
+                    "total_size": len(df),
+                    "data_key": original_data_key,
+                    "strategy": strategy
+                })
             else:
                 sample_df = df
             documents = create_comprehensive_summary(sample_df, f"{original_data_key}_sample")
@@ -312,20 +384,45 @@ def prepare_dataframe_for_chat_optimized(
         if not documents:
             return False, "Nenhum documento criado para indexação.", None
 
-        print(f"RAG_MODULE - Construindo VectorStoreIndex com {len(documents)} documentos...")
+        log_info("Construindo VectorStoreIndex", extra={
+            "document_count": len(documents),
+            "data_key": original_data_key,
+            "strategy": strategy
+        })
         index = VectorStoreIndex.from_documents(documents, show_progress=True)
-        print(f"RAG_MODULE - VectorStoreIndex construído com sucesso!")
+        log_info("VectorStoreIndex construído com sucesso", extra={
+            "data_key": original_data_key,
+            "strategy": strategy,
+            "document_count": len(documents)
+        })
 
         cache_instance.set(index_cache_key, index, timeout=14400) # 4 horas
         if cache_instance.has(index_cache_key):
-            print(f"RAG_MODULE - Índice salvo no cache: {index_cache_key}")
+            log_info("Índice RAG salvo no cache com sucesso", extra={
+                "cache_key": index_cache_key,
+                "data_key": original_data_key,
+                "strategy": strategy,
+                "document_count": len(documents),
+                "rows_processed": len(df),
+                "cache_timeout_hours": 4
+            })
             return True, f"Dados indexados com estratégia '{strategy}' ({len(documents)} docs, {len(df)} linhas processadas)!", index_cache_key
         else: # Should ideally not happen if set was successful
-            print(f"RAG_MODULE - ERRO: Índice NÃO salvo no cache após tentativa: {index_cache_key}")
+            log_error("Falha ao salvar índice no cache", extra={
+                "cache_key": index_cache_key,
+                "data_key": original_data_key,
+                "strategy": strategy
+            })
             return False, "Erro ao salvar índice no cache.", None
 
     except Exception as e:
-        print(f"Erro crítico na indexação: {e}")
+        log_error("Erro crítico na indexação RAG", extra={
+            "error": str(e),
+            "data_key": original_data_key,
+            "strategy": strategy,
+            "embedding_model": ollama_embedding_model,
+            "traceback": traceback.format_exc()
+        })
         import traceback
         traceback.print_exc()
         return False, f"Erro crítico na indexação: {e}", None
@@ -397,9 +494,18 @@ def create_hierarchical_summary(df: pd.DataFrame, original_data_key: str) -> Lis
                 outlier_doc = Document(text="\n".join(outlier_content_list), doc_id=f"{original_data_key}_outliers_{col}", metadata=metadata)
                 documents.append(outlier_doc)
         except Exception as e_outlier:
-            print(f"Erro ao processar outliers da coluna {col}: {e_outlier}")
+            log_warning("Erro ao processar outliers da coluna", extra={
+                "column_name": str(col),
+                "error": str(e_outlier),
+                "data_key": original_data_key
+            })
             continue
-    print(f"RAG_MODULE - Criados {len(documents)} documentos hierárquicos.")
+    
+    log_info("Documentos hierárquicos criados", extra={
+        "total_documents": len(documents),
+        "data_key": original_data_key,
+        "strategy": "hierarchical"
+    })
     return documents
 
 
@@ -408,29 +514,50 @@ def query_data_with_llm_optimized(
     cache_instance,
     user_question: str,
     llm_provider: str,
-    ollama_model_name: Optional[str] = "llama3",
+    ollama_model_name: Optional[str] = "llama3.2:latest",
     groq_api_key: Optional[str] = None,
     groq_model_name: Optional[str] = "llama3-8b-8192",
     similarity_top_k: int = 8
 ) -> Tuple[str, Optional[str]]:
 
-    print(f"RAG_MODULE - Query otimizada para: {context_cache_key}")
+    log_info("Iniciando consulta RAG otimizada", extra={
+        "context_cache_key": context_cache_key,
+        "user_question": user_question[:100] + "..." if len(user_question) > 100 else user_question,
+        "llm_provider": llm_provider,
+        "model_name": ollama_model_name if llm_provider == "ollama" else groq_model_name,
+        "similarity_top_k": similarity_top_k
+    })
+    
     context_object = cache_instance.get(context_cache_key)
 
     if not context_object:
+        log_warning("Contexto não encontrado no cache", extra={
+            "context_cache_key": context_cache_key,
+            "user_question": user_question[:50] + "..." if len(user_question) > 50 else user_question
+        })
         return "", "Contexto não encontrado no cache. Prepare os dados novamente."
 
     is_llama_index = LLAMA_INDEX_AVAILABLE and isinstance(context_object, VectorStoreIndex)
 
     if is_llama_index:
-        print("RAG_MODULE: Usando índice LlamaIndex otimizado para consulta.")
+        log_info("Usando índice LlamaIndex para consulta", extra={
+            "context_cache_key": context_cache_key,
+            "llm_provider": llm_provider
+        })
         try:
             query_llm_instance = None
             if llm_provider == "ollama":
-                if not OLLAMA_AVAILABLE: return "", "Ollama não disponível."
+                if not OLLAMA_AVAILABLE: 
+                    log_error("Ollama não disponível para consulta")
+                    return "", "Ollama não disponível."
                 query_llm_instance = OllamaLLMLlamaIndex(model=ollama_model_name, request_timeout=180.0)
             elif llm_provider == "groq":
-                if not GROQ_AVAILABLE or not groq_api_key: return "", "Groq não configurado adequadamente."
+                if not GROQ_AVAILABLE or not groq_api_key: 
+                    log_error("Groq não configurado adequadamente", extra={
+                        "groq_available": GROQ_AVAILABLE,
+                        "has_api_key": bool(groq_api_key)
+                    })
+                    return "", "Groq não configurado adequadamente."
                 try:
                     from llama_index.llms.langchain import LangChainLLM # Compatibility for LlamaIndex v0.9.x
                     from langchain_groq import ChatGroq # Ensure langchain_groq is installed
@@ -440,15 +567,20 @@ def query_data_with_llm_optimized(
                     try:
                         from llama_index.llms.groq import Groq as LlamaGroqLLM # Check if this class exists
                         query_llm_instance = LlamaGroqLLM(model=groq_model_name, api_key=groq_api_key)
-                        print("RAG_MODULE: Usando LlamaIndex Groq LLM directo.")
+                        log_info("Usando LlamaIndex Groq LLM direto")
                     except ImportError:
-                         return "", "Bibliotecas Langchain/Groq ou LlamaIndex Groq não encontradas."
+                        log_error("Bibliotecas Langchain/Groq ou LlamaIndex Groq não encontradas")
+                        return "", "Bibliotecas Langchain/Groq ou LlamaIndex Groq não encontradas."
 
 
             if query_llm_instance:
                 current_settings_llm = Settings.llm # Store current global llm if any
                 Settings.llm = query_llm_instance # Set for this query
-                print(f"RAG_MODULE: LLM para query configurado: {llm_provider} - {ollama_model_name if llm_provider=='ollama' else groq_model_name}")
+                log_info("LLM para query configurado", extra={
+                    "llm_provider": llm_provider,
+                    "model_name": ollama_model_name if llm_provider == "ollama" else groq_model_name,
+                    "context_cache_key": context_cache_key
+                })
 
 
             query_engine = context_object.as_query_engine(
@@ -503,8 +635,20 @@ def query_data_with_llm_optimized(
             IMPORTANTE: NÃO faça inferências além dos dados fornecidos. Seja preciso e completo.
             """
 
-            print(f"RAG_MODULE: Executando consulta com {similarity_top_k} documentos relevantes...")
+            log_info("Executando consulta RAG", extra={
+                "similarity_top_k": similarity_top_k,
+                "question_length": len(enhanced_question),
+                "context_cache_key": context_cache_key,
+                "llm_provider": llm_provider
+            })
             response = query_engine.query(enhanced_question)
+            
+            log_info("Consulta RAG executada com sucesso", extra={
+                "response_length": len(str(response)),
+                "context_cache_key": context_cache_key,
+                "llm_provider": llm_provider,
+                "model_name": ollama_model_name if llm_provider == "ollama" else groq_model_name
+            })
             
             if query_llm_instance and 'current_settings_llm' in locals(): # Restore global LLM if changed
                  Settings.llm = current_settings_llm
@@ -512,7 +656,14 @@ def query_data_with_llm_optimized(
             return str(response), None
 
         except Exception as e:
-            print(f"Erro na consulta RAG: {e}")
+            log_error("Erro na consulta RAG", extra={
+                "error": str(e),
+                "context_cache_key": context_cache_key,
+                "llm_provider": llm_provider,
+                "model_name": ollama_model_name if llm_provider == "ollama" else groq_model_name,
+                "user_question": user_question[:50] + "..." if len(user_question) > 50 else user_question,
+                "traceback": traceback.format_exc()
+            })
             import traceback
             traceback.print_exc()
             if 'current_settings_llm' in locals() and query_llm_instance: # Restore on error too
@@ -520,7 +671,11 @@ def query_data_with_llm_optimized(
             return "", f"Erro na consulta: {str(e)}"
 
     else: # Fallback for simple text summary
-        print("RAG_MODULE: Usando sumário textual para consulta.")
+        log_info("Usando sumário textual para consulta", extra={
+            "context_cache_key": context_cache_key,
+            "llm_provider": llm_provider,
+            "fallback_reason": "no_llama_index_or_simple_summary"
+        })
         data_summary = str(context_object) # This is just a string summary
         # Simplified prompt for text summary
         prompt = f"""Você é um analista de dados. Analise o sumário do dataset e responda à pergunta.
@@ -530,11 +685,23 @@ def query_data_with_llm_optimized(
 
         try:
             if llm_provider == "ollama":
-                if not OLLAMA_AVAILABLE: return "", "Ollama não disponível."
+                if not OLLAMA_AVAILABLE: 
+                    log_error("Ollama não disponível para consulta fallback")
+                    return "", "Ollama não disponível."
+                log_info("Executando consulta fallback com Ollama", extra={
+                    "model_name": ollama_model_name,
+                    "prompt_length": len(prompt)
+                })
                 ollama_response = ollama.chat(model=ollama_model_name, messages=[{'role': 'user', 'content': prompt}])
                 return ollama_response['message']['content'], None
             elif llm_provider == "groq":
-                if not GROQ_AVAILABLE or not groq_api_key: return "", "Groq não configurado."
+                if not GROQ_AVAILABLE or not groq_api_key: 
+                    log_error("Groq não configurado para consulta fallback")
+                    return "", "Groq não configurado."
+                log_info("Executando consulta fallback com Groq", extra={
+                    "model_name": groq_model_name,
+                    "prompt_length": len(prompt)
+                })
                 client = Groq(api_key=groq_api_key)
                 completion = client.chat.completions.create(
                     model=groq_model_name,
@@ -543,7 +710,12 @@ def query_data_with_llm_optimized(
                 )
                 return completion.choices[0].message.content, None
         except Exception as e_llm_fallback:
-            print(f"Erro na consulta com sumário textual: {e_llm_fallback}")
+            log_error("Erro na consulta com sumário textual", extra={
+                "error": str(e_llm_fallback),
+                "llm_provider": llm_provider,
+                "model_name": ollama_model_name if llm_provider == "ollama" else groq_model_name,
+                "context_cache_key": context_cache_key
+            })
             return "", f"Erro na comunicação com LLM (fallback): {str(e_llm_fallback)}"
 
 
@@ -562,12 +734,29 @@ def prepare_dataframe_for_chat(
     ollama_embedding_model: str = "nomic-embed-text",
     force_complete_processing: bool = True # Defaulting to comprehensive as per user request
 ) -> Tuple[bool, str, Optional[str]]:
+    log_info("Iniciando preparação de dados para chat", extra={
+        "data_key": original_data_key,
+        "total_records": len(df),
+        "strategy": strategy,
+        "force_complete": force_complete_processing
+    })
+
     if force_complete_processing:
         strategy = "comprehensive"
-        print(f"RAG_MODULE: Forçando estratégia COMPREHENSIVE para processar TODOS os {len(df)} registros")
+        log_info("Forçando estratégia COMPREHENSIVE", extra={
+            "data_key": original_data_key,
+            "total_records": len(df),
+            "strategy": strategy,
+            "force_complete": True
+        })
     else:
         strategy = get_recommended_strategy(len(df))
-        print(f"RAG_MODULE: Auto-selecionando estratégia '{strategy}' para {len(df)} linhas")
+        log_info("Auto-selecionando estratégia RAG", extra={
+            "data_key": original_data_key,
+            "total_records": len(df),
+            "strategy": strategy,
+            "force_complete": False
+        })
 
     return prepare_dataframe_for_chat_optimized(
         original_data_key=original_data_key, df=df, cache_instance=cache_instance,
@@ -576,7 +765,7 @@ def prepare_dataframe_for_chat(
 
 def query_data_with_llm(
     context_cache_key: str, cache_instance, user_question: str, llm_provider: str,
-    ollama_model_name: Optional[str] = "llama3",
+    ollama_model_name: Optional[str] = "llama3.2:latest",
     groq_api_key: Optional[str] = None, groq_model_name: Optional[str] = "llama3-8b-8192"
 ) -> Tuple[str, Optional[str]]:
     return query_data_with_llm_optimized(
@@ -586,9 +775,22 @@ def query_data_with_llm(
     )
 
 def verify_data_completeness(context_cache_key: str, cache_instance, expected_total_rows: int) -> Dict[str, any]:
+    log_info("Verificando completude dos dados RAG", extra={
+        "context_cache_key": context_cache_key,
+        "expected_total_rows": expected_total_rows
+    })
+    
     context_object = cache_instance.get(context_cache_key)
-    if not context_object: return {"status": "error", "message": "Contexto não encontrado"}
+    if not context_object: 
+        log_warning("Contexto não encontrado para verificação", extra={
+            "context_cache_key": context_cache_key
+        })
+        return {"status": "error", "message": "Contexto não encontrado"}
     if not (LLAMA_INDEX_AVAILABLE and isinstance(context_object, VectorStoreIndex)):
+        log_info("Usando sumário textual para verificação", extra={
+            "context_cache_key": context_cache_key,
+            "llama_index_available": LLAMA_INDEX_AVAILABLE
+        })
         return {"status": "warning", "message": "Usando sumário textual, não índice completo"}
     try:
         docstore = context_object.docstore
@@ -623,7 +825,7 @@ def verify_data_completeness(context_cache_key: str, cache_instance, expected_to
         completeness_ratio = (total_indexed_rows / expected_total_rows) * 100 if expected_total_rows > 0 else 0
         # If using 'comprehensive' strategy, `total_indexed_rows` from `chunk_complete`'s `chunk_size` should be accurate.
 
-        return {
+        result = {
             "status": "success", "total_documents": len(all_docs),
             "chunk_documents": len(chunk_docs), "summary_documents": len(summary_docs),
             "total_indexed_rows_from_chunks": total_indexed_rows, # Might be > expected due to overlap in some strategies
@@ -632,7 +834,25 @@ def verify_data_completeness(context_cache_key: str, cache_instance, expected_to
             "is_complete_by_summary_metadata": is_complete_check,
             "is_complete_heuristic": is_complete_check or completeness_ratio >= 95 # Heuristic
         }
+        
+        log_info("Verificação de completude concluída", extra={
+            "context_cache_key": context_cache_key,
+            "total_documents": len(all_docs),
+            "chunk_documents": len(chunk_docs),
+            "summary_documents": len(summary_docs),
+            "expected_rows": expected_total_rows,
+            "indexed_rows": total_indexed_rows,
+            "completeness_percentage": round(completeness_ratio, 2),
+            "is_complete": is_complete_check or completeness_ratio >= 95
+        })
+        
+        return result
     except Exception as e:
+        log_error("Erro ao verificar completude dos dados", extra={
+            "context_cache_key": context_cache_key,
+            "expected_total_rows": expected_total_rows,
+            "error": str(e)
+        })
         return {"status": "error", "message": f"Erro ao verificar completude: {e}"}
 
 
@@ -640,18 +860,35 @@ def force_complete_reindexing(
     original_data_key: str, df: pd.DataFrame, cache_instance,
     ollama_embedding_model: str = "nomic-embed-text"
 ) -> Tuple[bool, str, Optional[str]]:
-    print(f"RAG_MODULE: FORÇANDO reprocessamento completo de {len(df)} registros...")
+    log_info("FORÇANDO reprocessamento completo", extra={
+        "data_key": original_data_key,
+        "total_records": len(df),
+        "force_reprocess": True
+    })
+    
     df_hash = get_dataframe_hash(df)
+    removed_keys = []
     for strategy_key_part in ["comprehensive", "hierarchical", "chunked", "sample"]:
         old_cache_key = f"{RAG_INDEX_CACHE_PREFIX}{original_data_key}_{df_hash}_{strategy_key_part}"
         if cache_instance.has(old_cache_key):
             cache_instance.delete(old_cache_key)
-            print(f"RAG_MODULE: Cache removido: {old_cache_key}")
+            removed_keys.append(old_cache_key)
+    
+    if removed_keys:
+        log_info("Cache RAG removido", extra={
+            "data_key": original_data_key,
+            "removed_keys": removed_keys,
+            "count": len(removed_keys)
+        })
+    
     # Also remove simple summary key if it exists
     simple_summary_key = f"{SUMMARY_CACHE_PREFIX}{original_data_key}"
     if cache_instance.has(simple_summary_key):
         cache_instance.delete(simple_summary_key)
-        print(f"RAG_MODULE: Cache de sumário simples removido: {simple_summary_key}")
+        log_info("Cache de sumário simples removido", extra={
+            "data_key": original_data_key,
+            "summary_key": simple_summary_key
+        })
 
 
     return prepare_dataframe_for_chat_optimized(
@@ -659,4 +896,10 @@ def force_complete_reindexing(
         ollama_embedding_model=ollama_embedding_model, strategy="comprehensive", use_cache=False
     )
 
-print("RAG_MODULE: Módulo carregado com estratégia COMPREHENSIVE para processamento completo de dados e sugestões de gráficos!")
+log_info("Módulo RAG carregado", extra={
+    "strategy": "COMPREHENSIVE",
+    "features": ["processamento_completo", "sugestoes_graficos"],
+    "llama_index_available": LLAMA_INDEX_AVAILABLE,
+    "ollama_available": OLLAMA_AVAILABLE,
+    "groq_available": GROQ_AVAILABLE
+})

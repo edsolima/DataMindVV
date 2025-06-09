@@ -10,6 +10,7 @@ import json
 
 from utils.data_analyzer import DataAnalyzer
 from utils.advanced_analytics import AdvancedAnalytics
+from utils.logger import log_error
 # A função load_dataframe_from_store não será mais usada aqui para o DF principal.
 # from utils.dataframe_utils import load_dataframe_from_store 
 
@@ -563,5 +564,6 @@ def register_callbacks(app, cache_instance):
                 return generate_cohort_analysis_content(df, cohort_date_col, cohort_id_col, cohort_value_col, cohort_time_unit)
             else: return dbc.Alert("Tipo de análise inválido.", color="warning", className="mt-3")
         except Exception as e:
-            print(f"Erro na análise '{analysis_type}': {e}"); import traceback; traceback.print_exc()
+            log_error(f"Erro na análise '{analysis_type}':", exception=e)
+            import traceback; traceback.print_exc()
             return dbc.Alert(f"Erro em '{analysis_type}': {str(e)}", color="danger", className="mt-3")

@@ -1,0 +1,2715 @@
+2025-06-10 00:01:05 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 00:01:05 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 00:01:06 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 00:01:06 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 00:01:06 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 00:01:06 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 00:01:06 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 00:01:06 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 00:01:06 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 00:01:06 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 00:01:06 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 00:01:06 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 06:37:12 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 06:37:12 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 06:37:12 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 06:37:12 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 06:37:13 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 06:37:13 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 06:37:13 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 06:37:13 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 06:37:13 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 06:37:13 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 06:37:13 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 06:37:13 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 06:37:20 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 06:37:20 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 06:37:21 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 06:37:21 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 06:37:21 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 06:37:21 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 06:37:21 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 06:37:21 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 06:37:21 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 06:37:21 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 06:37:21 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 06:37:21 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 06:37:25 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 6f6c9eaa-79da-4cdc-8348-2e1ef6ecda82
+2025-06-10 06:37:25 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:37:25 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=6f6c9eaa-79da-4cdc-8348-2e1ef6ecda82 | select_result=OK | file_size=28901376 bytes
+2025-06-10 06:37:25 | BI_APP | WARNING | logger:warning:74 | Dados não encontrados no cache
+2025-06-10 06:37:25 | BI_APP | ERROR | logger:error:81 | Erro ao recuperar dados do cache: 'Cache' object has no attribute 'get_active_data_key'
+2025-06-10 06:37:30 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:37:33 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:37:33 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-10 06:37:39 | BI_APP | INFO | logger:info:70 | Conexão com banco de dados estabelecida
+2025-06-10 06:37:40 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-10 06:37:46 | BI_APP | INFO | logger:info:70 | Query executada com sucesso
+2025-06-10 06:37:46 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=22179cc1-904e-45fb-8cb0-c028079b7d1a | file_size=28901376 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-10 06:37:46 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=22179cc1-904e-45fb-8cb0-c028079b7d1a | select_result=OK | file_size=28901376 bytes
+2025-06-10 06:37:46 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Dados salvos no cache com chave: 22179cc1-904e-45fb-8cb0-c028079b7d1a. Cache.has('22179cc1-904e-45fb-8cb0-c028079b7d1a') = True
+2025-06-10 06:37:46 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=22179cc1-904e-45fb-8cb0-c028079b7d1a | select_result=OK | file_size=28901376 bytes
+2025-06-10 06:37:46 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: 10000
+2025-06-10 06:37:46 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 22179cc1-904e-45fb-8cb0-c028079b7d1a
+2025-06-10 06:37:46 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=22179cc1-904e-45fb-8cb0-c028079b7d1a | select_result=OK | file_size=28901376 bytes
+2025-06-10 06:37:46 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-10 06:37:49 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:37:49 | BI_APP | ERROR | logger:error:81 | Erro ao recuperar dados do cache: 'Cache' object has no attribute 'get_active_data_key'
+2025-06-10 06:38:14 | BI_APP | ERROR | logger:error:81 | Erro ao recuperar dados do cache: 'Cache' object has no attribute 'get_active_data_key'
+2025-06-10 06:38:14 | BI_APP | ERROR | logger:error:81 | Erro ao recuperar dados do cache: 'Cache' object has no attribute 'get_active_data_key'
+2025-06-10 06:38:15 | BI_APP | ERROR | logger:error:81 | Erro ao recuperar dados do cache: 'Cache' object has no attribute 'get_active_data_key'
+2025-06-10 06:38:27 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:38:36 | BI_APP | INFO | logger:info:70 | Arquivo selecionado para upload
+2025-06-10 06:38:38 | BI_APP | INFO | logger:info:70 | Iniciando processamento de arquivo
+2025-06-10 06:38:38 | BI_APP | ERROR | logger:error:81 | Tipo de arquivo não suportado
+2025-06-10 06:38:38 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-10 06:39:25 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:39:26 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-10 06:39:31 | BI_APP | INFO | logger:info:70 | Conexão com banco de dados estabelecida
+2025-06-10 06:39:31 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-10 06:39:36 | BI_APP | INFO | logger:info:70 | Query executada com sucesso
+2025-06-10 06:39:36 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=814f4f67-68d7-4976-8c6c-8c8c9cd91642 | file_size=30044160 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-10 06:39:36 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=814f4f67-68d7-4976-8c6c-8c8c9cd91642 | select_result=OK | file_size=30044160 bytes
+2025-06-10 06:39:36 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Dados salvos no cache com chave: 814f4f67-68d7-4976-8c6c-8c8c9cd91642. Cache.has('814f4f67-68d7-4976-8c6c-8c8c9cd91642') = True
+2025-06-10 06:39:36 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=814f4f67-68d7-4976-8c6c-8c8c9cd91642 | select_result=OK | file_size=30044160 bytes
+2025-06-10 06:39:36 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: 10000
+2025-06-10 06:39:36 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 814f4f67-68d7-4976-8c6c-8c8c9cd91642
+2025-06-10 06:39:36 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=814f4f67-68d7-4976-8c6c-8c8c9cd91642 | select_result=OK | file_size=30044160 bytes
+2025-06-10 06:39:36 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-10 06:39:38 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:39:38 | BI_APP | ERROR | logger:error:81 | Erro ao recuperar dados do cache: 'Cache' object has no attribute 'get_active_data_key'
+2025-06-10 06:40:10 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:40:11 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=814f4f67-68d7-4976-8c6c-8c8c9cd91642 | select_result=OK | file_size=30044160 bytes
+2025-06-10 06:40:11 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=814f4f67-68d7-4976-8c6c-8c8c9cd91642 | select_result=OK | file_size=30044160 bytes
+2025-06-10 06:40:15 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:40:15 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=814f4f67-68d7-4976-8c6c-8c8c9cd91642 | select_result=OK | file_size=30044160 bytes
+2025-06-10 06:40:15 | BI_APP | INFO | logger:info:70 | Dados válidos carregados para AI Chat
+2025-06-10 06:41:39 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 06:41:39 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 06:41:40 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 06:41:40 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 06:41:40 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 06:41:40 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 06:41:40 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 06:41:40 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 06:41:40 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 06:41:40 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 06:41:40 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 06:41:40 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 06:41:49 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 06:41:49 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 06:41:50 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 06:41:50 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 06:41:50 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 06:41:50 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 06:41:50 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 06:41:50 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 06:41:50 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 06:41:50 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 06:41:50 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 06:41:50 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 06:41:53 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-10 06:41:53 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:41:56 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:41:57 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-10 06:42:02 | BI_APP | INFO | logger:info:70 | Conexão com banco de dados estabelecida
+2025-06-10 06:42:02 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-10 06:42:09 | BI_APP | INFO | logger:info:70 | Query executada com sucesso
+2025-06-10 06:42:09 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7e4c1218-440f-4c9f-a13c-aa17674f679e | file_size=31186944 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-10 06:42:09 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7e4c1218-440f-4c9f-a13c-aa17674f679e | select_result=OK | file_size=31186944 bytes
+2025-06-10 06:42:09 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Dados salvos no cache com chave: 7e4c1218-440f-4c9f-a13c-aa17674f679e. Cache.has('7e4c1218-440f-4c9f-a13c-aa17674f679e') = True
+2025-06-10 06:42:09 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7e4c1218-440f-4c9f-a13c-aa17674f679e | select_result=OK | file_size=31186944 bytes
+2025-06-10 06:42:09 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: 10000
+2025-06-10 06:42:09 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 7e4c1218-440f-4c9f-a13c-aa17674f679e
+2025-06-10 06:42:09 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7e4c1218-440f-4c9f-a13c-aa17674f679e | select_result=OK | file_size=31186944 bytes
+2025-06-10 06:42:09 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-10 06:42:12 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:42:12 | BI_APP | ERROR | logger:error:81 | Erro ao recuperar dados do cache: 'Cache' object has no attribute 'get_active_data_key'
+2025-06-10 06:43:57 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 06:43:57 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 06:43:57 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 06:43:57 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 06:43:57 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 06:43:57 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 06:43:57 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 06:43:57 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 06:43:57 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 06:43:57 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 06:43:57 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 06:43:57 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 06:44:11 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 06:44:11 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 06:44:11 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 06:44:11 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 06:44:11 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 06:44:11 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 06:44:11 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 06:44:11 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 06:44:11 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 06:44:11 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 06:44:11 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 06:44:11 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 06:44:11 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:44:12 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 7e4c1218-440f-4c9f-a13c-aa17674f679e
+2025-06-10 06:44:12 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:44:12 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7e4c1218-440f-4c9f-a13c-aa17674f679e | select_result=OK | file_size=31186944 bytes
+2025-06-10 06:44:12 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-10 06:44:15 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:44:16 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7e4c1218-440f-4c9f-a13c-aa17674f679e | select_result=OK | file_size=31186944 bytes
+2025-06-10 06:44:16 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7e4c1218-440f-4c9f-a13c-aa17674f679e | select_result=OK | file_size=31186944 bytes
+2025-06-10 06:44:16 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7e4c1218-440f-4c9f-a13c-aa17674f679e | select_result=OK | file_size=31186944 bytes
+2025-06-10 06:44:24 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 06:44:24 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 06:44:24 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 06:44:24 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 06:44:24 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 06:44:24 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 06:44:24 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 06:44:24 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 06:44:24 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 06:44:24 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 06:44:24 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 06:44:24 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 06:44:25 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 7e4c1218-440f-4c9f-a13c-aa17674f679e
+2025-06-10 06:44:25 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:44:25 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7e4c1218-440f-4c9f-a13c-aa17674f679e | select_result=OK | file_size=31186944 bytes
+2025-06-10 06:44:25 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-10 06:44:25 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7e4c1218-440f-4c9f-a13c-aa17674f679e | select_result=OK | file_size=31186944 bytes
+2025-06-10 06:44:25 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7e4c1218-440f-4c9f-a13c-aa17674f679e | select_result=OK | file_size=31186944 bytes
+2025-06-10 06:44:25 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7e4c1218-440f-4c9f-a13c-aa17674f679e | select_result=OK | file_size=31186944 bytes
+2025-06-10 06:48:06 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 06:48:06 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 06:48:06 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 06:48:06 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 06:48:06 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 06:48:06 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 06:48:06 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 06:48:06 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 06:48:06 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 06:48:06 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 06:48:06 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 06:48:06 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 06:48:21 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 06:48:21 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 06:48:21 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 06:48:21 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 06:48:21 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 06:48:21 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 06:48:21 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 06:48:21 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 06:48:21 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 06:48:21 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 06:48:21 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 06:48:21 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 06:48:47 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 7e4c1218-440f-4c9f-a13c-aa17674f679e
+2025-06-10 06:48:47 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:48:47 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7e4c1218-440f-4c9f-a13c-aa17674f679e | select_result=OK | file_size=31186944 bytes
+2025-06-10 06:48:47 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-10 06:48:47 | BI_APP | ERROR | logger:error:81 | Erro ao recuperar dados do cache: 'Cache' object has no attribute 'get_active_data_key'
+2025-06-10 06:50:23 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 06:50:23 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 06:50:23 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 06:50:23 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 06:50:23 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 06:50:23 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 06:50:23 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 06:50:23 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 06:50:23 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 06:50:23 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 06:50:23 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 06:50:23 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 06:50:34 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 06:50:34 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 06:50:35 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 06:50:35 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 06:50:35 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 06:50:35 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 06:50:35 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 06:50:35 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 06:50:35 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 06:50:35 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 06:50:35 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 06:50:35 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 06:50:49 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 06:50:49 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 06:50:49 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 06:50:49 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 06:50:49 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 06:50:49 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 06:50:49 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 06:50:49 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 06:50:49 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 06:50:49 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 06:50:49 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 06:50:49 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 06:50:50 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 7e4c1218-440f-4c9f-a13c-aa17674f679e
+2025-06-10 06:50:50 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:50:50 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7e4c1218-440f-4c9f-a13c-aa17674f679e | select_result=OK | file_size=31186944 bytes
+2025-06-10 06:50:50 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-10 06:50:56 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:50:57 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-10 06:51:03 | BI_APP | INFO | logger:info:70 | Conexão com banco de dados estabelecida
+2025-06-10 06:51:03 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-10 06:51:07 | BI_APP | INFO | logger:info:70 | Query executada com sucesso
+2025-06-10 06:51:07 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d5b4da45-7aee-400a-86bb-175a4a24698d | file_size=32333824 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-10 06:51:07 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d5b4da45-7aee-400a-86bb-175a4a24698d | select_result=OK | file_size=32333824 bytes
+2025-06-10 06:51:07 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Dados salvos no cache com chave: d5b4da45-7aee-400a-86bb-175a4a24698d. Cache.has('d5b4da45-7aee-400a-86bb-175a4a24698d') = True
+2025-06-10 06:51:07 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d5b4da45-7aee-400a-86bb-175a4a24698d | select_result=OK | file_size=32333824 bytes
+2025-06-10 06:51:07 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: 10000
+2025-06-10 06:51:08 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: d5b4da45-7aee-400a-86bb-175a4a24698d
+2025-06-10 06:51:08 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d5b4da45-7aee-400a-86bb-175a4a24698d | select_result=OK | file_size=32333824 bytes
+2025-06-10 06:51:08 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-10 06:51:09 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:51:10 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d5b4da45-7aee-400a-86bb-175a4a24698d | select_result=OK | file_size=32333824 bytes
+2025-06-10 06:51:12 | BI_APP | ERROR | logger:error:81 | Erro ao atualizar layout do dashboard: Invalid property specified for object of type plotly.graph_objs.Bar: 'line'
+
+Did you mean "base"?
+
+    Valid properties:
+        alignmentgroup
+            Set several traces linked to the same position axis or
+            matching axes to the same alignmentgroup. This controls
+            whether bars compute their positional range dependently
+            or independently.
+        base
+            Sets where the bar base is drawn (in position axis
+            units). In "stack" or "relative" barmode, traces that
+            set "base" will be excluded and drawn in "overlay" mode
+            instead.
+        basesrc
+            Sets the source reference on Chart Studio Cloud for
+            `base`.
+        cliponaxis
+            Determines whether the text nodes are clipped about the
+            subplot axes. To show the text nodes above axis lines
+            and tick labels, make sure to set `xaxis.layer` and
+            `yaxis.layer` to *below traces*.
+        constraintext
+            Constrain the size of text inside or outside a bar to
+            be no larger than the bar itself.
+        customdata
+            Assigns extra data each datum. This may be useful when
+            listening to hover, click and selection events. Note
+            that, "scatter" traces also appends customdata items in
+            the markers DOM elements
+        customdatasrc
+            Sets the source reference on Chart Studio Cloud for
+            `customdata`.
+        dx
+            Sets the x coordinate step. See `x0` for more info.
+        dy
+            Sets the y coordinate step. See `y0` for more info.
+        error_x
+            :class:`plotly.graph_objects.bar.ErrorX` instance or
+            dict with compatible properties
+        error_y
+            :class:`plotly.graph_objects.bar.ErrorY` instance or
+            dict with compatible properties
+        hoverinfo
+            Determines which trace information appear on hover. If
+            `none` or `skip` are set, no information is displayed
+            upon hovering. But, if `none` is set, click and hover
+            events are still fired.
+        hoverinfosrc
+            Sets the source reference on Chart Studio Cloud for
+            `hoverinfo`.
+        hoverlabel
+            :class:`plotly.graph_objects.bar.Hoverlabel` instance
+            or dict with compatible properties
+        hovertemplate
+            Template string used for rendering the information that
+            appear on hover box. Note that this will override
+            `hoverinfo`. Variables are inserted using %{variable},
+            for example "y: %{y}" as well as %{xother}, {%_xother},
+            {%_xother_}, {%xother_}. When showing info for several
+            points, "xother" will be added to those with different
+            x positions from the first point. An underscore before
+            or after "(x|y)other" will add a space on that side,
+            only when this field is shown. Numbers are formatted
+            using d3-format's syntax %{variable:d3-format}, for
+            example "Price: %{y:$.2f}".
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format
+            for details on the formatting syntax. Dates are
+            formatted using d3-time-format's syntax
+            %{variable|d3-time-format}, for example "Day:
+            %{2019-01-01|%A}". https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format for details on the
+            date formatting syntax. The variables available in
+            `hovertemplate` are the ones emitted as event data
+            described at this link
+            https://plotly.com/javascript/plotlyjs-events/#event-
+            data. Additionally, every attributes that can be
+            specified per-point (the ones that are `arrayOk: true`)
+            are available. Finally, the template string has access
+            to variables `value` and `label`. Anything contained in
+            tag `<extra>` is displayed in the secondary box, for
+            example "<extra>{fullData.name}</extra>". To hide the
+            secondary box completely, use an empty tag
+            `<extra></extra>`.
+        hovertemplatesrc
+            Sets the source reference on Chart Studio Cloud for
+            `hovertemplate`.
+        hovertext
+            Sets hover text elements associated with each (x,y)
+            pair. If a single string, the same string appears over
+            all the data points. If an array of string, the items
+            are mapped in order to the this trace's (x,y)
+            coordinates. To be seen, trace `hoverinfo` must contain
+            a "text" flag.
+        hovertextsrc
+            Sets the source reference on Chart Studio Cloud for
+            `hovertext`.
+        ids
+            Assigns id labels to each datum. These ids for object
+            constancy of data points during animation. Should be an
+            array of strings, not numbers or any other type.
+        idssrc
+            Sets the source reference on Chart Studio Cloud for
+            `ids`.
+        insidetextanchor
+            Determines if texts are kept at center or start/end
+            points in `textposition` "inside" mode.
+        insidetextfont
+            Sets the font used for `text` lying inside the bar.
+        legend
+            Sets the reference to a legend to show this trace in.
+            References to these legends are "legend", "legend2",
+            "legend3", etc. Settings for these legends are set in
+            the layout, under `layout.legend`, `layout.legend2`,
+            etc.
+        legendgroup
+            Sets the legend group for this trace. Traces and shapes
+            part of the same legend group hide/show at the same
+            time when toggling legend items.
+        legendgrouptitle
+            :class:`plotly.graph_objects.bar.Legendgrouptitle`
+            instance or dict with compatible properties
+        legendrank
+            Sets the legend rank for this trace. Items and groups
+            with smaller ranks are presented on top/left side while
+            with "reversed" `legend.traceorder` they are on
+            bottom/right side. The default legendrank is 1000, so
+            that you can use ranks less than 1000 to place certain
+            items before all unranked items, and ranks greater than
+            1000 to go after all unranked items. When having
+            unranked or equal rank items shapes would be displayed
+            after traces i.e. according to their order in data and
+            layout.
+        legendwidth
+            Sets the width (in px or fraction) of the legend for
+            this trace.
+        marker
+            :class:`plotly.graph_objects.bar.Marker` instance or
+            dict with compatible properties
+        meta
+            Assigns extra meta information associated with this
+            trace that can be used in various text attributes.
+            Attributes such as trace `name`, graph, axis and
+            colorbar `title.text`, annotation `text`
+            `rangeselector`, `updatemenues` and `sliders` `label`
+            text all support `meta`. To access the trace `meta`
+            values in an attribute in the same trace, simply use
+            `%{meta[i]}` where `i` is the index or key of the
+            `meta` item in question. To access trace `meta` in
+            layout attributes, use `%{data[n[.meta[i]}` where `i`
+            is the index or key of the `meta` and `n` is the trace
+            index.
+        metasrc
+            Sets the source reference on Chart Studio Cloud for
+            `meta`.
+        name
+            Sets the trace name. The trace name appears as the
+            legend item and on hover.
+        offset
+            Shifts the position where the bar is drawn (in position
+            axis units). In "group" barmode, traces that set
+            "offset" will be excluded and drawn in "overlay" mode
+            instead.
+        offsetgroup
+            Set several traces linked to the same position axis or
+            matching axes to the same offsetgroup where bars of the
+            same position coordinate will line up.
+        offsetsrc
+            Sets the source reference on Chart Studio Cloud for
+            `offset`.
+        opacity
+            Sets the opacity of the trace.
+        orientation
+            Sets the orientation of the bars. With "v" ("h"), the
+            value of the each bar spans along the vertical
+            (horizontal).
+        outsidetextfont
+            Sets the font used for `text` lying outside the bar.
+        selected
+            :class:`plotly.graph_objects.bar.Selected` instance or
+            dict with compatible properties
+        selectedpoints
+            Array containing integer indices of selected points.
+            Has an effect only for traces that support selections.
+            Note that an empty array means an empty selection where
+            the `unselected` are turned on for all points, whereas,
+            any other non-array values means no selection all where
+            the `selected` and `unselected` styles have no effect.
+        showlegend
+            Determines whether or not an item corresponding to this
+            trace is shown in the legend.
+        stream
+            :class:`plotly.graph_objects.bar.Stream` instance or
+            dict with compatible properties
+        text
+            Sets text elements associated with each (x,y) pair. If
+            a single string, the same string appears over all the
+            data points. If an array of string, the items are
+            mapped in order to the this trace's (x,y) coordinates.
+            If trace `hoverinfo` contains a "text" flag and
+            "hovertext" is not set, these elements will be seen in
+            the hover labels.
+        textangle
+            Sets the angle of the tick labels with respect to the
+            bar. For example, a `tickangle` of -90 draws the tick
+            labels vertically. With "auto" the texts may
+            automatically be rotated to fit with the maximum size
+            in bars.
+        textfont
+            Sets the font used for `text`.
+        textposition
+            Specifies the location of the `text`. "inside"
+            positions `text` inside, next to the bar end (rotated
+            and scaled if needed). "outside" positions `text`
+            outside, next to the bar end (scaled if needed), unless
+            there is another bar stacked on this one, then the text
+            gets pushed inside. "auto" tries to position `text`
+            inside the bar, but if the bar is too small and no bar
+            is stacked on this one the text is moved outside. If
+            "none", no text appears.
+        textpositionsrc
+            Sets the source reference on Chart Studio Cloud for
+            `textposition`.
+        textsrc
+            Sets the source reference on Chart Studio Cloud for
+            `text`.
+        texttemplate
+            Template string used for rendering the information text
+            that appear on points. Note that this will override
+            `textinfo`. Variables are inserted using %{variable},
+            for example "y: %{y}". Numbers are formatted using
+            d3-format's syntax %{variable:d3-format}, for example
+            "Price: %{y:$.2f}".
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format
+            for details on the formatting syntax. Dates are
+            formatted using d3-time-format's syntax
+            %{variable|d3-time-format}, for example "Day:
+            %{2019-01-01|%A}". https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format for details on the
+            date formatting syntax. Every attributes that can be
+            specified per-point (the ones that are `arrayOk: true`)
+            are available. Finally, the template string has access
+            to variables `value` and `label`.
+        texttemplatesrc
+            Sets the source reference on Chart Studio Cloud for
+            `texttemplate`.
+        uid
+            Assign an id to this trace, Use this to provide object
+            constancy between traces during animations and
+            transitions.
+        uirevision
+            Controls persistence of some user-driven changes to the
+            trace: `constraintrange` in `parcoords` traces, as well
+            as some `editable: true` modifications such as `name`
+            and `colorbar.title`. Defaults to `layout.uirevision`.
+            Note that other user-driven trace attribute changes are
+            controlled by `layout` attributes: `trace.visible` is
+            controlled by `layout.legend.uirevision`,
+            `selectedpoints` is controlled by
+            `layout.selectionrevision`, and `colorbar.(x|y)`
+            (accessible with `config: {editable: true}`) is
+            controlled by `layout.editrevision`. Trace changes are
+            tracked by `uid`, which only falls back on trace index
+            if no `uid` is provided. So if your app can add/remove
+            traces before the end of the `data` array, such that
+            the same trace has a different index, you can still
+            preserve user-driven changes if you give each trace a
+            `uid` that stays with it as it moves.
+        unselected
+            :class:`plotly.graph_objects.bar.Unselected` instance
+            or dict with compatible properties
+        visible
+            Determines whether or not this trace is visible. If
+            "legendonly", the trace is not drawn, but can appear as
+            a legend item (provided that the legend itself is
+            visible).
+        width
+            Sets the bar width (in position axis units).
+        widthsrc
+            Sets the source reference on Chart Studio Cloud for
+            `width`.
+        x
+            Sets the x coordinates.
+        x0
+            Alternate to `x`. Builds a linear space of x
+            coordinates. Use with `dx` where `x0` is the starting
+            coordinate and `dx` the step.
+        xaxis
+            Sets a reference between this trace's x coordinates and
+            a 2D cartesian x axis. If "x" (the default value), the
+            x coordinates refer to `layout.xaxis`. If "x2", the x
+            coordinates refer to `layout.xaxis2`, and so on.
+        xcalendar
+            Sets the calendar system to use with `x` date data.
+        xhoverformat
+            Sets the hover text formatting rulefor `x`  using d3
+            formatting mini-languages which are very similar to
+            those in Python. For numbers, see:
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format.
+            And for dates see: https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format. We add two items to
+            d3's date formatter: "%h" for half of the year as a
+            decimal number as well as "%{n}f" for fractional
+            seconds with n digits. For example, *2016-10-13
+            09:15:23.456* with tickformat "%H~%M~%S.%2f" would
+            display *09~15~23.46*By default the values are
+            formatted using `xaxis.hoverformat`.
+        xperiod
+            Only relevant when the axis `type` is "date". Sets the
+            period positioning in milliseconds or "M<n>" on the x
+            axis. Special values in the form of "M<n>" could be
+            used to declare the number of months. In this case `n`
+            must be a positive integer.
+        xperiod0
+            Only relevant when the axis `type` is "date". Sets the
+            base for period positioning in milliseconds or date
+            string on the x0 axis. When `x0period` is round number
+            of weeks, the `x0period0` by default would be on a
+            Sunday i.e. 2000-01-02, otherwise it would be at
+            2000-01-01.
+        xperiodalignment
+            Only relevant when the axis `type` is "date". Sets the
+            alignment of data points on the x axis.
+        xsrc
+            Sets the source reference on Chart Studio Cloud for
+            `x`.
+        y
+            Sets the y coordinates.
+        y0
+            Alternate to `y`. Builds a linear space of y
+            coordinates. Use with `dy` where `y0` is the starting
+            coordinate and `dy` the step.
+        yaxis
+            Sets a reference between this trace's y coordinates and
+            a 2D cartesian y axis. If "y" (the default value), the
+            y coordinates refer to `layout.yaxis`. If "y2", the y
+            coordinates refer to `layout.yaxis2`, and so on.
+        ycalendar
+            Sets the calendar system to use with `y` date data.
+        yhoverformat
+            Sets the hover text formatting rulefor `y`  using d3
+            formatting mini-languages which are very similar to
+            those in Python. For numbers, see:
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format.
+            And for dates see: https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format. We add two items to
+            d3's date formatter: "%h" for half of the year as a
+            decimal number as well as "%{n}f" for fractional
+            seconds with n digits. For example, *2016-10-13
+            09:15:23.456* with tickformat "%H~%M~%S.%2f" would
+            display *09~15~23.46*By default the values are
+            formatted using `yaxis.hoverformat`.
+        yperiod
+            Only relevant when the axis `type` is "date". Sets the
+            period positioning in milliseconds or "M<n>" on the y
+            axis. Special values in the form of "M<n>" could be
+            used to declare the number of months. In this case `n`
+            must be a positive integer.
+        yperiod0
+            Only relevant when the axis `type` is "date". Sets the
+            base for period positioning in milliseconds or date
+            string on the y0 axis. When `y0period` is round number
+            of weeks, the `y0period0` by default would be on a
+            Sunday i.e. 2000-01-02, otherwise it would be at
+            2000-01-01.
+        yperiodalignment
+            Only relevant when the axis `type` is "date". Sets the
+            alignment of data points on the y axis.
+        ysrc
+            Sets the source reference on Chart Studio Cloud for
+            `y`.
+        zorder
+            Sets the layer on which this trace is displayed,
+            relative to other SVG traces on the same subplot. SVG
+            traces with higher `zorder` appear in front of those
+            with lower `zorder`.
+        
+Did you mean "base"?
+
+Bad property path:
+line
+^^^^
+2025-06-10 06:51:20 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d5b4da45-7aee-400a-86bb-175a4a24698d | select_result=OK | file_size=32333824 bytes
+2025-06-10 06:51:20 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d5b4da45-7aee-400a-86bb-175a4a24698d | select_result=OK | file_size=32333824 bytes
+2025-06-10 06:51:20 | BI_APP | ERROR | logger:error:81 | Erro ao atualizar layout do dashboard: Invalid property specified for object of type plotly.graph_objs.Bar: 'line'
+
+Did you mean "base"?
+
+    Valid properties:
+        alignmentgroup
+            Set several traces linked to the same position axis or
+            matching axes to the same alignmentgroup. This controls
+            whether bars compute their positional range dependently
+            or independently.
+        base
+            Sets where the bar base is drawn (in position axis
+            units). In "stack" or "relative" barmode, traces that
+            set "base" will be excluded and drawn in "overlay" mode
+            instead.
+        basesrc
+            Sets the source reference on Chart Studio Cloud for
+            `base`.
+        cliponaxis
+            Determines whether the text nodes are clipped about the
+            subplot axes. To show the text nodes above axis lines
+            and tick labels, make sure to set `xaxis.layer` and
+            `yaxis.layer` to *below traces*.
+        constraintext
+            Constrain the size of text inside or outside a bar to
+            be no larger than the bar itself.
+        customdata
+            Assigns extra data each datum. This may be useful when
+            listening to hover, click and selection events. Note
+            that, "scatter" traces also appends customdata items in
+            the markers DOM elements
+        customdatasrc
+            Sets the source reference on Chart Studio Cloud for
+            `customdata`.
+        dx
+            Sets the x coordinate step. See `x0` for more info.
+        dy
+            Sets the y coordinate step. See `y0` for more info.
+        error_x
+            :class:`plotly.graph_objects.bar.ErrorX` instance or
+            dict with compatible properties
+        error_y
+            :class:`plotly.graph_objects.bar.ErrorY` instance or
+            dict with compatible properties
+        hoverinfo
+            Determines which trace information appear on hover. If
+            `none` or `skip` are set, no information is displayed
+            upon hovering. But, if `none` is set, click and hover
+            events are still fired.
+        hoverinfosrc
+            Sets the source reference on Chart Studio Cloud for
+            `hoverinfo`.
+        hoverlabel
+            :class:`plotly.graph_objects.bar.Hoverlabel` instance
+            or dict with compatible properties
+        hovertemplate
+            Template string used for rendering the information that
+            appear on hover box. Note that this will override
+            `hoverinfo`. Variables are inserted using %{variable},
+            for example "y: %{y}" as well as %{xother}, {%_xother},
+            {%_xother_}, {%xother_}. When showing info for several
+            points, "xother" will be added to those with different
+            x positions from the first point. An underscore before
+            or after "(x|y)other" will add a space on that side,
+            only when this field is shown. Numbers are formatted
+            using d3-format's syntax %{variable:d3-format}, for
+            example "Price: %{y:$.2f}".
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format
+            for details on the formatting syntax. Dates are
+            formatted using d3-time-format's syntax
+            %{variable|d3-time-format}, for example "Day:
+            %{2019-01-01|%A}". https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format for details on the
+            date formatting syntax. The variables available in
+            `hovertemplate` are the ones emitted as event data
+            described at this link
+            https://plotly.com/javascript/plotlyjs-events/#event-
+            data. Additionally, every attributes that can be
+            specified per-point (the ones that are `arrayOk: true`)
+            are available. Finally, the template string has access
+            to variables `value` and `label`. Anything contained in
+            tag `<extra>` is displayed in the secondary box, for
+            example "<extra>{fullData.name}</extra>". To hide the
+            secondary box completely, use an empty tag
+            `<extra></extra>`.
+        hovertemplatesrc
+            Sets the source reference on Chart Studio Cloud for
+            `hovertemplate`.
+        hovertext
+            Sets hover text elements associated with each (x,y)
+            pair. If a single string, the same string appears over
+            all the data points. If an array of string, the items
+            are mapped in order to the this trace's (x,y)
+            coordinates. To be seen, trace `hoverinfo` must contain
+            a "text" flag.
+        hovertextsrc
+            Sets the source reference on Chart Studio Cloud for
+            `hovertext`.
+        ids
+            Assigns id labels to each datum. These ids for object
+            constancy of data points during animation. Should be an
+            array of strings, not numbers or any other type.
+        idssrc
+            Sets the source reference on Chart Studio Cloud for
+            `ids`.
+        insidetextanchor
+            Determines if texts are kept at center or start/end
+            points in `textposition` "inside" mode.
+        insidetextfont
+            Sets the font used for `text` lying inside the bar.
+        legend
+            Sets the reference to a legend to show this trace in.
+            References to these legends are "legend", "legend2",
+            "legend3", etc. Settings for these legends are set in
+            the layout, under `layout.legend`, `layout.legend2`,
+            etc.
+        legendgroup
+            Sets the legend group for this trace. Traces and shapes
+            part of the same legend group hide/show at the same
+            time when toggling legend items.
+        legendgrouptitle
+            :class:`plotly.graph_objects.bar.Legendgrouptitle`
+            instance or dict with compatible properties
+        legendrank
+            Sets the legend rank for this trace. Items and groups
+            with smaller ranks are presented on top/left side while
+            with "reversed" `legend.traceorder` they are on
+            bottom/right side. The default legendrank is 1000, so
+            that you can use ranks less than 1000 to place certain
+            items before all unranked items, and ranks greater than
+            1000 to go after all unranked items. When having
+            unranked or equal rank items shapes would be displayed
+            after traces i.e. according to their order in data and
+            layout.
+        legendwidth
+            Sets the width (in px or fraction) of the legend for
+            this trace.
+        marker
+            :class:`plotly.graph_objects.bar.Marker` instance or
+            dict with compatible properties
+        meta
+            Assigns extra meta information associated with this
+            trace that can be used in various text attributes.
+            Attributes such as trace `name`, graph, axis and
+            colorbar `title.text`, annotation `text`
+            `rangeselector`, `updatemenues` and `sliders` `label`
+            text all support `meta`. To access the trace `meta`
+            values in an attribute in the same trace, simply use
+            `%{meta[i]}` where `i` is the index or key of the
+            `meta` item in question. To access trace `meta` in
+            layout attributes, use `%{data[n[.meta[i]}` where `i`
+            is the index or key of the `meta` and `n` is the trace
+            index.
+        metasrc
+            Sets the source reference on Chart Studio Cloud for
+            `meta`.
+        name
+            Sets the trace name. The trace name appears as the
+            legend item and on hover.
+        offset
+            Shifts the position where the bar is drawn (in position
+            axis units). In "group" barmode, traces that set
+            "offset" will be excluded and drawn in "overlay" mode
+            instead.
+        offsetgroup
+            Set several traces linked to the same position axis or
+            matching axes to the same offsetgroup where bars of the
+            same position coordinate will line up.
+        offsetsrc
+            Sets the source reference on Chart Studio Cloud for
+            `offset`.
+        opacity
+            Sets the opacity of the trace.
+        orientation
+            Sets the orientation of the bars. With "v" ("h"), the
+            value of the each bar spans along the vertical
+            (horizontal).
+        outsidetextfont
+            Sets the font used for `text` lying outside the bar.
+        selected
+            :class:`plotly.graph_objects.bar.Selected` instance or
+            dict with compatible properties
+        selectedpoints
+            Array containing integer indices of selected points.
+            Has an effect only for traces that support selections.
+            Note that an empty array means an empty selection where
+            the `unselected` are turned on for all points, whereas,
+            any other non-array values means no selection all where
+            the `selected` and `unselected` styles have no effect.
+        showlegend
+            Determines whether or not an item corresponding to this
+            trace is shown in the legend.
+        stream
+            :class:`plotly.graph_objects.bar.Stream` instance or
+            dict with compatible properties
+        text
+            Sets text elements associated with each (x,y) pair. If
+            a single string, the same string appears over all the
+            data points. If an array of string, the items are
+            mapped in order to the this trace's (x,y) coordinates.
+            If trace `hoverinfo` contains a "text" flag and
+            "hovertext" is not set, these elements will be seen in
+            the hover labels.
+        textangle
+            Sets the angle of the tick labels with respect to the
+            bar. For example, a `tickangle` of -90 draws the tick
+            labels vertically. With "auto" the texts may
+            automatically be rotated to fit with the maximum size
+            in bars.
+        textfont
+            Sets the font used for `text`.
+        textposition
+            Specifies the location of the `text`. "inside"
+            positions `text` inside, next to the bar end (rotated
+            and scaled if needed). "outside" positions `text`
+            outside, next to the bar end (scaled if needed), unless
+            there is another bar stacked on this one, then the text
+            gets pushed inside. "auto" tries to position `text`
+            inside the bar, but if the bar is too small and no bar
+            is stacked on this one the text is moved outside. If
+            "none", no text appears.
+        textpositionsrc
+            Sets the source reference on Chart Studio Cloud for
+            `textposition`.
+        textsrc
+            Sets the source reference on Chart Studio Cloud for
+            `text`.
+        texttemplate
+            Template string used for rendering the information text
+            that appear on points. Note that this will override
+            `textinfo`. Variables are inserted using %{variable},
+            for example "y: %{y}". Numbers are formatted using
+            d3-format's syntax %{variable:d3-format}, for example
+            "Price: %{y:$.2f}".
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format
+            for details on the formatting syntax. Dates are
+            formatted using d3-time-format's syntax
+            %{variable|d3-time-format}, for example "Day:
+            %{2019-01-01|%A}". https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format for details on the
+            date formatting syntax. Every attributes that can be
+            specified per-point (the ones that are `arrayOk: true`)
+            are available. Finally, the template string has access
+            to variables `value` and `label`.
+        texttemplatesrc
+            Sets the source reference on Chart Studio Cloud for
+            `texttemplate`.
+        uid
+            Assign an id to this trace, Use this to provide object
+            constancy between traces during animations and
+            transitions.
+        uirevision
+            Controls persistence of some user-driven changes to the
+            trace: `constraintrange` in `parcoords` traces, as well
+            as some `editable: true` modifications such as `name`
+            and `colorbar.title`. Defaults to `layout.uirevision`.
+            Note that other user-driven trace attribute changes are
+            controlled by `layout` attributes: `trace.visible` is
+            controlled by `layout.legend.uirevision`,
+            `selectedpoints` is controlled by
+            `layout.selectionrevision`, and `colorbar.(x|y)`
+            (accessible with `config: {editable: true}`) is
+            controlled by `layout.editrevision`. Trace changes are
+            tracked by `uid`, which only falls back on trace index
+            if no `uid` is provided. So if your app can add/remove
+            traces before the end of the `data` array, such that
+            the same trace has a different index, you can still
+            preserve user-driven changes if you give each trace a
+            `uid` that stays with it as it moves.
+        unselected
+            :class:`plotly.graph_objects.bar.Unselected` instance
+            or dict with compatible properties
+        visible
+            Determines whether or not this trace is visible. If
+            "legendonly", the trace is not drawn, but can appear as
+            a legend item (provided that the legend itself is
+            visible).
+        width
+            Sets the bar width (in position axis units).
+        widthsrc
+            Sets the source reference on Chart Studio Cloud for
+            `width`.
+        x
+            Sets the x coordinates.
+        x0
+            Alternate to `x`. Builds a linear space of x
+            coordinates. Use with `dx` where `x0` is the starting
+            coordinate and `dx` the step.
+        xaxis
+            Sets a reference between this trace's x coordinates and
+            a 2D cartesian x axis. If "x" (the default value), the
+            x coordinates refer to `layout.xaxis`. If "x2", the x
+            coordinates refer to `layout.xaxis2`, and so on.
+        xcalendar
+            Sets the calendar system to use with `x` date data.
+        xhoverformat
+            Sets the hover text formatting rulefor `x`  using d3
+            formatting mini-languages which are very similar to
+            those in Python. For numbers, see:
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format.
+            And for dates see: https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format. We add two items to
+            d3's date formatter: "%h" for half of the year as a
+            decimal number as well as "%{n}f" for fractional
+            seconds with n digits. For example, *2016-10-13
+            09:15:23.456* with tickformat "%H~%M~%S.%2f" would
+            display *09~15~23.46*By default the values are
+            formatted using `xaxis.hoverformat`.
+        xperiod
+            Only relevant when the axis `type` is "date". Sets the
+            period positioning in milliseconds or "M<n>" on the x
+            axis. Special values in the form of "M<n>" could be
+            used to declare the number of months. In this case `n`
+            must be a positive integer.
+        xperiod0
+            Only relevant when the axis `type` is "date". Sets the
+            base for period positioning in milliseconds or date
+            string on the x0 axis. When `x0period` is round number
+            of weeks, the `x0period0` by default would be on a
+            Sunday i.e. 2000-01-02, otherwise it would be at
+            2000-01-01.
+        xperiodalignment
+            Only relevant when the axis `type` is "date". Sets the
+            alignment of data points on the x axis.
+        xsrc
+            Sets the source reference on Chart Studio Cloud for
+            `x`.
+        y
+            Sets the y coordinates.
+        y0
+            Alternate to `y`. Builds a linear space of y
+            coordinates. Use with `dy` where `y0` is the starting
+            coordinate and `dy` the step.
+        yaxis
+            Sets a reference between this trace's y coordinates and
+            a 2D cartesian y axis. If "y" (the default value), the
+            y coordinates refer to `layout.yaxis`. If "y2", the y
+            coordinates refer to `layout.yaxis2`, and so on.
+        ycalendar
+            Sets the calendar system to use with `y` date data.
+        yhoverformat
+            Sets the hover text formatting rulefor `y`  using d3
+            formatting mini-languages which are very similar to
+            those in Python. For numbers, see:
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format.
+            And for dates see: https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format. We add two items to
+            d3's date formatter: "%h" for half of the year as a
+            decimal number as well as "%{n}f" for fractional
+            seconds with n digits. For example, *2016-10-13
+            09:15:23.456* with tickformat "%H~%M~%S.%2f" would
+            display *09~15~23.46*By default the values are
+            formatted using `yaxis.hoverformat`.
+        yperiod
+            Only relevant when the axis `type` is "date". Sets the
+            period positioning in milliseconds or "M<n>" on the y
+            axis. Special values in the form of "M<n>" could be
+            used to declare the number of months. In this case `n`
+            must be a positive integer.
+        yperiod0
+            Only relevant when the axis `type` is "date". Sets the
+            base for period positioning in milliseconds or date
+            string on the y0 axis. When `y0period` is round number
+            of weeks, the `y0period0` by default would be on a
+            Sunday i.e. 2000-01-02, otherwise it would be at
+            2000-01-01.
+        yperiodalignment
+            Only relevant when the axis `type` is "date". Sets the
+            alignment of data points on the y axis.
+        ysrc
+            Sets the source reference on Chart Studio Cloud for
+            `y`.
+        zorder
+            Sets the layer on which this trace is displayed,
+            relative to other SVG traces on the same subplot. SVG
+            traces with higher `zorder` appear in front of those
+            with lower `zorder`.
+        
+Did you mean "base"?
+
+Bad property path:
+line
+^^^^
+2025-06-10 06:51:22 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:51:25 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:51:26 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d5b4da45-7aee-400a-86bb-175a4a24698d | select_result=OK | file_size=32333824 bytes
+2025-06-10 06:51:26 | BI_APP | ERROR | logger:error:81 | Erro ao atualizar layout do dashboard: Invalid property specified for object of type plotly.graph_objs.Bar: 'line'
+
+Did you mean "base"?
+
+    Valid properties:
+        alignmentgroup
+            Set several traces linked to the same position axis or
+            matching axes to the same alignmentgroup. This controls
+            whether bars compute their positional range dependently
+            or independently.
+        base
+            Sets where the bar base is drawn (in position axis
+            units). In "stack" or "relative" barmode, traces that
+            set "base" will be excluded and drawn in "overlay" mode
+            instead.
+        basesrc
+            Sets the source reference on Chart Studio Cloud for
+            `base`.
+        cliponaxis
+            Determines whether the text nodes are clipped about the
+            subplot axes. To show the text nodes above axis lines
+            and tick labels, make sure to set `xaxis.layer` and
+            `yaxis.layer` to *below traces*.
+        constraintext
+            Constrain the size of text inside or outside a bar to
+            be no larger than the bar itself.
+        customdata
+            Assigns extra data each datum. This may be useful when
+            listening to hover, click and selection events. Note
+            that, "scatter" traces also appends customdata items in
+            the markers DOM elements
+        customdatasrc
+            Sets the source reference on Chart Studio Cloud for
+            `customdata`.
+        dx
+            Sets the x coordinate step. See `x0` for more info.
+        dy
+            Sets the y coordinate step. See `y0` for more info.
+        error_x
+            :class:`plotly.graph_objects.bar.ErrorX` instance or
+            dict with compatible properties
+        error_y
+            :class:`plotly.graph_objects.bar.ErrorY` instance or
+            dict with compatible properties
+        hoverinfo
+            Determines which trace information appear on hover. If
+            `none` or `skip` are set, no information is displayed
+            upon hovering. But, if `none` is set, click and hover
+            events are still fired.
+        hoverinfosrc
+            Sets the source reference on Chart Studio Cloud for
+            `hoverinfo`.
+        hoverlabel
+            :class:`plotly.graph_objects.bar.Hoverlabel` instance
+            or dict with compatible properties
+        hovertemplate
+            Template string used for rendering the information that
+            appear on hover box. Note that this will override
+            `hoverinfo`. Variables are inserted using %{variable},
+            for example "y: %{y}" as well as %{xother}, {%_xother},
+            {%_xother_}, {%xother_}. When showing info for several
+            points, "xother" will be added to those with different
+            x positions from the first point. An underscore before
+            or after "(x|y)other" will add a space on that side,
+            only when this field is shown. Numbers are formatted
+            using d3-format's syntax %{variable:d3-format}, for
+            example "Price: %{y:$.2f}".
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format
+            for details on the formatting syntax. Dates are
+            formatted using d3-time-format's syntax
+            %{variable|d3-time-format}, for example "Day:
+            %{2019-01-01|%A}". https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format for details on the
+            date formatting syntax. The variables available in
+            `hovertemplate` are the ones emitted as event data
+            described at this link
+            https://plotly.com/javascript/plotlyjs-events/#event-
+            data. Additionally, every attributes that can be
+            specified per-point (the ones that are `arrayOk: true`)
+            are available. Finally, the template string has access
+            to variables `value` and `label`. Anything contained in
+            tag `<extra>` is displayed in the secondary box, for
+            example "<extra>{fullData.name}</extra>". To hide the
+            secondary box completely, use an empty tag
+            `<extra></extra>`.
+        hovertemplatesrc
+            Sets the source reference on Chart Studio Cloud for
+            `hovertemplate`.
+        hovertext
+            Sets hover text elements associated with each (x,y)
+            pair. If a single string, the same string appears over
+            all the data points. If an array of string, the items
+            are mapped in order to the this trace's (x,y)
+            coordinates. To be seen, trace `hoverinfo` must contain
+            a "text" flag.
+        hovertextsrc
+            Sets the source reference on Chart Studio Cloud for
+            `hovertext`.
+        ids
+            Assigns id labels to each datum. These ids for object
+            constancy of data points during animation. Should be an
+            array of strings, not numbers or any other type.
+        idssrc
+            Sets the source reference on Chart Studio Cloud for
+            `ids`.
+        insidetextanchor
+            Determines if texts are kept at center or start/end
+            points in `textposition` "inside" mode.
+        insidetextfont
+            Sets the font used for `text` lying inside the bar.
+        legend
+            Sets the reference to a legend to show this trace in.
+            References to these legends are "legend", "legend2",
+            "legend3", etc. Settings for these legends are set in
+            the layout, under `layout.legend`, `layout.legend2`,
+            etc.
+        legendgroup
+            Sets the legend group for this trace. Traces and shapes
+            part of the same legend group hide/show at the same
+            time when toggling legend items.
+        legendgrouptitle
+            :class:`plotly.graph_objects.bar.Legendgrouptitle`
+            instance or dict with compatible properties
+        legendrank
+            Sets the legend rank for this trace. Items and groups
+            with smaller ranks are presented on top/left side while
+            with "reversed" `legend.traceorder` they are on
+            bottom/right side. The default legendrank is 1000, so
+            that you can use ranks less than 1000 to place certain
+            items before all unranked items, and ranks greater than
+            1000 to go after all unranked items. When having
+            unranked or equal rank items shapes would be displayed
+            after traces i.e. according to their order in data and
+            layout.
+        legendwidth
+            Sets the width (in px or fraction) of the legend for
+            this trace.
+        marker
+            :class:`plotly.graph_objects.bar.Marker` instance or
+            dict with compatible properties
+        meta
+            Assigns extra meta information associated with this
+            trace that can be used in various text attributes.
+            Attributes such as trace `name`, graph, axis and
+            colorbar `title.text`, annotation `text`
+            `rangeselector`, `updatemenues` and `sliders` `label`
+            text all support `meta`. To access the trace `meta`
+            values in an attribute in the same trace, simply use
+            `%{meta[i]}` where `i` is the index or key of the
+            `meta` item in question. To access trace `meta` in
+            layout attributes, use `%{data[n[.meta[i]}` where `i`
+            is the index or key of the `meta` and `n` is the trace
+            index.
+        metasrc
+            Sets the source reference on Chart Studio Cloud for
+            `meta`.
+        name
+            Sets the trace name. The trace name appears as the
+            legend item and on hover.
+        offset
+            Shifts the position where the bar is drawn (in position
+            axis units). In "group" barmode, traces that set
+            "offset" will be excluded and drawn in "overlay" mode
+            instead.
+        offsetgroup
+            Set several traces linked to the same position axis or
+            matching axes to the same offsetgroup where bars of the
+            same position coordinate will line up.
+        offsetsrc
+            Sets the source reference on Chart Studio Cloud for
+            `offset`.
+        opacity
+            Sets the opacity of the trace.
+        orientation
+            Sets the orientation of the bars. With "v" ("h"), the
+            value of the each bar spans along the vertical
+            (horizontal).
+        outsidetextfont
+            Sets the font used for `text` lying outside the bar.
+        selected
+            :class:`plotly.graph_objects.bar.Selected` instance or
+            dict with compatible properties
+        selectedpoints
+            Array containing integer indices of selected points.
+            Has an effect only for traces that support selections.
+            Note that an empty array means an empty selection where
+            the `unselected` are turned on for all points, whereas,
+            any other non-array values means no selection all where
+            the `selected` and `unselected` styles have no effect.
+        showlegend
+            Determines whether or not an item corresponding to this
+            trace is shown in the legend.
+        stream
+            :class:`plotly.graph_objects.bar.Stream` instance or
+            dict with compatible properties
+        text
+            Sets text elements associated with each (x,y) pair. If
+            a single string, the same string appears over all the
+            data points. If an array of string, the items are
+            mapped in order to the this trace's (x,y) coordinates.
+            If trace `hoverinfo` contains a "text" flag and
+            "hovertext" is not set, these elements will be seen in
+            the hover labels.
+        textangle
+            Sets the angle of the tick labels with respect to the
+            bar. For example, a `tickangle` of -90 draws the tick
+            labels vertically. With "auto" the texts may
+            automatically be rotated to fit with the maximum size
+            in bars.
+        textfont
+            Sets the font used for `text`.
+        textposition
+            Specifies the location of the `text`. "inside"
+            positions `text` inside, next to the bar end (rotated
+            and scaled if needed). "outside" positions `text`
+            outside, next to the bar end (scaled if needed), unless
+            there is another bar stacked on this one, then the text
+            gets pushed inside. "auto" tries to position `text`
+            inside the bar, but if the bar is too small and no bar
+            is stacked on this one the text is moved outside. If
+            "none", no text appears.
+        textpositionsrc
+            Sets the source reference on Chart Studio Cloud for
+            `textposition`.
+        textsrc
+            Sets the source reference on Chart Studio Cloud for
+            `text`.
+        texttemplate
+            Template string used for rendering the information text
+            that appear on points. Note that this will override
+            `textinfo`. Variables are inserted using %{variable},
+            for example "y: %{y}". Numbers are formatted using
+            d3-format's syntax %{variable:d3-format}, for example
+            "Price: %{y:$.2f}".
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format
+            for details on the formatting syntax. Dates are
+            formatted using d3-time-format's syntax
+            %{variable|d3-time-format}, for example "Day:
+            %{2019-01-01|%A}". https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format for details on the
+            date formatting syntax. Every attributes that can be
+            specified per-point (the ones that are `arrayOk: true`)
+            are available. Finally, the template string has access
+            to variables `value` and `label`.
+        texttemplatesrc
+            Sets the source reference on Chart Studio Cloud for
+            `texttemplate`.
+        uid
+            Assign an id to this trace, Use this to provide object
+            constancy between traces during animations and
+            transitions.
+        uirevision
+            Controls persistence of some user-driven changes to the
+            trace: `constraintrange` in `parcoords` traces, as well
+            as some `editable: true` modifications such as `name`
+            and `colorbar.title`. Defaults to `layout.uirevision`.
+            Note that other user-driven trace attribute changes are
+            controlled by `layout` attributes: `trace.visible` is
+            controlled by `layout.legend.uirevision`,
+            `selectedpoints` is controlled by
+            `layout.selectionrevision`, and `colorbar.(x|y)`
+            (accessible with `config: {editable: true}`) is
+            controlled by `layout.editrevision`. Trace changes are
+            tracked by `uid`, which only falls back on trace index
+            if no `uid` is provided. So if your app can add/remove
+            traces before the end of the `data` array, such that
+            the same trace has a different index, you can still
+            preserve user-driven changes if you give each trace a
+            `uid` that stays with it as it moves.
+        unselected
+            :class:`plotly.graph_objects.bar.Unselected` instance
+            or dict with compatible properties
+        visible
+            Determines whether or not this trace is visible. If
+            "legendonly", the trace is not drawn, but can appear as
+            a legend item (provided that the legend itself is
+            visible).
+        width
+            Sets the bar width (in position axis units).
+        widthsrc
+            Sets the source reference on Chart Studio Cloud for
+            `width`.
+        x
+            Sets the x coordinates.
+        x0
+            Alternate to `x`. Builds a linear space of x
+            coordinates. Use with `dx` where `x0` is the starting
+            coordinate and `dx` the step.
+        xaxis
+            Sets a reference between this trace's x coordinates and
+            a 2D cartesian x axis. If "x" (the default value), the
+            x coordinates refer to `layout.xaxis`. If "x2", the x
+            coordinates refer to `layout.xaxis2`, and so on.
+        xcalendar
+            Sets the calendar system to use with `x` date data.
+        xhoverformat
+            Sets the hover text formatting rulefor `x`  using d3
+            formatting mini-languages which are very similar to
+            those in Python. For numbers, see:
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format.
+            And for dates see: https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format. We add two items to
+            d3's date formatter: "%h" for half of the year as a
+            decimal number as well as "%{n}f" for fractional
+            seconds with n digits. For example, *2016-10-13
+            09:15:23.456* with tickformat "%H~%M~%S.%2f" would
+            display *09~15~23.46*By default the values are
+            formatted using `xaxis.hoverformat`.
+        xperiod
+            Only relevant when the axis `type` is "date". Sets the
+            period positioning in milliseconds or "M<n>" on the x
+            axis. Special values in the form of "M<n>" could be
+            used to declare the number of months. In this case `n`
+            must be a positive integer.
+        xperiod0
+            Only relevant when the axis `type` is "date". Sets the
+            base for period positioning in milliseconds or date
+            string on the x0 axis. When `x0period` is round number
+            of weeks, the `x0period0` by default would be on a
+            Sunday i.e. 2000-01-02, otherwise it would be at
+            2000-01-01.
+        xperiodalignment
+            Only relevant when the axis `type` is "date". Sets the
+            alignment of data points on the x axis.
+        xsrc
+            Sets the source reference on Chart Studio Cloud for
+            `x`.
+        y
+            Sets the y coordinates.
+        y0
+            Alternate to `y`. Builds a linear space of y
+            coordinates. Use with `dy` where `y0` is the starting
+            coordinate and `dy` the step.
+        yaxis
+            Sets a reference between this trace's y coordinates and
+            a 2D cartesian y axis. If "y" (the default value), the
+            y coordinates refer to `layout.yaxis`. If "y2", the y
+            coordinates refer to `layout.yaxis2`, and so on.
+        ycalendar
+            Sets the calendar system to use with `y` date data.
+        yhoverformat
+            Sets the hover text formatting rulefor `y`  using d3
+            formatting mini-languages which are very similar to
+            those in Python. For numbers, see:
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format.
+            And for dates see: https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format. We add two items to
+            d3's date formatter: "%h" for half of the year as a
+            decimal number as well as "%{n}f" for fractional
+            seconds with n digits. For example, *2016-10-13
+            09:15:23.456* with tickformat "%H~%M~%S.%2f" would
+            display *09~15~23.46*By default the values are
+            formatted using `yaxis.hoverformat`.
+        yperiod
+            Only relevant when the axis `type` is "date". Sets the
+            period positioning in milliseconds or "M<n>" on the y
+            axis. Special values in the form of "M<n>" could be
+            used to declare the number of months. In this case `n`
+            must be a positive integer.
+        yperiod0
+            Only relevant when the axis `type` is "date". Sets the
+            base for period positioning in milliseconds or date
+            string on the y0 axis. When `y0period` is round number
+            of weeks, the `y0period0` by default would be on a
+            Sunday i.e. 2000-01-02, otherwise it would be at
+            2000-01-01.
+        yperiodalignment
+            Only relevant when the axis `type` is "date". Sets the
+            alignment of data points on the y axis.
+        ysrc
+            Sets the source reference on Chart Studio Cloud for
+            `y`.
+        zorder
+            Sets the layer on which this trace is displayed,
+            relative to other SVG traces on the same subplot. SVG
+            traces with higher `zorder` appear in front of those
+            with lower `zorder`.
+        
+Did you mean "base"?
+
+Bad property path:
+line
+^^^^
+2025-06-10 06:53:20 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 06:53:20 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 06:53:20 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 06:53:20 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 06:53:20 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 06:53:20 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 06:53:20 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 06:53:20 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 06:53:20 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 06:53:20 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 06:53:20 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 06:53:20 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 06:53:27 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 06:53:27 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 06:53:28 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 06:53:28 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 06:53:28 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 06:53:28 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 06:53:28 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 06:53:28 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 06:53:28 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 06:53:28 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 06:53:28 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 06:53:28 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 06:53:46 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: d5b4da45-7aee-400a-86bb-175a4a24698d
+2025-06-10 06:53:46 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:53:46 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d5b4da45-7aee-400a-86bb-175a4a24698d | select_result=OK | file_size=32333824 bytes
+2025-06-10 06:53:46 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-10 06:53:47 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d5b4da45-7aee-400a-86bb-175a4a24698d | select_result=OK | file_size=32333824 bytes
+2025-06-10 06:53:48 | BI_APP | ERROR | logger:error:81 | Erro ao atualizar layout do dashboard: Invalid property specified for object of type plotly.graph_objs.Bar: 'line'
+
+Did you mean "base"?
+
+    Valid properties:
+        alignmentgroup
+            Set several traces linked to the same position axis or
+            matching axes to the same alignmentgroup. This controls
+            whether bars compute their positional range dependently
+            or independently.
+        base
+            Sets where the bar base is drawn (in position axis
+            units). In "stack" or "relative" barmode, traces that
+            set "base" will be excluded and drawn in "overlay" mode
+            instead.
+        basesrc
+            Sets the source reference on Chart Studio Cloud for
+            `base`.
+        cliponaxis
+            Determines whether the text nodes are clipped about the
+            subplot axes. To show the text nodes above axis lines
+            and tick labels, make sure to set `xaxis.layer` and
+            `yaxis.layer` to *below traces*.
+        constraintext
+            Constrain the size of text inside or outside a bar to
+            be no larger than the bar itself.
+        customdata
+            Assigns extra data each datum. This may be useful when
+            listening to hover, click and selection events. Note
+            that, "scatter" traces also appends customdata items in
+            the markers DOM elements
+        customdatasrc
+            Sets the source reference on Chart Studio Cloud for
+            `customdata`.
+        dx
+            Sets the x coordinate step. See `x0` for more info.
+        dy
+            Sets the y coordinate step. See `y0` for more info.
+        error_x
+            :class:`plotly.graph_objects.bar.ErrorX` instance or
+            dict with compatible properties
+        error_y
+            :class:`plotly.graph_objects.bar.ErrorY` instance or
+            dict with compatible properties
+        hoverinfo
+            Determines which trace information appear on hover. If
+            `none` or `skip` are set, no information is displayed
+            upon hovering. But, if `none` is set, click and hover
+            events are still fired.
+        hoverinfosrc
+            Sets the source reference on Chart Studio Cloud for
+            `hoverinfo`.
+        hoverlabel
+            :class:`plotly.graph_objects.bar.Hoverlabel` instance
+            or dict with compatible properties
+        hovertemplate
+            Template string used for rendering the information that
+            appear on hover box. Note that this will override
+            `hoverinfo`. Variables are inserted using %{variable},
+            for example "y: %{y}" as well as %{xother}, {%_xother},
+            {%_xother_}, {%xother_}. When showing info for several
+            points, "xother" will be added to those with different
+            x positions from the first point. An underscore before
+            or after "(x|y)other" will add a space on that side,
+            only when this field is shown. Numbers are formatted
+            using d3-format's syntax %{variable:d3-format}, for
+            example "Price: %{y:$.2f}".
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format
+            for details on the formatting syntax. Dates are
+            formatted using d3-time-format's syntax
+            %{variable|d3-time-format}, for example "Day:
+            %{2019-01-01|%A}". https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format for details on the
+            date formatting syntax. The variables available in
+            `hovertemplate` are the ones emitted as event data
+            described at this link
+            https://plotly.com/javascript/plotlyjs-events/#event-
+            data. Additionally, every attributes that can be
+            specified per-point (the ones that are `arrayOk: true`)
+            are available. Finally, the template string has access
+            to variables `value` and `label`. Anything contained in
+            tag `<extra>` is displayed in the secondary box, for
+            example "<extra>{fullData.name}</extra>". To hide the
+            secondary box completely, use an empty tag
+            `<extra></extra>`.
+        hovertemplatesrc
+            Sets the source reference on Chart Studio Cloud for
+            `hovertemplate`.
+        hovertext
+            Sets hover text elements associated with each (x,y)
+            pair. If a single string, the same string appears over
+            all the data points. If an array of string, the items
+            are mapped in order to the this trace's (x,y)
+            coordinates. To be seen, trace `hoverinfo` must contain
+            a "text" flag.
+        hovertextsrc
+            Sets the source reference on Chart Studio Cloud for
+            `hovertext`.
+        ids
+            Assigns id labels to each datum. These ids for object
+            constancy of data points during animation. Should be an
+            array of strings, not numbers or any other type.
+        idssrc
+            Sets the source reference on Chart Studio Cloud for
+            `ids`.
+        insidetextanchor
+            Determines if texts are kept at center or start/end
+            points in `textposition` "inside" mode.
+        insidetextfont
+            Sets the font used for `text` lying inside the bar.
+        legend
+            Sets the reference to a legend to show this trace in.
+            References to these legends are "legend", "legend2",
+            "legend3", etc. Settings for these legends are set in
+            the layout, under `layout.legend`, `layout.legend2`,
+            etc.
+        legendgroup
+            Sets the legend group for this trace. Traces and shapes
+            part of the same legend group hide/show at the same
+            time when toggling legend items.
+        legendgrouptitle
+            :class:`plotly.graph_objects.bar.Legendgrouptitle`
+            instance or dict with compatible properties
+        legendrank
+            Sets the legend rank for this trace. Items and groups
+            with smaller ranks are presented on top/left side while
+            with "reversed" `legend.traceorder` they are on
+            bottom/right side. The default legendrank is 1000, so
+            that you can use ranks less than 1000 to place certain
+            items before all unranked items, and ranks greater than
+            1000 to go after all unranked items. When having
+            unranked or equal rank items shapes would be displayed
+            after traces i.e. according to their order in data and
+            layout.
+        legendwidth
+            Sets the width (in px or fraction) of the legend for
+            this trace.
+        marker
+            :class:`plotly.graph_objects.bar.Marker` instance or
+            dict with compatible properties
+        meta
+            Assigns extra meta information associated with this
+            trace that can be used in various text attributes.
+            Attributes such as trace `name`, graph, axis and
+            colorbar `title.text`, annotation `text`
+            `rangeselector`, `updatemenues` and `sliders` `label`
+            text all support `meta`. To access the trace `meta`
+            values in an attribute in the same trace, simply use
+            `%{meta[i]}` where `i` is the index or key of the
+            `meta` item in question. To access trace `meta` in
+            layout attributes, use `%{data[n[.meta[i]}` where `i`
+            is the index or key of the `meta` and `n` is the trace
+            index.
+        metasrc
+            Sets the source reference on Chart Studio Cloud for
+            `meta`.
+        name
+            Sets the trace name. The trace name appears as the
+            legend item and on hover.
+        offset
+            Shifts the position where the bar is drawn (in position
+            axis units). In "group" barmode, traces that set
+            "offset" will be excluded and drawn in "overlay" mode
+            instead.
+        offsetgroup
+            Set several traces linked to the same position axis or
+            matching axes to the same offsetgroup where bars of the
+            same position coordinate will line up.
+        offsetsrc
+            Sets the source reference on Chart Studio Cloud for
+            `offset`.
+        opacity
+            Sets the opacity of the trace.
+        orientation
+            Sets the orientation of the bars. With "v" ("h"), the
+            value of the each bar spans along the vertical
+            (horizontal).
+        outsidetextfont
+            Sets the font used for `text` lying outside the bar.
+        selected
+            :class:`plotly.graph_objects.bar.Selected` instance or
+            dict with compatible properties
+        selectedpoints
+            Array containing integer indices of selected points.
+            Has an effect only for traces that support selections.
+            Note that an empty array means an empty selection where
+            the `unselected` are turned on for all points, whereas,
+            any other non-array values means no selection all where
+            the `selected` and `unselected` styles have no effect.
+        showlegend
+            Determines whether or not an item corresponding to this
+            trace is shown in the legend.
+        stream
+            :class:`plotly.graph_objects.bar.Stream` instance or
+            dict with compatible properties
+        text
+            Sets text elements associated with each (x,y) pair. If
+            a single string, the same string appears over all the
+            data points. If an array of string, the items are
+            mapped in order to the this trace's (x,y) coordinates.
+            If trace `hoverinfo` contains a "text" flag and
+            "hovertext" is not set, these elements will be seen in
+            the hover labels.
+        textangle
+            Sets the angle of the tick labels with respect to the
+            bar. For example, a `tickangle` of -90 draws the tick
+            labels vertically. With "auto" the texts may
+            automatically be rotated to fit with the maximum size
+            in bars.
+        textfont
+            Sets the font used for `text`.
+        textposition
+            Specifies the location of the `text`. "inside"
+            positions `text` inside, next to the bar end (rotated
+            and scaled if needed). "outside" positions `text`
+            outside, next to the bar end (scaled if needed), unless
+            there is another bar stacked on this one, then the text
+            gets pushed inside. "auto" tries to position `text`
+            inside the bar, but if the bar is too small and no bar
+            is stacked on this one the text is moved outside. If
+            "none", no text appears.
+        textpositionsrc
+            Sets the source reference on Chart Studio Cloud for
+            `textposition`.
+        textsrc
+            Sets the source reference on Chart Studio Cloud for
+            `text`.
+        texttemplate
+            Template string used for rendering the information text
+            that appear on points. Note that this will override
+            `textinfo`. Variables are inserted using %{variable},
+            for example "y: %{y}". Numbers are formatted using
+            d3-format's syntax %{variable:d3-format}, for example
+            "Price: %{y:$.2f}".
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format
+            for details on the formatting syntax. Dates are
+            formatted using d3-time-format's syntax
+            %{variable|d3-time-format}, for example "Day:
+            %{2019-01-01|%A}". https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format for details on the
+            date formatting syntax. Every attributes that can be
+            specified per-point (the ones that are `arrayOk: true`)
+            are available. Finally, the template string has access
+            to variables `value` and `label`.
+        texttemplatesrc
+            Sets the source reference on Chart Studio Cloud for
+            `texttemplate`.
+        uid
+            Assign an id to this trace, Use this to provide object
+            constancy between traces during animations and
+            transitions.
+        uirevision
+            Controls persistence of some user-driven changes to the
+            trace: `constraintrange` in `parcoords` traces, as well
+            as some `editable: true` modifications such as `name`
+            and `colorbar.title`. Defaults to `layout.uirevision`.
+            Note that other user-driven trace attribute changes are
+            controlled by `layout` attributes: `trace.visible` is
+            controlled by `layout.legend.uirevision`,
+            `selectedpoints` is controlled by
+            `layout.selectionrevision`, and `colorbar.(x|y)`
+            (accessible with `config: {editable: true}`) is
+            controlled by `layout.editrevision`. Trace changes are
+            tracked by `uid`, which only falls back on trace index
+            if no `uid` is provided. So if your app can add/remove
+            traces before the end of the `data` array, such that
+            the same trace has a different index, you can still
+            preserve user-driven changes if you give each trace a
+            `uid` that stays with it as it moves.
+        unselected
+            :class:`plotly.graph_objects.bar.Unselected` instance
+            or dict with compatible properties
+        visible
+            Determines whether or not this trace is visible. If
+            "legendonly", the trace is not drawn, but can appear as
+            a legend item (provided that the legend itself is
+            visible).
+        width
+            Sets the bar width (in position axis units).
+        widthsrc
+            Sets the source reference on Chart Studio Cloud for
+            `width`.
+        x
+            Sets the x coordinates.
+        x0
+            Alternate to `x`. Builds a linear space of x
+            coordinates. Use with `dx` where `x0` is the starting
+            coordinate and `dx` the step.
+        xaxis
+            Sets a reference between this trace's x coordinates and
+            a 2D cartesian x axis. If "x" (the default value), the
+            x coordinates refer to `layout.xaxis`. If "x2", the x
+            coordinates refer to `layout.xaxis2`, and so on.
+        xcalendar
+            Sets the calendar system to use with `x` date data.
+        xhoverformat
+            Sets the hover text formatting rulefor `x`  using d3
+            formatting mini-languages which are very similar to
+            those in Python. For numbers, see:
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format.
+            And for dates see: https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format. We add two items to
+            d3's date formatter: "%h" for half of the year as a
+            decimal number as well as "%{n}f" for fractional
+            seconds with n digits. For example, *2016-10-13
+            09:15:23.456* with tickformat "%H~%M~%S.%2f" would
+            display *09~15~23.46*By default the values are
+            formatted using `xaxis.hoverformat`.
+        xperiod
+            Only relevant when the axis `type` is "date". Sets the
+            period positioning in milliseconds or "M<n>" on the x
+            axis. Special values in the form of "M<n>" could be
+            used to declare the number of months. In this case `n`
+            must be a positive integer.
+        xperiod0
+            Only relevant when the axis `type` is "date". Sets the
+            base for period positioning in milliseconds or date
+            string on the x0 axis. When `x0period` is round number
+            of weeks, the `x0period0` by default would be on a
+            Sunday i.e. 2000-01-02, otherwise it would be at
+            2000-01-01.
+        xperiodalignment
+            Only relevant when the axis `type` is "date". Sets the
+            alignment of data points on the x axis.
+        xsrc
+            Sets the source reference on Chart Studio Cloud for
+            `x`.
+        y
+            Sets the y coordinates.
+        y0
+            Alternate to `y`. Builds a linear space of y
+            coordinates. Use with `dy` where `y0` is the starting
+            coordinate and `dy` the step.
+        yaxis
+            Sets a reference between this trace's y coordinates and
+            a 2D cartesian y axis. If "y" (the default value), the
+            y coordinates refer to `layout.yaxis`. If "y2", the y
+            coordinates refer to `layout.yaxis2`, and so on.
+        ycalendar
+            Sets the calendar system to use with `y` date data.
+        yhoverformat
+            Sets the hover text formatting rulefor `y`  using d3
+            formatting mini-languages which are very similar to
+            those in Python. For numbers, see:
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format.
+            And for dates see: https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format. We add two items to
+            d3's date formatter: "%h" for half of the year as a
+            decimal number as well as "%{n}f" for fractional
+            seconds with n digits. For example, *2016-10-13
+            09:15:23.456* with tickformat "%H~%M~%S.%2f" would
+            display *09~15~23.46*By default the values are
+            formatted using `yaxis.hoverformat`.
+        yperiod
+            Only relevant when the axis `type` is "date". Sets the
+            period positioning in milliseconds or "M<n>" on the y
+            axis. Special values in the form of "M<n>" could be
+            used to declare the number of months. In this case `n`
+            must be a positive integer.
+        yperiod0
+            Only relevant when the axis `type` is "date". Sets the
+            base for period positioning in milliseconds or date
+            string on the y0 axis. When `y0period` is round number
+            of weeks, the `y0period0` by default would be on a
+            Sunday i.e. 2000-01-02, otherwise it would be at
+            2000-01-01.
+        yperiodalignment
+            Only relevant when the axis `type` is "date". Sets the
+            alignment of data points on the y axis.
+        ysrc
+            Sets the source reference on Chart Studio Cloud for
+            `y`.
+        zorder
+            Sets the layer on which this trace is displayed,
+            relative to other SVG traces on the same subplot. SVG
+            traces with higher `zorder` appear in front of those
+            with lower `zorder`.
+        
+Did you mean "base"?
+
+Bad property path:
+line
+^^^^
+2025-06-10 06:53:52 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:53:54 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:53:54 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d5b4da45-7aee-400a-86bb-175a4a24698d | select_result=OK | file_size=32333824 bytes
+2025-06-10 06:53:55 | BI_APP | ERROR | logger:error:81 | Erro ao atualizar layout do dashboard: Invalid property specified for object of type plotly.graph_objs.Bar: 'line'
+
+Did you mean "base"?
+
+    Valid properties:
+        alignmentgroup
+            Set several traces linked to the same position axis or
+            matching axes to the same alignmentgroup. This controls
+            whether bars compute their positional range dependently
+            or independently.
+        base
+            Sets where the bar base is drawn (in position axis
+            units). In "stack" or "relative" barmode, traces that
+            set "base" will be excluded and drawn in "overlay" mode
+            instead.
+        basesrc
+            Sets the source reference on Chart Studio Cloud for
+            `base`.
+        cliponaxis
+            Determines whether the text nodes are clipped about the
+            subplot axes. To show the text nodes above axis lines
+            and tick labels, make sure to set `xaxis.layer` and
+            `yaxis.layer` to *below traces*.
+        constraintext
+            Constrain the size of text inside or outside a bar to
+            be no larger than the bar itself.
+        customdata
+            Assigns extra data each datum. This may be useful when
+            listening to hover, click and selection events. Note
+            that, "scatter" traces also appends customdata items in
+            the markers DOM elements
+        customdatasrc
+            Sets the source reference on Chart Studio Cloud for
+            `customdata`.
+        dx
+            Sets the x coordinate step. See `x0` for more info.
+        dy
+            Sets the y coordinate step. See `y0` for more info.
+        error_x
+            :class:`plotly.graph_objects.bar.ErrorX` instance or
+            dict with compatible properties
+        error_y
+            :class:`plotly.graph_objects.bar.ErrorY` instance or
+            dict with compatible properties
+        hoverinfo
+            Determines which trace information appear on hover. If
+            `none` or `skip` are set, no information is displayed
+            upon hovering. But, if `none` is set, click and hover
+            events are still fired.
+        hoverinfosrc
+            Sets the source reference on Chart Studio Cloud for
+            `hoverinfo`.
+        hoverlabel
+            :class:`plotly.graph_objects.bar.Hoverlabel` instance
+            or dict with compatible properties
+        hovertemplate
+            Template string used for rendering the information that
+            appear on hover box. Note that this will override
+            `hoverinfo`. Variables are inserted using %{variable},
+            for example "y: %{y}" as well as %{xother}, {%_xother},
+            {%_xother_}, {%xother_}. When showing info for several
+            points, "xother" will be added to those with different
+            x positions from the first point. An underscore before
+            or after "(x|y)other" will add a space on that side,
+            only when this field is shown. Numbers are formatted
+            using d3-format's syntax %{variable:d3-format}, for
+            example "Price: %{y:$.2f}".
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format
+            for details on the formatting syntax. Dates are
+            formatted using d3-time-format's syntax
+            %{variable|d3-time-format}, for example "Day:
+            %{2019-01-01|%A}". https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format for details on the
+            date formatting syntax. The variables available in
+            `hovertemplate` are the ones emitted as event data
+            described at this link
+            https://plotly.com/javascript/plotlyjs-events/#event-
+            data. Additionally, every attributes that can be
+            specified per-point (the ones that are `arrayOk: true`)
+            are available. Finally, the template string has access
+            to variables `value` and `label`. Anything contained in
+            tag `<extra>` is displayed in the secondary box, for
+            example "<extra>{fullData.name}</extra>". To hide the
+            secondary box completely, use an empty tag
+            `<extra></extra>`.
+        hovertemplatesrc
+            Sets the source reference on Chart Studio Cloud for
+            `hovertemplate`.
+        hovertext
+            Sets hover text elements associated with each (x,y)
+            pair. If a single string, the same string appears over
+            all the data points. If an array of string, the items
+            are mapped in order to the this trace's (x,y)
+            coordinates. To be seen, trace `hoverinfo` must contain
+            a "text" flag.
+        hovertextsrc
+            Sets the source reference on Chart Studio Cloud for
+            `hovertext`.
+        ids
+            Assigns id labels to each datum. These ids for object
+            constancy of data points during animation. Should be an
+            array of strings, not numbers or any other type.
+        idssrc
+            Sets the source reference on Chart Studio Cloud for
+            `ids`.
+        insidetextanchor
+            Determines if texts are kept at center or start/end
+            points in `textposition` "inside" mode.
+        insidetextfont
+            Sets the font used for `text` lying inside the bar.
+        legend
+            Sets the reference to a legend to show this trace in.
+            References to these legends are "legend", "legend2",
+            "legend3", etc. Settings for these legends are set in
+            the layout, under `layout.legend`, `layout.legend2`,
+            etc.
+        legendgroup
+            Sets the legend group for this trace. Traces and shapes
+            part of the same legend group hide/show at the same
+            time when toggling legend items.
+        legendgrouptitle
+            :class:`plotly.graph_objects.bar.Legendgrouptitle`
+            instance or dict with compatible properties
+        legendrank
+            Sets the legend rank for this trace. Items and groups
+            with smaller ranks are presented on top/left side while
+            with "reversed" `legend.traceorder` they are on
+            bottom/right side. The default legendrank is 1000, so
+            that you can use ranks less than 1000 to place certain
+            items before all unranked items, and ranks greater than
+            1000 to go after all unranked items. When having
+            unranked or equal rank items shapes would be displayed
+            after traces i.e. according to their order in data and
+            layout.
+        legendwidth
+            Sets the width (in px or fraction) of the legend for
+            this trace.
+        marker
+            :class:`plotly.graph_objects.bar.Marker` instance or
+            dict with compatible properties
+        meta
+            Assigns extra meta information associated with this
+            trace that can be used in various text attributes.
+            Attributes such as trace `name`, graph, axis and
+            colorbar `title.text`, annotation `text`
+            `rangeselector`, `updatemenues` and `sliders` `label`
+            text all support `meta`. To access the trace `meta`
+            values in an attribute in the same trace, simply use
+            `%{meta[i]}` where `i` is the index or key of the
+            `meta` item in question. To access trace `meta` in
+            layout attributes, use `%{data[n[.meta[i]}` where `i`
+            is the index or key of the `meta` and `n` is the trace
+            index.
+        metasrc
+            Sets the source reference on Chart Studio Cloud for
+            `meta`.
+        name
+            Sets the trace name. The trace name appears as the
+            legend item and on hover.
+        offset
+            Shifts the position where the bar is drawn (in position
+            axis units). In "group" barmode, traces that set
+            "offset" will be excluded and drawn in "overlay" mode
+            instead.
+        offsetgroup
+            Set several traces linked to the same position axis or
+            matching axes to the same offsetgroup where bars of the
+            same position coordinate will line up.
+        offsetsrc
+            Sets the source reference on Chart Studio Cloud for
+            `offset`.
+        opacity
+            Sets the opacity of the trace.
+        orientation
+            Sets the orientation of the bars. With "v" ("h"), the
+            value of the each bar spans along the vertical
+            (horizontal).
+        outsidetextfont
+            Sets the font used for `text` lying outside the bar.
+        selected
+            :class:`plotly.graph_objects.bar.Selected` instance or
+            dict with compatible properties
+        selectedpoints
+            Array containing integer indices of selected points.
+            Has an effect only for traces that support selections.
+            Note that an empty array means an empty selection where
+            the `unselected` are turned on for all points, whereas,
+            any other non-array values means no selection all where
+            the `selected` and `unselected` styles have no effect.
+        showlegend
+            Determines whether or not an item corresponding to this
+            trace is shown in the legend.
+        stream
+            :class:`plotly.graph_objects.bar.Stream` instance or
+            dict with compatible properties
+        text
+            Sets text elements associated with each (x,y) pair. If
+            a single string, the same string appears over all the
+            data points. If an array of string, the items are
+            mapped in order to the this trace's (x,y) coordinates.
+            If trace `hoverinfo` contains a "text" flag and
+            "hovertext" is not set, these elements will be seen in
+            the hover labels.
+        textangle
+            Sets the angle of the tick labels with respect to the
+            bar. For example, a `tickangle` of -90 draws the tick
+            labels vertically. With "auto" the texts may
+            automatically be rotated to fit with the maximum size
+            in bars.
+        textfont
+            Sets the font used for `text`.
+        textposition
+            Specifies the location of the `text`. "inside"
+            positions `text` inside, next to the bar end (rotated
+            and scaled if needed). "outside" positions `text`
+            outside, next to the bar end (scaled if needed), unless
+            there is another bar stacked on this one, then the text
+            gets pushed inside. "auto" tries to position `text`
+            inside the bar, but if the bar is too small and no bar
+            is stacked on this one the text is moved outside. If
+            "none", no text appears.
+        textpositionsrc
+            Sets the source reference on Chart Studio Cloud for
+            `textposition`.
+        textsrc
+            Sets the source reference on Chart Studio Cloud for
+            `text`.
+        texttemplate
+            Template string used for rendering the information text
+            that appear on points. Note that this will override
+            `textinfo`. Variables are inserted using %{variable},
+            for example "y: %{y}". Numbers are formatted using
+            d3-format's syntax %{variable:d3-format}, for example
+            "Price: %{y:$.2f}".
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format
+            for details on the formatting syntax. Dates are
+            formatted using d3-time-format's syntax
+            %{variable|d3-time-format}, for example "Day:
+            %{2019-01-01|%A}". https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format for details on the
+            date formatting syntax. Every attributes that can be
+            specified per-point (the ones that are `arrayOk: true`)
+            are available. Finally, the template string has access
+            to variables `value` and `label`.
+        texttemplatesrc
+            Sets the source reference on Chart Studio Cloud for
+            `texttemplate`.
+        uid
+            Assign an id to this trace, Use this to provide object
+            constancy between traces during animations and
+            transitions.
+        uirevision
+            Controls persistence of some user-driven changes to the
+            trace: `constraintrange` in `parcoords` traces, as well
+            as some `editable: true` modifications such as `name`
+            and `colorbar.title`. Defaults to `layout.uirevision`.
+            Note that other user-driven trace attribute changes are
+            controlled by `layout` attributes: `trace.visible` is
+            controlled by `layout.legend.uirevision`,
+            `selectedpoints` is controlled by
+            `layout.selectionrevision`, and `colorbar.(x|y)`
+            (accessible with `config: {editable: true}`) is
+            controlled by `layout.editrevision`. Trace changes are
+            tracked by `uid`, which only falls back on trace index
+            if no `uid` is provided. So if your app can add/remove
+            traces before the end of the `data` array, such that
+            the same trace has a different index, you can still
+            preserve user-driven changes if you give each trace a
+            `uid` that stays with it as it moves.
+        unselected
+            :class:`plotly.graph_objects.bar.Unselected` instance
+            or dict with compatible properties
+        visible
+            Determines whether or not this trace is visible. If
+            "legendonly", the trace is not drawn, but can appear as
+            a legend item (provided that the legend itself is
+            visible).
+        width
+            Sets the bar width (in position axis units).
+        widthsrc
+            Sets the source reference on Chart Studio Cloud for
+            `width`.
+        x
+            Sets the x coordinates.
+        x0
+            Alternate to `x`. Builds a linear space of x
+            coordinates. Use with `dx` where `x0` is the starting
+            coordinate and `dx` the step.
+        xaxis
+            Sets a reference between this trace's x coordinates and
+            a 2D cartesian x axis. If "x" (the default value), the
+            x coordinates refer to `layout.xaxis`. If "x2", the x
+            coordinates refer to `layout.xaxis2`, and so on.
+        xcalendar
+            Sets the calendar system to use with `x` date data.
+        xhoverformat
+            Sets the hover text formatting rulefor `x`  using d3
+            formatting mini-languages which are very similar to
+            those in Python. For numbers, see:
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format.
+            And for dates see: https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format. We add two items to
+            d3's date formatter: "%h" for half of the year as a
+            decimal number as well as "%{n}f" for fractional
+            seconds with n digits. For example, *2016-10-13
+            09:15:23.456* with tickformat "%H~%M~%S.%2f" would
+            display *09~15~23.46*By default the values are
+            formatted using `xaxis.hoverformat`.
+        xperiod
+            Only relevant when the axis `type` is "date". Sets the
+            period positioning in milliseconds or "M<n>" on the x
+            axis. Special values in the form of "M<n>" could be
+            used to declare the number of months. In this case `n`
+            must be a positive integer.
+        xperiod0
+            Only relevant when the axis `type` is "date". Sets the
+            base for period positioning in milliseconds or date
+            string on the x0 axis. When `x0period` is round number
+            of weeks, the `x0period0` by default would be on a
+            Sunday i.e. 2000-01-02, otherwise it would be at
+            2000-01-01.
+        xperiodalignment
+            Only relevant when the axis `type` is "date". Sets the
+            alignment of data points on the x axis.
+        xsrc
+            Sets the source reference on Chart Studio Cloud for
+            `x`.
+        y
+            Sets the y coordinates.
+        y0
+            Alternate to `y`. Builds a linear space of y
+            coordinates. Use with `dy` where `y0` is the starting
+            coordinate and `dy` the step.
+        yaxis
+            Sets a reference between this trace's y coordinates and
+            a 2D cartesian y axis. If "y" (the default value), the
+            y coordinates refer to `layout.yaxis`. If "y2", the y
+            coordinates refer to `layout.yaxis2`, and so on.
+        ycalendar
+            Sets the calendar system to use with `y` date data.
+        yhoverformat
+            Sets the hover text formatting rulefor `y`  using d3
+            formatting mini-languages which are very similar to
+            those in Python. For numbers, see:
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format.
+            And for dates see: https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format. We add two items to
+            d3's date formatter: "%h" for half of the year as a
+            decimal number as well as "%{n}f" for fractional
+            seconds with n digits. For example, *2016-10-13
+            09:15:23.456* with tickformat "%H~%M~%S.%2f" would
+            display *09~15~23.46*By default the values are
+            formatted using `yaxis.hoverformat`.
+        yperiod
+            Only relevant when the axis `type` is "date". Sets the
+            period positioning in milliseconds or "M<n>" on the y
+            axis. Special values in the form of "M<n>" could be
+            used to declare the number of months. In this case `n`
+            must be a positive integer.
+        yperiod0
+            Only relevant when the axis `type` is "date". Sets the
+            base for period positioning in milliseconds or date
+            string on the y0 axis. When `y0period` is round number
+            of weeks, the `y0period0` by default would be on a
+            Sunday i.e. 2000-01-02, otherwise it would be at
+            2000-01-01.
+        yperiodalignment
+            Only relevant when the axis `type` is "date". Sets the
+            alignment of data points on the y axis.
+        ysrc
+            Sets the source reference on Chart Studio Cloud for
+            `y`.
+        zorder
+            Sets the layer on which this trace is displayed,
+            relative to other SVG traces on the same subplot. SVG
+            traces with higher `zorder` appear in front of those
+            with lower `zorder`.
+        
+Did you mean "base"?
+
+Bad property path:
+line
+^^^^
+2025-06-10 06:54:44 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 06:54:44 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 06:54:44 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 06:54:44 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 06:54:44 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 06:54:44 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 06:54:44 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 06:54:44 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 06:54:44 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 06:54:44 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 06:54:44 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 06:54:44 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 06:54:45 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: d5b4da45-7aee-400a-86bb-175a4a24698d
+2025-06-10 06:54:45 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:54:45 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d5b4da45-7aee-400a-86bb-175a4a24698d | select_result=OK | file_size=32333824 bytes
+2025-06-10 06:54:45 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-10 06:54:46 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d5b4da45-7aee-400a-86bb-175a4a24698d | select_result=OK | file_size=32333824 bytes
+2025-06-10 06:54:47 | BI_APP | ERROR | logger:error:81 | Erro ao atualizar layout do dashboard: Invalid property specified for object of type plotly.graph_objs.Bar: 'line'
+
+Did you mean "base"?
+
+    Valid properties:
+        alignmentgroup
+            Set several traces linked to the same position axis or
+            matching axes to the same alignmentgroup. This controls
+            whether bars compute their positional range dependently
+            or independently.
+        base
+            Sets where the bar base is drawn (in position axis
+            units). In "stack" or "relative" barmode, traces that
+            set "base" will be excluded and drawn in "overlay" mode
+            instead.
+        basesrc
+            Sets the source reference on Chart Studio Cloud for
+            `base`.
+        cliponaxis
+            Determines whether the text nodes are clipped about the
+            subplot axes. To show the text nodes above axis lines
+            and tick labels, make sure to set `xaxis.layer` and
+            `yaxis.layer` to *below traces*.
+        constraintext
+            Constrain the size of text inside or outside a bar to
+            be no larger than the bar itself.
+        customdata
+            Assigns extra data each datum. This may be useful when
+            listening to hover, click and selection events. Note
+            that, "scatter" traces also appends customdata items in
+            the markers DOM elements
+        customdatasrc
+            Sets the source reference on Chart Studio Cloud for
+            `customdata`.
+        dx
+            Sets the x coordinate step. See `x0` for more info.
+        dy
+            Sets the y coordinate step. See `y0` for more info.
+        error_x
+            :class:`plotly.graph_objects.bar.ErrorX` instance or
+            dict with compatible properties
+        error_y
+            :class:`plotly.graph_objects.bar.ErrorY` instance or
+            dict with compatible properties
+        hoverinfo
+            Determines which trace information appear on hover. If
+            `none` or `skip` are set, no information is displayed
+            upon hovering. But, if `none` is set, click and hover
+            events are still fired.
+        hoverinfosrc
+            Sets the source reference on Chart Studio Cloud for
+            `hoverinfo`.
+        hoverlabel
+            :class:`plotly.graph_objects.bar.Hoverlabel` instance
+            or dict with compatible properties
+        hovertemplate
+            Template string used for rendering the information that
+            appear on hover box. Note that this will override
+            `hoverinfo`. Variables are inserted using %{variable},
+            for example "y: %{y}" as well as %{xother}, {%_xother},
+            {%_xother_}, {%xother_}. When showing info for several
+            points, "xother" will be added to those with different
+            x positions from the first point. An underscore before
+            or after "(x|y)other" will add a space on that side,
+            only when this field is shown. Numbers are formatted
+            using d3-format's syntax %{variable:d3-format}, for
+            example "Price: %{y:$.2f}".
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format
+            for details on the formatting syntax. Dates are
+            formatted using d3-time-format's syntax
+            %{variable|d3-time-format}, for example "Day:
+            %{2019-01-01|%A}". https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format for details on the
+            date formatting syntax. The variables available in
+            `hovertemplate` are the ones emitted as event data
+            described at this link
+            https://plotly.com/javascript/plotlyjs-events/#event-
+            data. Additionally, every attributes that can be
+            specified per-point (the ones that are `arrayOk: true`)
+            are available. Finally, the template string has access
+            to variables `value` and `label`. Anything contained in
+            tag `<extra>` is displayed in the secondary box, for
+            example "<extra>{fullData.name}</extra>". To hide the
+            secondary box completely, use an empty tag
+            `<extra></extra>`.
+        hovertemplatesrc
+            Sets the source reference on Chart Studio Cloud for
+            `hovertemplate`.
+        hovertext
+            Sets hover text elements associated with each (x,y)
+            pair. If a single string, the same string appears over
+            all the data points. If an array of string, the items
+            are mapped in order to the this trace's (x,y)
+            coordinates. To be seen, trace `hoverinfo` must contain
+            a "text" flag.
+        hovertextsrc
+            Sets the source reference on Chart Studio Cloud for
+            `hovertext`.
+        ids
+            Assigns id labels to each datum. These ids for object
+            constancy of data points during animation. Should be an
+            array of strings, not numbers or any other type.
+        idssrc
+            Sets the source reference on Chart Studio Cloud for
+            `ids`.
+        insidetextanchor
+            Determines if texts are kept at center or start/end
+            points in `textposition` "inside" mode.
+        insidetextfont
+            Sets the font used for `text` lying inside the bar.
+        legend
+            Sets the reference to a legend to show this trace in.
+            References to these legends are "legend", "legend2",
+            "legend3", etc. Settings for these legends are set in
+            the layout, under `layout.legend`, `layout.legend2`,
+            etc.
+        legendgroup
+            Sets the legend group for this trace. Traces and shapes
+            part of the same legend group hide/show at the same
+            time when toggling legend items.
+        legendgrouptitle
+            :class:`plotly.graph_objects.bar.Legendgrouptitle`
+            instance or dict with compatible properties
+        legendrank
+            Sets the legend rank for this trace. Items and groups
+            with smaller ranks are presented on top/left side while
+            with "reversed" `legend.traceorder` they are on
+            bottom/right side. The default legendrank is 1000, so
+            that you can use ranks less than 1000 to place certain
+            items before all unranked items, and ranks greater than
+            1000 to go after all unranked items. When having
+            unranked or equal rank items shapes would be displayed
+            after traces i.e. according to their order in data and
+            layout.
+        legendwidth
+            Sets the width (in px or fraction) of the legend for
+            this trace.
+        marker
+            :class:`plotly.graph_objects.bar.Marker` instance or
+            dict with compatible properties
+        meta
+            Assigns extra meta information associated with this
+            trace that can be used in various text attributes.
+            Attributes such as trace `name`, graph, axis and
+            colorbar `title.text`, annotation `text`
+            `rangeselector`, `updatemenues` and `sliders` `label`
+            text all support `meta`. To access the trace `meta`
+            values in an attribute in the same trace, simply use
+            `%{meta[i]}` where `i` is the index or key of the
+            `meta` item in question. To access trace `meta` in
+            layout attributes, use `%{data[n[.meta[i]}` where `i`
+            is the index or key of the `meta` and `n` is the trace
+            index.
+        metasrc
+            Sets the source reference on Chart Studio Cloud for
+            `meta`.
+        name
+            Sets the trace name. The trace name appears as the
+            legend item and on hover.
+        offset
+            Shifts the position where the bar is drawn (in position
+            axis units). In "group" barmode, traces that set
+            "offset" will be excluded and drawn in "overlay" mode
+            instead.
+        offsetgroup
+            Set several traces linked to the same position axis or
+            matching axes to the same offsetgroup where bars of the
+            same position coordinate will line up.
+        offsetsrc
+            Sets the source reference on Chart Studio Cloud for
+            `offset`.
+        opacity
+            Sets the opacity of the trace.
+        orientation
+            Sets the orientation of the bars. With "v" ("h"), the
+            value of the each bar spans along the vertical
+            (horizontal).
+        outsidetextfont
+            Sets the font used for `text` lying outside the bar.
+        selected
+            :class:`plotly.graph_objects.bar.Selected` instance or
+            dict with compatible properties
+        selectedpoints
+            Array containing integer indices of selected points.
+            Has an effect only for traces that support selections.
+            Note that an empty array means an empty selection where
+            the `unselected` are turned on for all points, whereas,
+            any other non-array values means no selection all where
+            the `selected` and `unselected` styles have no effect.
+        showlegend
+            Determines whether or not an item corresponding to this
+            trace is shown in the legend.
+        stream
+            :class:`plotly.graph_objects.bar.Stream` instance or
+            dict with compatible properties
+        text
+            Sets text elements associated with each (x,y) pair. If
+            a single string, the same string appears over all the
+            data points. If an array of string, the items are
+            mapped in order to the this trace's (x,y) coordinates.
+            If trace `hoverinfo` contains a "text" flag and
+            "hovertext" is not set, these elements will be seen in
+            the hover labels.
+        textangle
+            Sets the angle of the tick labels with respect to the
+            bar. For example, a `tickangle` of -90 draws the tick
+            labels vertically. With "auto" the texts may
+            automatically be rotated to fit with the maximum size
+            in bars.
+        textfont
+            Sets the font used for `text`.
+        textposition
+            Specifies the location of the `text`. "inside"
+            positions `text` inside, next to the bar end (rotated
+            and scaled if needed). "outside" positions `text`
+            outside, next to the bar end (scaled if needed), unless
+            there is another bar stacked on this one, then the text
+            gets pushed inside. "auto" tries to position `text`
+            inside the bar, but if the bar is too small and no bar
+            is stacked on this one the text is moved outside. If
+            "none", no text appears.
+        textpositionsrc
+            Sets the source reference on Chart Studio Cloud for
+            `textposition`.
+        textsrc
+            Sets the source reference on Chart Studio Cloud for
+            `text`.
+        texttemplate
+            Template string used for rendering the information text
+            that appear on points. Note that this will override
+            `textinfo`. Variables are inserted using %{variable},
+            for example "y: %{y}". Numbers are formatted using
+            d3-format's syntax %{variable:d3-format}, for example
+            "Price: %{y:$.2f}".
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format
+            for details on the formatting syntax. Dates are
+            formatted using d3-time-format's syntax
+            %{variable|d3-time-format}, for example "Day:
+            %{2019-01-01|%A}". https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format for details on the
+            date formatting syntax. Every attributes that can be
+            specified per-point (the ones that are `arrayOk: true`)
+            are available. Finally, the template string has access
+            to variables `value` and `label`.
+        texttemplatesrc
+            Sets the source reference on Chart Studio Cloud for
+            `texttemplate`.
+        uid
+            Assign an id to this trace, Use this to provide object
+            constancy between traces during animations and
+            transitions.
+        uirevision
+            Controls persistence of some user-driven changes to the
+            trace: `constraintrange` in `parcoords` traces, as well
+            as some `editable: true` modifications such as `name`
+            and `colorbar.title`. Defaults to `layout.uirevision`.
+            Note that other user-driven trace attribute changes are
+            controlled by `layout` attributes: `trace.visible` is
+            controlled by `layout.legend.uirevision`,
+            `selectedpoints` is controlled by
+            `layout.selectionrevision`, and `colorbar.(x|y)`
+            (accessible with `config: {editable: true}`) is
+            controlled by `layout.editrevision`. Trace changes are
+            tracked by `uid`, which only falls back on trace index
+            if no `uid` is provided. So if your app can add/remove
+            traces before the end of the `data` array, such that
+            the same trace has a different index, you can still
+            preserve user-driven changes if you give each trace a
+            `uid` that stays with it as it moves.
+        unselected
+            :class:`plotly.graph_objects.bar.Unselected` instance
+            or dict with compatible properties
+        visible
+            Determines whether or not this trace is visible. If
+            "legendonly", the trace is not drawn, but can appear as
+            a legend item (provided that the legend itself is
+            visible).
+        width
+            Sets the bar width (in position axis units).
+        widthsrc
+            Sets the source reference on Chart Studio Cloud for
+            `width`.
+        x
+            Sets the x coordinates.
+        x0
+            Alternate to `x`. Builds a linear space of x
+            coordinates. Use with `dx` where `x0` is the starting
+            coordinate and `dx` the step.
+        xaxis
+            Sets a reference between this trace's x coordinates and
+            a 2D cartesian x axis. If "x" (the default value), the
+            x coordinates refer to `layout.xaxis`. If "x2", the x
+            coordinates refer to `layout.xaxis2`, and so on.
+        xcalendar
+            Sets the calendar system to use with `x` date data.
+        xhoverformat
+            Sets the hover text formatting rulefor `x`  using d3
+            formatting mini-languages which are very similar to
+            those in Python. For numbers, see:
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format.
+            And for dates see: https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format. We add two items to
+            d3's date formatter: "%h" for half of the year as a
+            decimal number as well as "%{n}f" for fractional
+            seconds with n digits. For example, *2016-10-13
+            09:15:23.456* with tickformat "%H~%M~%S.%2f" would
+            display *09~15~23.46*By default the values are
+            formatted using `xaxis.hoverformat`.
+        xperiod
+            Only relevant when the axis `type` is "date". Sets the
+            period positioning in milliseconds or "M<n>" on the x
+            axis. Special values in the form of "M<n>" could be
+            used to declare the number of months. In this case `n`
+            must be a positive integer.
+        xperiod0
+            Only relevant when the axis `type` is "date". Sets the
+            base for period positioning in milliseconds or date
+            string on the x0 axis. When `x0period` is round number
+            of weeks, the `x0period0` by default would be on a
+            Sunday i.e. 2000-01-02, otherwise it would be at
+            2000-01-01.
+        xperiodalignment
+            Only relevant when the axis `type` is "date". Sets the
+            alignment of data points on the x axis.
+        xsrc
+            Sets the source reference on Chart Studio Cloud for
+            `x`.
+        y
+            Sets the y coordinates.
+        y0
+            Alternate to `y`. Builds a linear space of y
+            coordinates. Use with `dy` where `y0` is the starting
+            coordinate and `dy` the step.
+        yaxis
+            Sets a reference between this trace's y coordinates and
+            a 2D cartesian y axis. If "y" (the default value), the
+            y coordinates refer to `layout.yaxis`. If "y2", the y
+            coordinates refer to `layout.yaxis2`, and so on.
+        ycalendar
+            Sets the calendar system to use with `y` date data.
+        yhoverformat
+            Sets the hover text formatting rulefor `y`  using d3
+            formatting mini-languages which are very similar to
+            those in Python. For numbers, see:
+            https://github.com/d3/d3-format/tree/v1.4.5#d3-format.
+            And for dates see: https://github.com/d3/d3-time-
+            format/tree/v2.2.3#locale_format. We add two items to
+            d3's date formatter: "%h" for half of the year as a
+            decimal number as well as "%{n}f" for fractional
+            seconds with n digits. For example, *2016-10-13
+            09:15:23.456* with tickformat "%H~%M~%S.%2f" would
+            display *09~15~23.46*By default the values are
+            formatted using `yaxis.hoverformat`.
+        yperiod
+            Only relevant when the axis `type` is "date". Sets the
+            period positioning in milliseconds or "M<n>" on the y
+            axis. Special values in the form of "M<n>" could be
+            used to declare the number of months. In this case `n`
+            must be a positive integer.
+        yperiod0
+            Only relevant when the axis `type` is "date". Sets the
+            base for period positioning in milliseconds or date
+            string on the y0 axis. When `y0period` is round number
+            of weeks, the `y0period0` by default would be on a
+            Sunday i.e. 2000-01-02, otherwise it would be at
+            2000-01-01.
+        yperiodalignment
+            Only relevant when the axis `type` is "date". Sets the
+            alignment of data points on the y axis.
+        ysrc
+            Sets the source reference on Chart Studio Cloud for
+            `y`.
+        zorder
+            Sets the layer on which this trace is displayed,
+            relative to other SVG traces on the same subplot. SVG
+            traces with higher `zorder` appear in front of those
+            with lower `zorder`.
+        
+Did you mean "base"?
+
+Bad property path:
+line
+^^^^
+2025-06-10 06:55:44 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 06:55:44 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 06:55:44 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 06:55:44 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 06:55:44 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 06:55:44 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 06:55:44 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 06:55:44 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 06:55:44 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 06:55:44 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 06:55:44 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 06:55:44 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 06:55:46 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: d5b4da45-7aee-400a-86bb-175a4a24698d
+2025-06-10 06:55:46 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 06:55:46 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d5b4da45-7aee-400a-86bb-175a4a24698d | select_result=OK | file_size=32333824 bytes
+2025-06-10 06:55:46 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-10 06:55:47 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d5b4da45-7aee-400a-86bb-175a4a24698d | select_result=OK | file_size=32333824 bytes
+2025-06-10 06:55:48 | BI_APP | ERROR | logger:error:81 | Erro ao atualizar layout do dashboard: 'info_light'
+2025-06-10 07:06:48 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: d5b4da45-7aee-400a-86bb-175a4a24698d
+2025-06-10 07:06:48 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 07:06:48 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d5b4da45-7aee-400a-86bb-175a4a24698d | select_result=OK | file_size=32333824 bytes
+2025-06-10 07:06:48 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-10 07:06:48 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d5b4da45-7aee-400a-86bb-175a4a24698d | select_result=OK | file_size=32333824 bytes
+2025-06-10 07:06:48 | BI_APP | ERROR | logger:error:81 | Erro ao atualizar layout do dashboard: 'info_light'
+2025-06-10 07:06:52 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 07:06:53 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-10 07:06:59 | BI_APP | INFO | logger:info:70 | Conexão com banco de dados estabelecida
+2025-06-10 07:06:59 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-10 07:07:03 | BI_APP | INFO | logger:info:70 | Query executada com sucesso
+2025-06-10 07:07:03 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=b6b48a32-2781-408f-a869-d5a06d61ce86 | file_size=32788480 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-10 07:07:03 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=b6b48a32-2781-408f-a869-d5a06d61ce86 | select_result=OK | file_size=32788480 bytes
+2025-06-10 07:07:03 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Dados salvos no cache com chave: b6b48a32-2781-408f-a869-d5a06d61ce86. Cache.has('b6b48a32-2781-408f-a869-d5a06d61ce86') = True
+2025-06-10 07:07:03 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=b6b48a32-2781-408f-a869-d5a06d61ce86 | select_result=OK | file_size=32788480 bytes
+2025-06-10 07:07:03 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: 5761
+2025-06-10 07:07:04 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: b6b48a32-2781-408f-a869-d5a06d61ce86
+2025-06-10 07:07:04 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=b6b48a32-2781-408f-a869-d5a06d61ce86 | select_result=OK | file_size=32788480 bytes
+2025-06-10 07:07:04 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-10 07:07:06 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 07:07:06 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=b6b48a32-2781-408f-a869-d5a06d61ce86 | select_result=OK | file_size=32788480 bytes
+2025-06-10 07:07:06 | BI_APP | ERROR | logger:error:81 | Erro ao atualizar layout do dashboard: 'info_light'
+2025-06-10 22:24:26 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 22:24:26 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 22:24:27 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 22:24:27 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 22:24:27 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 22:24:27 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 22:24:27 | BI_APP | INFO | logger:info:70 | Arquivo config/themes.yml criado
+2025-06-10 22:24:27 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 22:24:27 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 22:24:27 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 22:24:27 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 22:24:36 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 22:24:36 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 22:24:36 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 22:24:36 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 22:24:36 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 22:24:36 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 22:24:36 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 22:24:36 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 22:24:36 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 22:24:36 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 22:24:37 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-10 22:24:37 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 22:24:40 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-10 22:24:41 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-10 22:25:00 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 22:25:00 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 22:25:00 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 22:25:00 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 22:25:00 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 22:25:00 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 22:25:00 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 22:25:00 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 22:25:00 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 22:25:00 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 22:25:00 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 22:25:00 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 22:25:10 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 22:25:10 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 22:25:10 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 22:25:10 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 22:25:10 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 22:25:10 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 22:25:10 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 22:25:10 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 22:25:10 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 22:25:10 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 22:25:10 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-10 22:25:10 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-10 23:45:13 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-10 23:45:13 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-10 23:45:14 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-10 23:45:14 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-10 23:45:14 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-10 23:45:14 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-10 23:45:14 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-10 23:45:14 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-10 23:45:14 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-10 23:45:14 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-10 23:45:14 | BI_APP | INFO | logger:info:70 | QueryManager initialized.

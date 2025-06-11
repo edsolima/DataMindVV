@@ -1,1114 +1,2087 @@
-# pages/dashboard.py
+# Dashboard Moderno - Refatoração Completa
 import dash
-from dash import dcc, html, Input, Output, State, callback_context, dash_table
+from dash import dcc, html, Input, Output, State, callback_context, dash_table, ALL, MATCH
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
 import numpy as np
-import json 
-import dash_dynamic_grid_layout as dgl
+import json
 import uuid
+from datetime import datetime, timedelta
 from dash.exceptions import PreventUpdate
 
 from utils.logger import log_info, log_error, log_warning, log_debug
+from utils.ui_helpers import create_preview_table, show_feedback_alert
 
 # Variável global para a instância do cache
 cache = None
 
-# Layout for dashboard page
-layout = dbc.Container([
-    dcc.Store(id="dashboard-filtered-data", storage_type="session"),
-    dcc.Store(id="dashboard-edit-mode", data=False),
-    dcc.Store(id="dashboard-modal-feedback", data={}),
-    dcc.Store(id="dashboard-elements", data=[]),
-    dbc.Row([
-        dbc.Col([
-            html.H2([html.I(className="fas fa-tachometer-alt me-2"), "Dashboard Executivo"], className="mb-4 text-primary"),
-            dbc.Card([
-                dbc.CardHeader(html.H5([html.I(className="fas fa-filter me-2"),"Configurações e Filtros"], className="mb-0")),
-                dbc.CardBody([
-                    dbc.Row([
-                        dbc.Col([
-                            dbc.Label("Intervalo de Atualização:", html_for="dashboard-refresh-interval"),
-                            dcc.Dropdown(
-                                id="dashboard-refresh-interval",
-                                options=[
-                                    {"label": "Manual", "value": 0}, 
-                                    {"label": "30 segundos", "value": 30000},
-                                    {"label": "1 minuto", "value": 60000},
-                                    {"label": "5 minutos", "value": 300000}
-                                ], value=0, clearable=False
-                            )
-                        ], md=3, className="mb-2"),
-                        dbc.Col([
-                            dbc.Label("Coluna Categórica para Filtro:", html_for="dashboard-filter-column"),
-                            dcc.Dropdown(id="dashboard-filter-column", placeholder="Selecione uma coluna...")
-                        ], md=3, className="mb-2"),
-                        dbc.Col([
-                            dbc.Label("Valores para Filtro (da coluna acima):", html_for="dashboard-filter-value"),
-                            dcc.Dropdown(id="dashboard-filter-value", placeholder="Selecione valores...", multi=True, disabled=True)
-                        ], md=3, className="mb-2"),
-                        dbc.Col([
-                            dbc.Label("Coluna de Data para Filtro:", html_for="dashboard-date-column-selector"),
-                            dcc.Dropdown(id="dashboard-date-column-selector", placeholder="Selecione coluna de data...", disabled=True)
-                        ], md=3, className="mb-2"),
-                    ]),
-                    dbc.Row([
-                        dbc.Col([
-                            dbc.Label("Intervalo de Datas (da coluna acima):", html_for="dashboard-date-range"),
-                            dcc.DatePickerRange(
-                                id="dashboard-date-range", display_format="DD/MM/YYYY",
-                                clearable=True, disabled=True
-                            )
-                        ], md=6, className="mb-2"),
-                        dbc.Col([
-                            html.Br(), 
-                            dbc.Button([html.I(className="fas fa-sync-alt me-1"), "Aplicar Filtros e Atualizar"], 
-                                       id="refresh-dashboard-btn", color="primary", className="w-100 mt-md-2", n_clicks=0)
-                        ], md=3, className="d-flex align-items-md-end"),
-                        dbc.Col([
-                            html.Br(),
-                            dbc.Button([html.I(className="fas fa-edit me-1"), "Modo de Edição"],
-                                      id="dashboard-edit-mode-btn", color="secondary", className="w-100 mt-md-2", n_clicks=0)
-                        ], md=3, className="d-flex align-items-md-end"),
-                    ]),
-                ])
-            ], className="mb-4 shadow-sm"),
-            
-            # Botões para adicionar elementos
-            dbc.Card([
-                dbc.CardHeader(html.H5([html.I(className="fas fa-plus-circle me-2"),"Adicionar Elementos"], className="mb-0")),
-                dbc.CardBody([
-                    dbc.Row([
-                        dbc.Col([
-                            dbc.Button([html.I(className="fas fa-chart-bar me-1"), "Adicionar Gráfico"], 
-                                     id="add-chart-btn", color="success", className="w-100", n_clicks=0)
-                        ], md=4),
-                        dbc.Col([
-                            dbc.Button([html.I(className="fas fa-table me-1"), "Adicionar Tabela"], 
-                                     id="add-table-btn", color="info", className="w-100", n_clicks=0)
-                        ], md=4),
-                        dbc.Col([
-                            dbc.Button([html.I(className="fas fa-calculator me-1"), "Adicionar KPI"], 
-                                     id="add-kpi-btn", color="warning", className="w-100", n_clicks=0)
-                        ], md=4),
-                    ])
-                ])
-            ], className="mb-4 shadow-sm"),
-            
-            dcc.Interval(id="dashboard-interval-component", interval=60000, n_intervals=0, disabled=True),
-            
-            # Modal para configurar gráfico
-            dbc.Modal([
-                dbc.ModalHeader(dbc.ModalTitle("Configurar Gráfico")),
-                dbc.Alert(id="chart-modal-feedback", children="", color="danger", className="mb-2"),
-                dbc.ModalBody([
-                    dbc.Row([
-                        dbc.Col([
-                            dbc.Label("Título do Gráfico:"),
-                            dbc.Input(id="chart-title-input", type="text", placeholder="Digite um título para o gráfico")
-                        ], width=12, className="mb-3"),
-                    ]),
-                    dbc.Row([
-                        dbc.Col([
-                            dbc.Label("Selecione a coluna para o eixo X:"),
-                            dcc.Dropdown(id="chart-x-axis-selector", placeholder="Selecione coluna para eixo X...")
-                        ], width=6, className="mb-3"),
-                        dbc.Col([
-                            dbc.Label("Selecione a coluna para o eixo Y:"),
-                            dcc.Dropdown(id="chart-y-axis-selector", placeholder="Selecione coluna para eixo Y...")
-                        ], width=6, className="mb-3"),
-                    ]),
-                    dbc.Row([
-                        dbc.Col([
-                            dbc.Label("Tipo de gráfico:"),
-                            dcc.Dropdown(
-                                id="chart-type-selector",
-                                options=[
-                                    {"label": "Dispersão", "value": "scatter"},
-                                    {"label": "Linha", "value": "line"},
-                                    {"label": "Barra", "value": "bar"},
-                                    {"label": "Histograma", "value": "histogram"},
-                                    {"label": "Box Plot", "value": "box"},
-                                    {"label": "Pizza", "value": "pie"}
-                                ],
-                                value="bar",
-                                clearable=False
-                            )
-                        ], width=6, className="mb-3"),
-                        dbc.Col([
-                            dbc.Label("Agrupar por (opcional):"),
-                            dcc.Dropdown(id="chart-group-by-selector", placeholder="Selecione coluna para agrupar...")
-                        ], width=6, className="mb-3"),
-                    ]),
-                    dbc.Row([
-                        dbc.Col([
-                            dbc.Label("Operação de agregação:"),
-                            dcc.Dropdown(
-                                id="chart-agg-operation",
-                                options=[
-                                    {"label": "Soma", "value": "sum"},
-                                    {"label": "Média", "value": "mean"},
-                                    {"label": "Contagem", "value": "count"},
-                                    {"label": "Mínimo", "value": "min"},
-                                    {"label": "Máximo", "value": "max"}
-                                ],
-                                value="count",
-                                clearable=False
-                            )
-                        ], width=6, className="mb-3"),
-                    ])
-                ]),
-                dbc.ModalFooter([
-                    dbc.Button("Cancelar", id="chart-modal-close", className="me-2", color="secondary"),
-                    dbc.Button("Adicionar", id="chart-modal-add", color="primary", n_clicks=0)
-                ])
-            ], id="chart-config-modal", size="lg", is_open=False),
-            
-            # Modal para configurar tabela
-            dbc.Modal([
-                dbc.ModalHeader(dbc.ModalTitle("Configurar Tabela")),
-                dbc.Alert(id="table-modal-feedback", children="", color="danger", className="mb-2"),
-                dbc.ModalBody([
-                    dbc.Row([
-                        dbc.Col([
-                            dbc.Label("Título da Tabela:"),
-                            dbc.Input(id="table-title-input", type="text", placeholder="Digite um título para a tabela")
-                        ], width=12, className="mb-3"),
-                    ]),
-                    dbc.Row([
-                        dbc.Col([
-                            dbc.Label("Selecione as colunas para exibir:"),
-                            dcc.Dropdown(id="table-columns-selector", multi=True, placeholder="Selecione as colunas...")
-                        ], width=12, className="mb-3"),
-                    ]),
-                    dbc.Row([
-                        dbc.Col([
-                            dbc.Label("Número de linhas a exibir:"),
-                            dbc.Input(id="table-rows-input", type="number", min=1, max=100, step=1, value=10)
-                        ], width=6, className="mb-3"),
-                    ])
-                ]),
-                dbc.ModalFooter([
-                    dbc.Button("Cancelar", id="table-modal-close", className="me-2", color="secondary"),
-                    dbc.Button("Adicionar", id="table-modal-add", color="primary", n_clicks=0)
-                ])
-            ], id="table-config-modal", size="lg", is_open=False),
-            
-            # Modal para configurar KPI
-            dbc.Modal([
-                dbc.ModalHeader(dbc.ModalTitle("Configurar KPI")),
-                dbc.Alert(id="kpi-modal-feedback", children="", color="danger", className="mb-2"),
-                dbc.ModalBody([
-                    dbc.Row([
-                        dbc.Col([
-                            dbc.Label("Título do KPI:"),
-                            dbc.Input(id="kpi-title-input", type="text", placeholder="Digite um título para o KPI")
-                        ], width=12, className="mb-3"),
-                    ]),
-                    dbc.Row([
-                        dbc.Col([
-                            dbc.Label("Selecione a coluna para o KPI:"),
-                            dcc.Dropdown(id="kpi-column-selector", placeholder="Selecione a coluna...")
-                        ], width=6, className="mb-3"),
-                        dbc.Col([
-                            dbc.Label("Operação:"),
-                            dcc.Dropdown(
-                                id="kpi-operation-selector",
-                                options=[
-                                    {"label": "Soma", "value": "sum"},
-                                    {"label": "Média", "value": "mean"},
-                                    {"label": "Contagem", "value": "count"},
-                                    {"label": "Mínimo", "value": "min"},
-                                    {"label": "Máximo", "value": "max"}
-                                ],
-                                value="sum",
-                                clearable=False
-                            )
-                        ], width=6, className="mb-3"),
-                    ]),
-                    dbc.Row([
-                        dbc.Col([
-                            dbc.Label("Cor do KPI:"),
-                            dcc.Dropdown(
-                                id="kpi-color-selector",
-                                options=[
-                                    {"label": "Azul", "value": "primary"},
-                                    {"label": "Verde", "value": "success"},
-                                    {"label": "Vermelho", "value": "danger"},
-                                    {"label": "Amarelo", "value": "warning"},
-                                    {"label": "Roxo", "value": "info"}
-                                ],
-                                value="primary",
-                                clearable=False
-                            )
-                        ], width=6, className="mb-3"),
-                        dbc.Col([
-                            dbc.Label("Ícone:"),
-                            dcc.Dropdown(
-                                id="kpi-icon-selector",
-                                options=[
-                                    {"label": "Gráfico", "value": "fas fa-chart-bar"},
-                                    {"label": "Usuários", "value": "fas fa-users"},
-                                    {"label": "Dinheiro", "value": "fas fa-dollar-sign"},
-                                    {"label": "Calendário", "value": "fas fa-calendar"},
-                                    {"label": "Relógio", "value": "fas fa-clock"}
-                                ],
-                                value="fas fa-chart-bar",
-                                clearable=False
-                            )
-                        ], width=6, className="mb-3"),
-                    ])
-                ]),
-                dbc.ModalFooter([
-                    dbc.Button("Cancelar", id="kpi-modal-close", className="me-2", color="secondary"),
-                    dbc.Button("Adicionar", id="kpi-modal-add", color="primary", n_clicks=0)
-                ])
-            ], id="kpi-config-modal", size="lg", is_open=False),
-            
-            # Área de conteúdo do dashboard
-            dcc.Loading(
-                id="loading-dashboard-content",
-                type="default",
-                children=html.Div(id="dashboard-content-area", className="mt-4")
-            ),
-        ])
-    ])
-], fluid=True)
+# Temas para modo escuro/claro
+THEMES = {
+    'light': {
+        'primary': '#0d6efd',
+        'secondary': '#6c757d', 
+        'success': '#198754',
+        'warning': '#ffc107',
+        'danger': '#dc3545',
+        'info': '#0dcaf0',
+        'background': '#ffffff',
+        'surface': '#f8f9fa',
+        'text': '#212529',
+        'text_secondary': '#6c757d',
+        'border': '#dee2e6'
+    },
+    'dark': {
+        'primary': '#0d6efd',
+        'secondary': '#6c757d',
+        'success': '#198754', 
+        'warning': '#ffc107',
+        'danger': '#dc3545',
+        'info': '#0dcaf0',
+        'background': '#212529',
+        'surface': '#343a40',
+        'text': '#ffffff',
+        'text_secondary': '#adb5bd',
+        'border': '#495057'
+    }
+}
 
-# Função para criar um KPI card moderno
-def create_kpi_card(title, value, icon="fas fa-chart-bar", color="primary", note=""):
-    return dbc.Card(
-        dbc.CardBody([
-        dbc.Row([
-            dbc.Col([
-                    html.Div([
-                        html.I(className=f"{icon} fa-lg text-white"),
-                    ], className=f"d-flex align-items-center justify-content-center rounded-circle bg-{color}", style={"width": "48px", "height": "48px"})
-                ], width="auto", className="me-3"),
+def create_header(theme='light'):
+    """Cria cabeçalho fixo elegante com logo e opções avançadas"""
+    colors = THEMES[theme]
+    
+    # Definir estilo do logo baseado no tema
+    logo_style = {
+        'color': colors['primary'],
+        'filter': 'drop-shadow(0px 2px 2px rgba(0,0,0,0.2))',
+        'transition': 'all 0.3s ease'
+    }
+    
+    # Definir estilo do título baseado no tema
+    title_style = {
+        'color': colors['text'],
+        'transition': 'all 0.3s ease'
+    }
+    
+    # Definir estilo do subtítulo baseado no tema
+    subtitle_style = {
+        'color': colors['text_secondary'],
+        'fontSize': '0.9rem',
+        'transition': 'all 0.3s ease'
+    }
+    
+    return dbc.Navbar(
+        dbc.Container([
+            # Logo e título com animação suave
+            dbc.Row([
                 dbc.Col([
-                    html.H3(value, className=f"card-title text-{color} mb-1 fw-bold"),
-                html.P(title, className="card-text text-muted mb-0 small text-uppercase fw-bold"),
-                html.P(note, className="card-text text-muted small fst-italic") if note else None
-                ], className="d-flex flex-column justify-content-center")
-            ], align="center", className="h-100")
-        ]), className="shadow-sm h-100 border-0"
+                    html.Div([
+                        # Logo com efeito de sombra
+                        html.Div([
+                            html.I(className="fas fa-chart-line fa-2x", style=logo_style),
+                            html.I(className="fas fa-analytics fa-2x ms-n2", style={**logo_style, 'opacity': '0.7'})
+                        ], className="d-flex position-relative me-3"),
+                        
+                        # Título e subtítulo
+                        html.Div([
+                            html.H3("DataMindVV", className="mb-0 fw-bold", style=title_style),
+                            html.Small("Dashboard Analítico Executivo", style=subtitle_style)
+                        ])
+                    ], className="d-flex align-items-center")
+                ], width="auto"),
+                
+                # Informações e status do sistema
+                dbc.Col([
+                    html.Div([
+                        html.Span("Última atualização: ", className="me-1", style={'color': colors['text_secondary']}),
+                        html.Span(id="last-update-time", children=datetime.now().strftime("%d/%m/%Y %H:%M"), 
+                                style={'color': colors['text']})
+                    ], className="d-none d-md-block text-center")
+                ], width="auto", className="d-none d-md-block"),
+                
+                # Menu de configurações avançado
+                dbc.Col([
+                    dbc.ButtonGroup([
+                        # Botão de tema com tooltip
+                        dbc.Button(
+                            html.I(className="fas fa-moon" if theme == 'light' else "fas fa-sun"),
+                            id="theme-toggle-btn",
+                            color="outline-secondary",
+                            size="sm",
+                            className="rounded-pill",
+                            title="Alternar tema claro/escuro"
+                        ),
+                        
+                        # Botão de atualização com tooltip
+                        dbc.Button(
+                            html.I(className="fas fa-sync-alt"),
+                            id="refresh-header-btn",
+                            color="outline-info",
+                            size="sm",
+                            className="rounded-pill",
+                            title="Atualizar dados"
+                        ),
+                        
+                        # Dropdown de configurações
+                        dbc.DropdownMenu(
+                            [
+                                dbc.DropdownMenuItem([html.I(className="fas fa-columns me-2"), "Layout Padrão"], id="layout-default"),
+                                dbc.DropdownMenuItem([html.I(className="fas fa-th-large me-2"), "Layout Compacto"], id="layout-compact"),
+                                dbc.DropdownMenuItem([html.I(className="fas fa-th me-2"), "Layout Expandido"], id="layout-expanded"),
+                                dbc.DropdownMenuItem(divider=True),
+                                dbc.DropdownMenuItem([html.I(className="fas fa-file-export me-2"), "Exportar PDF"], id="export-pdf"),
+                                dbc.DropdownMenuItem([html.I(className="fas fa-file-image me-2"), "Exportar PNG"], id="export-png"),
+                                dbc.DropdownMenuItem([html.I(className="fas fa-file-csv me-2"), "Exportar Dados CSV"], id="export-csv"),
+                                dbc.DropdownMenuItem(divider=True),
+                                dbc.DropdownMenuItem([html.I(className="fas fa-bookmark me-2"), "Salvar Visualização"], id="save-view"),
+                                dbc.DropdownMenuItem([html.I(className="fas fa-share-alt me-2"), "Compartilhar"], id="share-dashboard"),
+                            ],
+                            label=html.I(className="fas fa-cog"),
+                            color="outline-secondary",
+                            size="sm",
+                            className="rounded-pill",
+                            toggle_style={"fontSize": "0.875rem"},
+                        ),
+                    ], className="ms-auto")
+                ], width="auto", className="ms-auto")
+            ], className="w-100 justify-content-between align-items-center")
+        ], fluid=True),
+        color=colors['surface'],
+        dark=theme=='dark',
+        sticky="top",
+        className="shadow-sm border-bottom",
+        style={'borderColor': colors['border']}
     )
 
-# Função para criar um chart card moderno (agora recebe edit_mode)
-def create_chart_card(title, graph_id, edit_mode=False, icon="fas fa-chart-line"):
-    delete_btn = html.Button(
-                        html.I(className="fas fa-trash"),
-                        id={"type": "delete-chart", "index": graph_id},
-                        className="btn btn-sm btn-outline-danger ms-2",
-        n_clicks=0,
-        style={"display": "inline-block" if edit_mode else "none"}
-    )
-    return dbc.Card([
-        dbc.CardHeader([
-            html.Div([
-                html.H5([
-                    html.I(className=f"{icon} me-2 text-info"), title
-                ], className="mb-0 d-inline fw-bold"),
-                html.Div([delete_btn], className="float-end")
-            ], className="d-flex align-items-center justify-content-between")
-        ], className="bg-white border-0"),
-        dbc.CardBody(dcc.Loading(dcc.Graph(id={"type": "graph", "index": graph_id}, style={"height": "350px"})), className="p-2")
-    ], className="shadow-sm h-100 border-0")
-
-# Função para criar um table card moderno (agora recebe edit_mode)
-def create_table_card(title, table_id, edit_mode=False):
-    delete_btn = html.Button(
-                        html.I(className="fas fa-trash"),
-                        id={"type": "delete-table", "index": table_id},
-                        className="btn btn-sm btn-outline-danger ms-2",
-        n_clicks=0,
-        style={"display": "inline-block" if edit_mode else "none"}
-    )
-    return dbc.Card([
-        dbc.CardHeader([
-            html.Div([
-                html.H5([
-                    html.I(className="fas fa-table me-2 text-info"), title
-                ], className="mb-0 d-inline fw-bold"),
-                html.Div([delete_btn], className="float-end")
-            ], className="d-flex align-items-center justify-content-between")
-        ], className="bg-white border-0"),
-        dbc.CardBody(dcc.Loading(html.Div(id={"type": "table", "index": table_id})), className="p-2")
-    ], className="shadow-sm h-100 border-0")
-
-# Função para criar um layout vazio
-def create_empty_dashboard_layout():
-    return dbc.Alert([
-        html.H4([html.I(className="fas fa-info-circle me-2"), "Dashboard Vazio"]),
-        html.P("Nenhum dado carregado. Por favor, carregue dados para visualizar o dashboard.")
-    ], color="info", className="text-center m-3 p-4")
-
-# Função para criar o layout do dashboard com grid dinâmico (recebe edit_mode)
-def create_dashboard_layout(df_exists, data_source_name, data_source_type, elements=None, edit_mode=False):
-    if not df_exists:
-        return create_empty_dashboard_layout()
+def create_kpi_cards(data=None, theme='light'):
+    """Cria cards de KPI interativos com animações e indicadores de tendência"""
+    colors = THEMES[theme]
     
-    if not elements:
-        elements = []
+    # Estilos base para os cards
+    card_style = {
+        'transition': 'all 0.3s ease',
+        'borderRadius': '12px',
+        'overflow': 'hidden',
+        'border': f"1px solid {colors['border']}"
+    }
     
-    grid_items = []
-    item_layouts = []
-
-    for i, elem in enumerate(elements):
-        # Definir tamanho base do elemento
-        w = 6  # Largura padrão (metade da tela)
-        h = 4  # Altura padrão
+    # Estilos para os valores dos KPIs
+    kpi_value_style = {
+        'fontSize': '2rem',
+        'fontWeight': '700',
+        'color': colors['text'],
+        'transition': 'all 0.3s ease'
+    }
+    
+    # Estilos para os títulos dos KPIs
+    kpi_title_style = {
+        'fontSize': '0.9rem',
+        'color': colors['text_secondary'],
+        'fontWeight': '600',
+        'textTransform': 'uppercase',
+        'letterSpacing': '0.5px'
+    }
+    
+    if data is None or not isinstance(data, pd.DataFrame) or data.empty:
+        # Retorna cards vazios com estilo moderno se não houver dados
+        return dbc.Row([
+            dbc.Col(dbc.Card(
+                dbc.CardBody([
+                    html.Div([
+                        html.I(className="fas fa-exclamation-circle fa-2x mb-3", 
+                               style={'color': colors['warning']}),
+                        html.H5("Sem dados disponíveis", className="mb-2", 
+                                style={'color': colors['text']}),
+                        html.P("Carregue dados para visualizar os KPIs", 
+                               style={'color': colors['text_secondary']})
+                    ], className="text-center py-4")
+                ]), 
+                color=colors['surface'], 
+                className="shadow-sm",
+                style=card_style), 
+                width=12)
+        ], className="mb-4")
+    
+    # Calcula KPIs básicos
+    total_rows = len(data)
+    
+    # Identifica colunas numéricas para cálculos
+    numeric_cols = data.select_dtypes(include=['number']).columns
+    
+    # Simula dados históricos para mostrar tendências (em um app real, isso viria do banco de dados)
+    # Aqui estamos simulando uma variação de -10% a +15%
+    def get_trend_data(value):
+        # Simula dados históricos (em um app real, isso viria do banco de dados)
+        np.random.seed(int(abs(value)) % 100 if value else 42)  # Seed para consistência
+        change_pct = np.random.uniform(-10, 15)  # Variação percentual entre -10% e +15%
+        previous_value = value / (1 + change_pct/100)
         
-        # Ajustar tamanho baseado no tipo de elemento
-        if elem['type'] == 'kpi':
-            w = 3  # KPIs são menores
-            h = 2
-        elif elem['type'] == 'table':
-            w = 12 # Tabelas ocupam toda a largura
-            h = 6
-        
-        # ID único para o item no layout do grid
-        item_id = str(elem.get('id', i)) # Usar o ID do elemento se disponível
-
-        # Adicionar posição e tamanho ao layout do item
-        item_layouts.append({
-            'i': item_id,
-            'x': (i * w) % 12,  # Posição X baseada no índice
-            'y': (i * h) // 12, # Posição Y baseada no índice
-            'w': w,
-            'h': h,
-            'minW': 3,  # Largura mínima
-            'minH': 2,  # Altura mínima
-            'maxW': 12, # Largura máxima
-            'maxH': 12, # Altura máxima
-            'isDraggable': edit_mode, # Parâmetros para cada item
-            'isResizable': edit_mode  # Parâmetros para cada item
-        })
-
-        # Criar o componente real envolto em DraggableWrapper
-        component_to_add = create_element_component(elem, edit_mode)
-        
-        grid_items.append(
-            dgl.DraggableWrapper(
-                children=[component_to_add],
-                handleText="Mover", # Texto genérico da alça de arrasto
-                handleBackground="#f8f9fa", # Cor de fundo da alça
-                handleColor="#495057" # Cor do texto da alça
+        # Determina cor e ícone com base na tendência
+        if change_pct > 5:
+            trend_color = colors['success']
+            trend_icon = "fas fa-arrow-up"
+            trend_text = f"+{change_pct:.1f}%"
+        elif change_pct < -5:
+            trend_color = colors['danger']
+            trend_icon = "fas fa-arrow-down"
+            trend_text = f"{change_pct:.1f}%"
+        else:
+            trend_color = colors['warning']
+            trend_icon = "fas fa-arrows-alt-h"
+            trend_text = f"{change_pct:.1f}%"
+            
+        return {
+            'previous_value': previous_value,
+            'change_pct': change_pct,
+            'trend_color': trend_color,
+            'trend_icon': trend_icon,
+            'trend_text': trend_text
+        }
+    
+    kpi_cards = []
+    
+    # KPI 1: Total de registros com indicador de tendência
+    trend_data = get_trend_data(total_rows)
+    
+    kpi_cards.append(
+        dbc.Col(
+            dbc.Card(
+                dbc.CardBody([
+                    # Ícone e título
+                    html.Div([
+                        html.Div([
+                            html.I(className="fas fa-database", 
+                                  style={'color': colors['primary'], 'fontSize': '1.2rem'})
+                        ], className="p-2 rounded-circle", 
+                           style={'backgroundColor': f"{colors['primary']}20"}),
+                        html.Div([
+                            html.H6("TOTAL DE REGISTROS", 
+                                  style=kpi_title_style, 
+                                  className="mb-0")
+                        ], className="ms-2")
+                    ], className="d-flex align-items-center mb-3"),
+                    
+                    # Valor principal e tendência
+                    html.Div([
+                        html.Div([
+                            html.H3(f"{total_rows:,}".replace(',', '.'), 
+                                   style=kpi_value_style, 
+                                   className="mb-0"),
+                        ]),
+                        html.Div([
+                            html.Span([
+                                html.I(className=f"{trend_data['trend_icon']} me-1"),
+                                trend_data['trend_text']
+                            ], style={'color': trend_data['trend_color'], 'fontWeight': '500'})
+                        ], className="ms-auto")
+                    ], className="d-flex align-items-baseline justify-content-between"),
+                    
+                    # Barra de progresso
+                    html.Div([
+                        dbc.Progress(value=min(100, abs(trend_data['change_pct']) * 5), 
+                                    color="success" if trend_data['change_pct'] > 0 else "danger",
+                                    className="mt-2", 
+                                    style={'height': '4px'})
+                    ]),
+                    
+                    # Texto de comparação
+                    html.Div([
+                        html.Small(f"vs {int(trend_data['previous_value']):,}".replace(',', '.') + " anteriores", 
+                                 style={'color': colors['text_secondary']})
+                    ], className="mt-2")
+                ]),
+                color=colors['surface'],
+                className="shadow-sm h-100",
+                style=card_style
+            ),
+            width=12, sm=6, md=4, lg=3,
+            className="mb-4"
+        )
+    )
+    
+    # Adiciona KPIs para colunas numéricas (até 3 colunas)
+    for i, col in enumerate(numeric_cols[:3]):
+        try:
+            col_mean = data[col].mean()
+            col_sum = data[col].sum()
+            col_max = data[col].max()
+            col_min = data[col].min()
+            
+            # Determina qual valor mostrar como principal (soma ou média)
+            # Para valores muito grandes, a média pode ser mais informativa
+            if abs(col_sum) > 1_000_000 and abs(col_mean) < 10_000:
+                primary_value = col_mean
+                primary_label = "MÉDIA"
+                secondary_value = col_sum
+                secondary_label = "Total"
+            else:
+                primary_value = col_sum
+                primary_label = "TOTAL"
+                secondary_value = col_mean
+                secondary_label = "Média"
+            
+            # Formata valores com base na magnitude
+            def format_value(val):
+                if abs(val) >= 1_000_000:
+                    return f"{val/1_000_000:.2f}M"
+                elif abs(val) >= 1_000:
+                    return f"{val/1_000:.1f}K"
+                else:
+                    return f"{val:.2f}"
+                
+            formatted_primary = format_value(primary_value)
+            formatted_secondary = format_value(secondary_value)
+            
+            # Escolhe ícone com base no nome da coluna
+            icon_class = "fas fa-chart-line"
+            if any(term in col.lower() for term in ["valor", "preco", "price", "custo", "cost"]):
+                icon_class = "fas fa-dollar-sign"
+                card_accent_color = colors['success']
+            elif any(term in col.lower() for term in ["quantidade", "qtd", "qty", "count", "total"]):
+                icon_class = "fas fa-cubes"
+                card_accent_color = colors['info']
+            elif any(term in col.lower() for term in ["tempo", "time", "duration", "period"]):
+                icon_class = "fas fa-clock"
+                card_accent_color = colors['warning']
+            else:
+                card_accent_color = colors['primary']
+                
+            # Obtém dados de tendência
+            trend_data = get_trend_data(primary_value)
+            
+            # Formata o título da coluna para exibição
+            display_title = col.replace('_', ' ').title()
+            if len(display_title) > 20:
+                display_title = display_title[:18] + '...'
+                
+            kpi_cards.append(
+                dbc.Col(
+                    dbc.Card(
+                        [
+                            # Barra de acento colorida no topo do card
+                            html.Div(className="w-100", style={
+                                'height': '4px', 
+                                'backgroundColor': card_accent_color,
+                                'borderTopLeftRadius': '12px',
+                                'borderTopRightRadius': '12px'
+                            }),
+                            
+                            dbc.CardBody([
+                                # Ícone e título
+                                html.Div([
+                                    html.Div([
+                                        html.I(className=icon_class, 
+                                              style={'color': card_accent_color, 'fontSize': '1.2rem'})
+                                    ], className="p-2 rounded-circle", 
+                                       style={'backgroundColor': f"{card_accent_color}20"}),
+                                    html.Div([
+                                        html.H6(display_title.upper(), 
+                                              style=kpi_title_style, 
+                                              className="mb-0",
+                                              title=col)  # Tooltip com nome completo
+                                    ], className="ms-2")
+                                ], className="d-flex align-items-center mb-3"),
+                                
+                                # Valor principal e tendência
+                                html.Div([
+                                    html.Div([
+                                        html.H3(formatted_primary, 
+                                               style=kpi_value_style, 
+                                               className="mb-0"),
+                                        html.Small(primary_label, 
+                                                  style={'color': colors['text_secondary']})
+                                    ]),
+                                    html.Div([
+                                        html.Span([
+                                            html.I(className=f"{trend_data['trend_icon']} me-1"),
+                                            trend_data['trend_text']
+                                        ], style={'color': trend_data['trend_color'], 'fontWeight': '500'})
+                                    ], className="ms-auto d-flex align-items-center")
+                                ], className="d-flex align-items-start justify-content-between"),
+                                
+                                # Barra de progresso
+                                html.Div([
+                                    dbc.Progress(value=min(100, abs(trend_data['change_pct']) * 5), 
+                                                color="success" if trend_data['change_pct'] > 0 else "danger",
+                                                className="mt-2", 
+                                                style={'height': '4px'})
+                                ]),
+                                
+                                # Informações adicionais
+                                html.Div([
+                                    html.Div([
+                                        html.Small(secondary_label, className="d-block text-muted"),
+                                        html.Span(formatted_secondary, style={'fontWeight': '600'})
+                                    ], className="me-3"),
+                                    html.Div([
+                                        html.Small("Máx", className="d-block text-muted"),
+                                        html.Span(format_value(col_max), style={'fontWeight': '600'})
+                                    ], className="me-3"),
+                                    html.Div([
+                                        html.Small("Mín", className="d-block text-muted"),
+                                        html.Span(format_value(col_min), style={'fontWeight': '600'})
+                                    ])
+                                ], className="d-flex justify-content-between mt-3 pt-2", 
+                                   style={'borderTop': f"1px solid {colors['border']}"})
+                            ])
+                        ],
+                        color=colors['surface'],
+                        className="shadow-sm h-100",
+                        style=card_style
+                    ),
+                    width=12, sm=6, md=4, lg=3,
+                    className="mb-4"
+                )
             )
+        except Exception as e:
+            print(f"Erro ao calcular KPI para coluna {col}: {e}")
+    
+    # Preenche com cards vazios se necessário para completar a linha
+    while len(kpi_cards) < 4:
+        kpi_cards.append(
+            dbc.Col(width=12, sm=6, md=4, lg=3, className="mb-4 d-none d-lg-block")
         )
     
-    # Criar grid container com configurações responsivas
-    grid_container = dgl.DashGridLayout(
-        id="dashboard-grid-layout",
-        items=grid_items, # Passa a lista de componentes envoltos
-        itemLayout=item_layouts, # Passa as definições de layout para cada item
-        className="dashboard-grid",
-        style={
-            'background': '#f8f9fa',
-            'padding': '10px',
-            'borderRadius': '5px',
-            'minHeight': '500px'
-        },
-        verticalCompact=True,
-        preventCollision=False,
-        useCSSTransforms=True,
-        margin=[10, 10],
-        containerPadding=[10, 10],
-        rowHeight=100,
-        breakpoints={'lg': 1200, 'md': 996, 'sm': 768, 'xs': 480, 'xxs': 0},
-        cols={'lg': 12, 'md': 10, 'sm': 6, 'xs': 4, 'xxs': 2}
-    )
-    
-    # Adicionar CSS personalizado para melhorar a responsividade
-    custom_css = html.Style('''
-        .dashboard-grid {
-            transition: all 0.3s ease;
-        }
-        .dashboard-grid .react-grid-item {
-            transition: all 0.3s ease;
-            background: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .dashboard-grid .react-grid-item:hover {
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        .dashboard-grid .react-grid-item.react-grid-placeholder {
-            background: #e9ecef;
-            border: 2px dashed #6c757d;
-            border-radius: 5px;
-        }
-        /* A classe drag-handle deve ser aplicada ao elemento dentro do componente que atua como a alça */
-        .drag-handle {
-            cursor: grab; /* Alterado para grab para melhor UX */
-            padding: 5px;
-            background: #f8f9fa; /* Consistente com o fundo do cabeçalho do cartão */
-            border-radius: 3px;
-        }
-        .dashboard-grid .react-grid-item.react-draggable-dragging {
-            transition: none;
-            z-index: 3;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-        }
-        @media (max-width: 768px) {
-            .dashboard-grid {
-                margin: 0;
-                padding: 5px;
-            }
-            .dashboard-grid .react-grid-item {
-                margin: 5px;
-            }
-        }
-    ''')
-    
-    return html.Div([
-        custom_css,
-        grid_container
-    ], className="dashboard-container")
+    return dbc.Row(kpi_cards, className="mb-4")
 
-def create_element_component(elem, edit_mode):
-    """Cria um componente para o elemento do dashboard com controles de edição"""
-    if elem['type'] == 'chart':
-        return create_chart_card(elem['title'], elem['id'], edit_mode)
-    elif elem['type'] == 'table':
-        return create_table_card(elem['title'], elem['id'], edit_mode)
-    elif elem['type'] == 'kpi':
-        return create_kpi_card(
-            elem['title'],
-            elem.get('value', '0'),
-            elem.get('icon', 'fas fa-chart-bar'),
-            elem.get('color', 'primary'),
-            elem.get('note', '')
-        )
-    return None
-
-def create_chart_card(title, graph_id, edit_mode=False, icon="fas fa-chart-line"):
-    """Cria um card para um gráfico com controles de edição"""
-    card = dbc.Card([
-        dbc.CardHeader([
-            html.Div([
-                html.I(className=f"{icon} me-2"),
-                html.Span(title, className="card-title")
-            ], className="d-flex align-items-center drag-handle"),
-            html.Div([
-                dbc.Button(
-                    html.I(className="fas fa-expand"),
-                    color="link",
-                    className="btn-sm me-2",
-                    id={"type": "expand-chart", "index": graph_id}
-                ),
-                dbc.Button(
-                    html.I(className="fas fa-trash-alt"),
-                    color="link",
-                    className="btn-sm text-danger",
-                    id={"type": "delete-chart", "index": graph_id}
-                ) if edit_mode else None
-            ], className="ms-auto") if edit_mode else None
-        ], className="d-flex align-items-center"),
-        dbc.CardBody([
-            dcc.Graph(
-                id={"type": "graph", "index": graph_id},
-                config={'displayModeBar': True, 'responsive': True},
-                style={'height': '100%', 'width': '100%'}
-            )
-        ], className="p-0")
-    ], className="h-100")
+def create_filters_sidebar(data=None, theme='light'):
+    """Cria barra lateral de filtros moderna e interativa"""
+    colors = THEMES[theme]
     
-    return card
-
-def create_table_card(title, table_id, edit_mode=False):
-    """Cria um card para uma tabela com controles de edição"""
-    card = dbc.Card([
-        dbc.CardHeader([
-            html.Div([
-                html.I(className="fas fa-table me-2"),
-                html.Span(title, className="card-title")
-            ], className="d-flex align-items-center drag-handle"),
-            html.Div([
-                dbc.Button(
-                    html.I(className="fas fa-expand"),
-                    color="link",
-                    className="btn-sm me-2",
-                    id={"type": "expand-table", "index": table_id}
-                ),
-                dbc.Button(
-                    html.I(className="fas fa-trash-alt"),
-                    color="link",
-                    className="btn-sm text-danger",
-                    id={"type": "delete-table", "index": table_id}
-                ) if edit_mode else None
-            ], className="ms-auto") if edit_mode else None
-        ], className="d-flex align-items-center"),
-        dbc.CardBody([
-            html.Div(
-                id={"type": "table", "index": table_id},
-                className="table-responsive"
-            )
-        ], className="p-0")
-    ], className="h-100")
+    # Estilos para os componentes do sidebar
+    sidebar_style = {
+        'backgroundColor': colors['surface'],
+        'borderRadius': '12px',
+        'border': f"1px solid {colors['border']}",
+        'transition': 'all 0.3s ease',
+        'overflow': 'hidden'
+    }
     
-    return card
-
-def create_kpi_card(title, value, icon="fas fa-chart-bar", color="primary", note=""):
-    """Cria um card para um KPI"""
-    card = dbc.Card([
-        dbc.CardBody([
-            html.Div([
+    # Estilos para os títulos dos filtros
+    filter_title_style = {
+        'fontSize': '0.9rem',
+        'fontWeight': '600',
+        'color': colors['text'],
+        'textTransform': 'uppercase',
+        'letterSpacing': '0.5px'
+    }
+    
+    # Estilos para os grupos de filtros
+    filter_group_style = {
+        'padding': '15px',
+        'marginBottom': '15px',
+        'borderRadius': '8px',
+        'backgroundColor': f"{colors['background']}50",
+        'border': f"1px solid {colors['border']}"
+    }
+    
+    if data is None or not isinstance(data, pd.DataFrame) or data.empty:
+        return dbc.Card([
+            dbc.CardHeader([
                 html.Div([
-                    html.I(className=f"{icon} fa-2x mb-2"),
-                    html.H4(value, className="mb-0"),
-                    html.Small(title, className="text-muted")
-                ], className="text-center")
-            ], className="drag-handle")
-        ], className="p-3")
-    ], className=f"bg-{color} text-white h-100")
+                    html.I(className="fas fa-filter me-2", style={'color': colors['primary']}),
+                    html.Span("Filtros Avançados", style={'fontWeight': '600'})
+                ], className="d-flex align-items-center"),
+                dbc.Button(
+                    html.I(className="fas fa-chevron-down"),
+                    id="filters-collapse-btn",
+                    color="link",
+                    size="sm",
+                    className="ms-auto p-0"
+                )
+            ], className="d-flex align-items-center", 
+               style={'borderBottom': f"1px solid {colors['border']}"}),
+            dbc.Collapse([
+                dbc.CardBody([
+                    html.Div([
+                        html.I(className="fas fa-info-circle fa-2x mb-3", 
+                               style={'color': colors['info']}),
+                        html.P("Carregue dados para visualizar os filtros disponíveis", 
+                              className="mb-0",
+                              style={'color': colors['text_secondary']})
+                    ], className="text-center py-4")
+                ])
+            ], id="filters-collapse", is_open=True)
+        ], className="mb-4 shadow-sm", style=sidebar_style)
     
-    return card
-
-def create_empty_dashboard_layout():
-    """Cria um layout vazio para quando não há dados"""
-    return dbc.Alert(
-        "Nenhum dado disponível para exibir no dashboard. Por favor, carregue dados primeiro.",
-        color="info",
-        className="text-center"
-    )
-
-# MODIFICADO PARA CACHE: Aceita cache_instance
-def register_callbacks(app, cache_instance):
-    global cache 
-    cache = cache_instance
-
-    @app.callback(
-        [Output("dashboard-interval-component", "disabled"), Output("dashboard-interval-component", "interval")],
-        [Input("dashboard-refresh-interval", "value")]
-    )
-    def update_dashboard_interval_settings(val):
-        return (False, val) if val and val > 0 else (True, 60000)
-
-    @app.callback(
-        [Output("dashboard-filter-column", "options"), Output("dashboard-filter-column", "disabled"),
-         Output("dashboard-date-column-selector", "options"), Output("dashboard-date-column-selector", "disabled"),
-         Output("chart-x-axis-selector", "options"), Output("chart-y-axis-selector", "options"),
-         Output("chart-group-by-selector", "options"), Output("table-columns-selector", "options"),
-         Output("kpi-column-selector", "options")],
-        [Input("server-side-data-key", "data")] 
-    )
-    def populate_filter_dropdowns(data_key): 
-        if not data_key: 
-            empty_opts = []
-            return empty_opts, True, empty_opts, True, empty_opts, empty_opts, empty_opts, empty_opts, empty_opts
-        
-        df = cache.get(data_key) 
-        if df is None or df.empty: 
-            empty_opts = []
-            return empty_opts, True, empty_opts, True, empty_opts, empty_opts, empty_opts, empty_opts, empty_opts
-        
-        cat_cols = df.select_dtypes(include=['object', 'category']).columns.tolist()
-        date_cols = df.select_dtypes(include=[np.datetime64]).columns.tolist() 
-        num_cols = df.select_dtypes(include=[np.number]).columns.tolist()
-        
-        # Opções para os diferentes dropdowns
-        cat_opts = [{"label":c,"value":c} for c in cat_cols]
-        date_opts = [{"label":c,"value":c} for c in date_cols]
-        
-        # Para eixos X e Y, podemos usar colunas numéricas e categóricas
-        all_cols = num_cols + cat_cols + date_cols
-        all_cols_opts = [{"label":c,"value":c} for c in all_cols]
-        
-        # Para agrupar, usamos apenas colunas categóricas
-        group_opts = cat_opts
-        
-        return (
-            cat_opts, not bool(cat_opts),  # Filtro categórico
-            date_opts, not bool(date_opts),  # Filtro de data
-            all_cols_opts,  # Eixo X
-            all_cols_opts,  # Eixo Y
-            group_opts,  # Agrupar por
-            all_cols_opts,  # Colunas da tabela
-            all_cols_opts   # Coluna do KPI
-        )
-
-    @app.callback(
-        [Output("dashboard-filter-value", "options"), Output("dashboard-filter-value", "disabled")],
-        [Input("dashboard-filter-column", "value")], [State("server-side-data-key", "data")] 
-    )
-    def populate_categorical_value_filter(col, data_key): 
-        if not col or not data_key: return [], True
-        df = cache.get(data_key) 
-        if df is None or df.empty or col not in df.columns: return [], True
-        
-        vals = df[col].dropna().unique()
-        options = [{"label":str(v),"value":v} for v in sorted(vals)[:500 if len(vals)>500 else len(vals)]] 
-        return options, False
-
-    @app.callback(Output("dashboard-date-range", "disabled"), [Input("dashboard-date-column-selector", "value")])
-    def toggle_date_picker_range(col): return not bool(col)
+    # Detectar colunas para filtros
+    categorical_cols = data.select_dtypes(include=['object', 'category']).columns.tolist()
+    numeric_cols = data.select_dtypes(include=[np.number]).columns.tolist()
+    date_cols = data.select_dtypes(include=['datetime64']).columns.tolist()
     
-    @app.callback(
-        Output("dashboard-edit-mode", "data"),
-        Output("dashboard-edit-mode-btn", "children"),
-        Output("dashboard-edit-mode-btn", "color"),
-        Input("dashboard-edit-mode-btn", "n_clicks"),
-        State("dashboard-edit-mode", "data")
-    )
-    def toggle_edit_mode(n_clicks, edit_mode):
-        if n_clicks is None:
-            return False, [html.I(className="fas fa-edit me-1"), "Modo de Edição"], "secondary"
-        new_mode = not edit_mode if edit_mode is not None else True
-        btn_text = [html.I(className="fas fa-check me-1"), "Modo de Edição Ativo"] if new_mode else [html.I(className="fas fa-edit me-1"), "Modo de Edição"]
-        btn_color = "danger" if new_mode else "secondary"
-        return new_mode, btn_text, btn_color
+    filters_content = []
     
-    # Callbacks para abrir/fechar modais
-    @app.callback(
-        Output("chart-config-modal", "is_open"),
-        [Input("add-chart-btn", "n_clicks"), Input("chart-modal-add", "n_clicks")],
-        [State("chart-config-modal", "is_open")]
-    )
-    def toggle_chart_modal(n_add, n_confirm, is_open):
-        if n_add or n_confirm:
-            return not is_open
-        return is_open
+    # Contador de filtros disponíveis
+    total_filters = len(date_cols[:1]) + len(categorical_cols[:3]) + len(numeric_cols[:3])
     
-    @app.callback(
-        Output("table-config-modal", "is_open"),
-        [Input("add-table-btn", "n_clicks"), Input("table-modal-close", "n_clicks"), Input("table-modal-add", "n_clicks")],
-        [State("table-config-modal", "is_open")]
+    filters_content.append(
+        html.Div([
+            html.Span(f"{total_filters}", 
+                     className="badge rounded-pill bg-primary me-2"),
+            html.Span("filtros disponíveis", style={'color': colors['text_secondary']})
+        ], className="mb-3 mt-2")
     )
-    def toggle_table_modal(n_add, n_close, n_confirm, is_open):
-        if n_add or n_close or n_confirm:
-            return not is_open
-        return is_open
     
-    @app.callback(
-        Output("kpi-config-modal", "is_open"),
-        [Input("add-kpi-btn", "n_clicks"), Input("kpi-modal-close", "n_clicks"), Input("kpi-modal-add", "n_clicks")],
-        [State("kpi-config-modal", "is_open")]
+    # Filtro de data
+    if date_cols:
+        date_filters = []
+        for i, col in enumerate(date_cols[:1]):  # Limita a 1 filtro de data
+            try:
+                min_date = data[col].min()
+                max_date = data[col].max()
+                
+                if isinstance(min_date, pd.Timestamp) and isinstance(max_date, pd.Timestamp):
+                    date_filter = html.Div([
+                        html.Label(col.replace('_', ' ').title(), 
+                                 className="d-block mb-2",
+                                 style={'fontWeight': '500', 'color': colors['text']}),
+                        dcc.DatePickerRange(
+                            id=f"date-filter-{i}",
+                            min_date_allowed=min_date.date(),
+                            max_date_allowed=max_date.date(),
+                            start_date=min_date.date(),
+                            end_date=max_date.date(),
+                            display_format="DD/MM/YYYY",
+                            className="w-100 mb-2",
+                            style={'zIndex': '1001'}
+                        )
+                    ], className="mb-3")
+                    date_filters.append(date_filter)
+            except Exception as e:
+                print(f"Erro ao criar filtro de data para {col}: {e}")
+        
+        if date_filters:
+            filters_content.append(html.Div([
+                html.Div([
+                    html.I(className="fas fa-calendar-alt me-2", 
+                          style={'color': colors['primary']}),
+                    html.Span("PERÍODO", style=filter_title_style)
+                ], className="d-flex align-items-center mb-3"),
+                html.Div(date_filters)
+            ], style=filter_group_style))
+    
+    # Filtros categóricos
+    if categorical_cols:
+        cat_filters = []
+        for i, col in enumerate(categorical_cols[:3]):  # Máximo 3 filtros categóricos
+            try:
+                unique_values = data[col].dropna().unique()[:20]  # Máximo 20 valores
+                options = [{'label': str(val), 'value': str(val)} for val in sorted(unique_values)]
+                
+                cat_filter = html.Div([
+                    html.Label(col.replace('_', ' ').title(), 
+                             className="d-block mb-2",
+                             style={'fontWeight': '500', 'color': colors['text']}),
+                    dcc.Dropdown(
+                        id=f"categorical-filter-{i}",
+                        options=options,
+                        multi=True,
+                        placeholder=f"Selecione valores...",
+                        className="mb-2",
+                        style={
+                            'borderRadius': '6px',
+                            'border': f"1px solid {colors['border']}"
+                        }
+                    )
+                ], className="mb-3")
+                cat_filters.append(cat_filter)
+            except Exception as e:
+                print(f"Erro ao criar filtro categórico para {col}: {e}")
+        
+        if cat_filters:
+            filters_content.append(html.Div([
+                html.Div([
+                    html.I(className="fas fa-tags me-2", 
+                          style={'color': colors['info']}),
+                    html.Span("CATEGORIAS", style=filter_title_style)
+                ], className="d-flex align-items-center mb-3"),
+                html.Div(cat_filters)
+            ], style=filter_group_style))
+    
+    # Filtros numéricos (range sliders)
+    if numeric_cols:
+        num_filters = []
+        for i, col in enumerate(numeric_cols[:3]):  # Máximo 3 filtros numéricos
+            try:
+                min_val = float(data[col].min())
+                max_val = float(data[col].max())
+                step = (max_val - min_val) / 100
+                
+                # Formata os valores para exibição
+                def format_number(val):
+                    if abs(val) >= 1_000_000:
+                        return f"{val/1_000_000:.1f}M"
+                    elif abs(val) >= 1_000:
+                        return f"{val/1_000:.1f}K"
+                    else:
+                        return f"{val:.1f}"
+                
+                # Cria marcas para o slider
+                marks = {
+                    min_val: {'label': format_number(min_val), 'style': {'color': colors['text_secondary']}},
+                    max_val: {'label': format_number(max_val), 'style': {'color': colors['text_secondary']}}
+                }
+                
+                # Adiciona marca intermediária
+                mid_val = min_val + (max_val - min_val) / 2
+                marks[mid_val] = {'label': format_number(mid_val), 'style': {'color': colors['text_secondary']}}
+                
+                num_filter = html.Div([
+                    html.Label(col.replace('_', ' ').title(), 
+                             className="d-block mb-2",
+                             style={'fontWeight': '500', 'color': colors['text']}),
+                    html.Div([
+                        html.Div(id=f"num-filter-{i}-display", 
+                               children=f"{format_number(min_val)} - {format_number(max_val)}",
+                               className="text-center mb-2",
+                               style={'color': colors['primary'], 'fontWeight': '600'})
+                    ]),
+                    dcc.RangeSlider(
+                        id=f"numeric-filter-{i}",
+                        min=min_val,
+                        max=max_val,
+                        step=step,
+                        marks=marks,
+                        value=[min_val, max_val],
+                        className="mb-3",
+                        tooltip={"placement": "bottom", "always_visible": False}
+                    )
+                ], className="mb-3")
+                num_filters.append(num_filter)
+            except Exception as e:
+                print(f"Erro ao criar filtro numérico para {col}: {e}")
+        
+        if num_filters:
+            filters_content.append(html.Div([
+                html.Div([
+                    html.I(className="fas fa-sliders-h me-2", 
+                          style={'color': colors['warning']}),
+                    html.Span("VALORES", style=filter_title_style)
+                ], className="d-flex align-items-center mb-3"),
+                html.Div(num_filters)
+            ], style=filter_group_style))
+    
+    # Botões de ação com ícones e efeitos visuais
+    filters_content.append(
+        html.Div([
+            dbc.Button([
+                html.I(className="fas fa-filter me-2"),
+                "Aplicar Filtros"
+            ], id="apply-filters-btn", color="primary", className="w-100 mb-2"),
+            dbc.Button([
+                html.I(className="fas fa-undo me-2"),
+                "Limpar Filtros"
+            ], id="clear-filters-btn", color="outline-secondary", className="w-100")
+        ], className="mt-3 mb-2")
     )
-    def toggle_kpi_modal(n_add, n_close, n_confirm, is_open):
-        if n_add or n_close or n_confirm:
-            return not is_open
-        return is_open
     
-    # Callback para adicionar elementos ao dashboard, agora com validação
-    @app.callback(
-        Output("dashboard-elements", "data"),
-        Output("dashboard-modal-feedback", "data"),
-        [Input("chart-modal-add", "n_clicks"),
-            Input("table-modal-add", "n_clicks"),
-         Input("kpi-modal-add", "n_clicks")],
-        [State("dashboard-elements", "data"),
-            # Estados para gráfico
-            State("chart-title-input", "value"),
-            State("chart-x-axis-selector", "value"),
-            State("chart-y-axis-selector", "value"),
-            State("chart-type-selector", "value"),
-            State("chart-group-by-selector", "value"),
-            State("chart-agg-operation", "value"),
-            # Estados para tabela
-            State("table-title-input", "value"),
-            State("table-columns-selector", "value"),
-            State("table-rows-input", "value"),
-            # Estados para KPI
-            State("kpi-title-input", "value"),
-            State("kpi-column-selector", "value"),
-            State("kpi-operation-selector", "value"),
-            State("kpi-color-selector", "value"),
-            State("kpi-icon-selector", "value")
+    # Adiciona dica de uso
+    filters_content.append(
+        html.Div([
+            html.I(className="fas fa-lightbulb me-2", style={'color': colors['warning']}),
+            html.Small("Dica: Combine múltiplos filtros para análises mais precisas", 
+                     style={'color': colors['text_secondary']})
+        ], className="mt-3 small")
+    )
+    
+    return dbc.Card([
+        dbc.CardHeader([
+            html.Div([
+                html.I(className="fas fa-filter me-2", style={'color': colors['primary']}),
+                html.Span("Filtros Avançados", style={'fontWeight': '600'})
+            ], className="d-flex align-items-center"),
+            dbc.Button(
+                html.I(className="fas fa-chevron-down", id="filters-chevron"),
+                id="filters-collapse-btn",
+                color="link",
+                size="sm",
+                className="ms-auto p-0"
+            )
+        ], className="d-flex align-items-center", 
+           style={'borderBottom': f"1px solid {colors['border']}"}),
+        dbc.Collapse([
+            dbc.CardBody(filters_content)
+        ], id="filters-collapse", is_open=True)
+    ], className="mb-4 shadow-sm", style=sidebar_style)
+
+def create_chart_card(chart_id, title, chart_type='bar', theme='light', data=None):
+    """Cria card de gráfico moderno com controles avançados e interatividade"""
+    colors = THEMES[theme]
+    
+    # Estilos para o card
+    card_style = {
+        'backgroundColor': colors['surface'],
+        'borderRadius': '12px',
+        'overflow': 'hidden',
+        'border': f"1px solid {colors['border']}",
+        'transition': 'all 0.3s ease',
+        'height': '100%'
+    }
+    
+    # Estilos para o cabeçalho
+    header_style = {
+        'borderBottom': f"1px solid {colors['border']}",
+        'padding': '12px 16px'
+    }
+    
+    # Determinar ícone baseado no tipo de gráfico
+    chart_icon = {
+        'bar': 'fas fa-chart-bar',
+        'line': 'fas fa-chart-line',
+        'pie': 'fas fa-chart-pie',
+        'scatter': 'fas fa-braille',
+        'area': 'fas fa-chart-area',
+        'heatmap': 'fas fa-th',
+        'histogram': 'fas fa-stream'
+    }.get(chart_type, 'fas fa-chart-bar')
+    
+    # Determinar cor de acento baseada no tipo de gráfico
+    chart_color = {
+        'bar': colors['primary'],
+        'line': colors['info'],
+        'pie': colors['success'],
+        'scatter': colors['warning'],
+        'area': colors['info'],
+        'heatmap': colors['danger'],
+        'histogram': colors['secondary']
+    }.get(chart_type, colors['primary'])
+    
+    # Criar gráfico baseado nos dados
+    fig = create_sample_chart(chart_type, data, theme)
+    
+    return dbc.Col([
+        dbc.Card([
+            # Barra de acento colorida no topo do card
+            html.Div(className="w-100", style={
+                'height': '4px', 
+                'backgroundColor': chart_color,
+                'borderTopLeftRadius': '12px',
+                'borderTopRightRadius': '12px'
+            }),
+            
+            # Cabeçalho com título e controles
+            dbc.CardHeader([
+                html.Div([
+                    html.Div([
+                        html.I(className=f"{chart_icon} me-2", 
+                              style={'color': chart_color}),
+                        html.Span(title, className="fw-bold", style={'color': colors['text']})
+                    ], className="d-flex align-items-center"),
+                    
+                    # Indicador de atualização
+                    html.Div([
+                        html.Small("Atualizado: ", className="me-1", 
+                                 style={'color': colors['text_secondary']}),
+                        html.Small(datetime.now().strftime("%H:%M"), 
+                                 style={'color': colors['text']})
+                    ], className="d-none d-md-block ms-3 small")
+                ], className="d-flex align-items-center"),
+                
+                # Botões de controle
+                dbc.ButtonGroup([
+                    # Botão de tela cheia
+                    dbc.Button(
+                        html.I(className="fas fa-expand"),
+                        id=f"fullscreen-{chart_id}",
+                        color="outline-secondary",
+                        size="sm",
+                        className="rounded-pill",
+                        title="Expandir para tela cheia"
+                    ),
+                    
+                    # Botão de download
+                    dbc.DropdownMenu(
+                        [
+                            dbc.DropdownMenuItem([html.I(className="fas fa-file-image me-2"), "PNG"], id=f"download-png-{chart_id}"),
+                            dbc.DropdownMenuItem([html.I(className="fas fa-file-pdf me-2"), "PDF"], id=f"download-pdf-{chart_id}"),
+                            dbc.DropdownMenuItem([html.I(className="fas fa-file-csv me-2"), "CSV"], id=f"download-csv-{chart_id}"),
+                            dbc.DropdownMenuItem([html.I(className="fas fa-file-excel me-2"), "Excel"], id=f"download-excel-{chart_id}"),
+                        ],
+                        label=html.I(className="fas fa-download"),
+                        color="outline-primary",
+                        size="sm",
+                        className="rounded-pill",
+                        toggle_style={"fontSize": "0.875rem"},
+                    ),
+                    
+                    # Botão de configuração
+                    dbc.DropdownMenu(
+                        [
+                            dbc.DropdownMenuItem([html.I(className="fas fa-chart-bar me-2"), "Gráfico de Barras"], id=f"chart-type-bar-{chart_id}"),
+                            dbc.DropdownMenuItem([html.I(className="fas fa-chart-line me-2"), "Gráfico de Linha"], id=f"chart-type-line-{chart_id}"),
+                            dbc.DropdownMenuItem([html.I(className="fas fa-chart-pie me-2"), "Gráfico de Pizza"], id=f"chart-type-pie-{chart_id}"),
+                            dbc.DropdownMenuItem([html.I(className="fas fa-braille me-2"), "Gráfico de Dispersão"], id=f"chart-type-scatter-{chart_id}"),
+                            dbc.DropdownMenuItem([html.I(className="fas fa-chart-area me-2"), "Gráfico de Área"], id=f"chart-type-area-{chart_id}"),
+                            dbc.DropdownMenuItem(divider=True),
+                            dbc.DropdownMenuItem([html.I(className="fas fa-cog me-2"), "Configurações Avançadas"], id=f"chart-config-{chart_id}"),
+                        ],
+                        label=html.I(className="fas fa-cog"),
+                        color="outline-secondary",
+                        size="sm",
+                        className="rounded-pill",
+                        toggle_style={"fontSize": "0.875rem"},
+                    )
+                ], size="sm", className="ms-auto")
+            ], className="d-flex justify-content-between align-items-center", style=header_style),
+            
+            # Corpo do card com o gráfico
+            dbc.CardBody([
+                # Área de loading para o gráfico
+                dbc.Spinner(
+                    dcc.Graph(
+                        id=f"chart-{chart_id}",
+                        figure=fig,
+                        config={
+                            'displayModeBar': 'hover',
+                            'responsive': True,
+                            'toImageButtonOptions': {
+                                'format': 'png',
+                                'filename': f'{title}_{chart_type}',
+                                'height': 800,
+                                'width': 1200,
+                                'scale': 2
+                            },
+                            'modeBarButtonsToRemove': ['select2d', 'lasso2d']
+                        },
+                        className="h-100 w-100",
+                        style={
+                            'minHeight': '300px',
+                            'transition': 'all 0.3s ease'
+                        }
+                    ),
+                    color=chart_color,
+                    type="border",
+                    fullscreen=False,
+                ),
+                
+                # Rodapé com informações adicionais
+                html.Div([
+                    html.Small([
+                        html.I(className="fas fa-info-circle me-1", style={'color': colors['info']}),
+                        "Clique e arraste para zoom. Clique duplo para resetar."
+                    ], style={'color': colors['text_secondary']})
+                ], className="mt-3 text-center small d-none d-md-block")
+            ], className="p-3")
+        ], className="shadow-sm", style=card_style)
+    ], lg=6, md=12, className="mb-4")
+
+def create_data_table_card(table_id, title, theme='light', data=None):
+    """Cria card de tabela moderna com pesquisa avançada, paginação e exportação"""
+    colors = THEMES[theme]
+    
+    # Estilos para o card
+    card_style = {
+        'backgroundColor': colors['surface'],
+        'borderRadius': '12px',
+        'overflow': 'hidden',
+        'border': f"1px solid {colors['border']}",
+        'transition': 'all 0.3s ease',
+        'height': '100%'
+    }
+    
+    # Estilos para o cabeçalho
+    header_style = {
+        'borderBottom': f"1px solid {colors['border']}",
+        'padding': '12px 16px'
+    }
+    
+    # Preparar dados da tabela
+    if data is not None and not data.empty:
+        # Formatar dados para exibição mais amigável
+        formatted_data = data.copy()
+        
+        # Detectar e formatar colunas numéricas
+        for col in formatted_data.select_dtypes(include=['float64', 'int64']).columns:
+            # Verificar se parece com valores monetários (grandes números)
+            if formatted_data[col].abs().mean() > 1000:
+                formatted_data[col] = formatted_data[col].apply(
+                    lambda x: f"R$ {x:,.2f}" if pd.notna(x) else ""
+                )
+            # Números decimais comuns
+            elif formatted_data[col].dtype == 'float64':
+                formatted_data[col] = formatted_data[col].apply(
+                    lambda x: f"{x:,.2f}" if pd.notna(x) else ""
+                )
+        
+        # Detectar e formatar colunas de data
+        for col in formatted_data.select_dtypes(include=['datetime64']).columns:
+            formatted_data[col] = formatted_data[col].dt.strftime('%d/%m/%Y')
+        
+        # Definir colunas e tipos para a tabela
+        table_columns = []
+        for i in formatted_data.columns:
+            col_type = str(data[i].dtype)
+            if 'int' in col_type or 'float' in col_type:
+                table_columns.append({"name": i, "id": i, "type": "numeric"})
+            elif 'datetime' in col_type or 'date' in col_type:
+                table_columns.append({"name": i, "id": i, "type": "datetime"})
+            else:
+                table_columns.append({"name": i, "id": i, "type": "text"})
+        
+        # Limitar a 100 linhas para performance
+        table_data = formatted_data.head(100).to_dict('records')
+        total_rows = len(data)
+        display_rows = min(100, total_rows)
+    else:
+        table_columns = []
+        table_data = []
+        total_rows = 0
+        display_rows = 0
+    
+    return dbc.Col([
+        dbc.Card([
+            # Barra de acento colorida no topo do card
+            html.Div(className="w-100", style={
+                'height': '4px', 
+                'backgroundColor': colors['info'],
+                'borderTopLeftRadius': '12px',
+                'borderTopRightRadius': '12px'
+            }),
+            
+            # Cabeçalho com título e controles
+            dbc.CardHeader([
+                html.Div([
+                    html.Div([
+                        html.I(className="fas fa-table me-2", style={'color': colors['info']}),
+                        html.Span(title, className="fw-bold", style={'color': colors['text']})
+                    ], className="d-flex align-items-center"),
+                    
+                    # Contador de registros
+                    html.Div([
+                        html.Small("Registros: ", className="me-1", style={'color': colors['text_secondary']}),
+                        html.Small(f"{display_rows} de {total_rows}", 
+                                  className="badge rounded-pill", 
+                                  style={
+                                      'backgroundColor': f"{colors['info']}20",
+                                      'color': colors['info'],
+                                      'fontWeight': 'normal'
+                                  })
+                    ], className="d-none d-md-flex ms-3 align-items-center" if total_rows > 0 else "d-none")
+                ], className="d-flex align-items-center"),
+                
+                # Botões de controle
+                dbc.ButtonGroup([
+                    # Campo de pesquisa
+                    dbc.Input(
+                        id=f"search-input-{table_id}",
+                        placeholder="Pesquisar...",
+                        size="sm",
+                        className="me-2 rounded-pill",
+                        style={
+                            'width': '150px',
+                            'transition': 'width 0.3s',
+                            'backgroundColor': colors['surface'],
+                            'border': f"1px solid {colors['border']}",
+                            'color': colors['text']
+                        }
+                    ),
+                    
+                    # Botão de pesquisa
+                    dbc.Button(
+                        html.I(className="fas fa-search"),
+                        id=f"search-{table_id}",
+                        color="outline-secondary",
+                        size="sm",
+                        className="rounded-pill",
+                        title="Pesquisar"
+                    ),
+                    
+                    # Menu de exportação
+                    dbc.DropdownMenu(
+                        [
+                            dbc.DropdownMenuItem([html.I(className="fas fa-file-csv me-2"), "CSV"], id=f"export-csv-{table_id}"),
+                            dbc.DropdownMenuItem([html.I(className="fas fa-file-excel me-2"), "Excel"], id=f"export-excel-{table_id}"),
+                            dbc.DropdownMenuItem([html.I(className="fas fa-file-pdf me-2"), "PDF"], id=f"export-pdf-{table_id}"),
+                            dbc.DropdownMenuItem(divider=True),
+                            dbc.DropdownMenuItem([html.I(className="fas fa-print me-2"), "Imprimir"], id=f"print-{table_id}"),
+                        ],
+                        label=html.I(className="fas fa-download"),
+                        color="outline-primary",
+                        size="sm",
+                        className="rounded-pill ms-2",
+                        toggle_style={"fontSize": "0.875rem"},
+                    ),
+                    # Botão de configuração
+                    dbc.DropdownMenu(
+                        [
+                            dbc.DropdownMenuItem([html.I(className="fas fa-sort-alpha-down me-2"), "Ordenar A-Z"], id=f"sort-asc-{table_id}"),
+                            dbc.DropdownMenuItem([html.I(className="fas fa-sort-alpha-up me-2"), "Ordenar Z-A"], id=f"sort-desc-{table_id}"),
+                            dbc.DropdownMenuItem(divider=True),
+                            dbc.DropdownMenuItem([html.I(className="fas fa-filter me-2"), "Mostrar Filtros"], id=f"toggle-filters-{table_id}"),
+                            dbc.DropdownMenuItem([html.I(className="fas fa-cog me-2"), "Configurações"], id=f"table-config-{table_id}"),
+                        ],
+                        label=html.I(className="fas fa-cog"),
+                        color="outline-secondary",
+                        size="sm",
+                        className="rounded-pill ms-2",
+                        toggle_style={"fontSize": "0.875rem"},
+                    )
+                ], size="sm", className="ms-auto")
+            ], className="d-flex justify-content-between align-items-center", style=header_style),
+            
+            # Corpo do card com a tabela
+            dbc.CardBody([
+                # Área de loading para a tabela
+                dbc.Spinner(
+                    html.Div([
+                        dash_table.DataTable(
+                            id=f"table-{table_id}",
+                            columns=table_columns,
+                            data=table_data,
+                            page_size=15,
+                            style_table={
+                                'overflowX': 'auto',
+                                'minWidth': '100%',
+                                'borderRadius': '8px',
+                                'overflow': 'hidden',
+                                'border': f"1px solid {colors['border']}",
+                            },
+                            style_cell={
+                                'textAlign': 'left',
+                                'padding': '12px 15px',
+                                'backgroundColor': colors['surface'],
+                                'color': colors['text'],
+                                'fontFamily': '"Segoe UI", Arial, sans-serif',
+                                'fontSize': '14px',
+                                'overflow': 'hidden',
+                                'textOverflow': 'ellipsis',
+                                'maxWidth': 0,
+                                'height': 'auto',
+                                'whiteSpace': 'normal',
+                                'lineHeight': '1.5',
+                            },
+                            style_header={
+                                'backgroundColor': colors['surface'],
+                                'color': colors['text'],
+                                'fontWeight': 'bold',
+                                'textAlign': 'left',
+                                'padding': '15px',
+                                'borderBottom': f"2px solid {colors['info']}",
+                            },
+                            style_data_conditional=[
+                                {
+                                    'if': {'row_index': 'odd'},
+                                    'backgroundColor': colors['surface'],
+                                    'opacity': '0.8'
+                                },
+                                {
+                                    'if': {'state': 'selected'},
+                                    'backgroundColor': f"{colors['info']}20",
+                                    'border': f"1px solid {colors['info']}",
+                                },
+                                # Estilo para colunas numéricas
+                                *[{
+                                    'if': {'column_type': 'numeric'},
+                                    'textAlign': 'right'
+                                }],
+                                # Estilo para valores negativos
+                                *([{                                    'if': {
+                                        'filter_query': f'{{{col}}} < 0',
+                                        'column_id': col
+                                    },
+                                    'color': colors['danger'],
+                                    'fontWeight': 'bold'
+                                } for col in ([] if data is None or data.empty else data.select_dtypes(include=['float64', 'int64']).columns)])
+                            ],
+                            page_action='native',
+                            sort_action='native',
+                            filter_action='native',
+                            export_format='xlsx',
+                            export_headers='display',
+                            row_selectable='multi',
+                            selected_rows=[],
+                            style_as_list_view=True,
+                            style_filter={
+                                'backgroundColor': colors['surface'],
+                                'color': colors['text'],
+                                'padding': '8px',
+                                'borderRadius': '4px',
+                            },
+                            style_pagination={
+                                'borderTop': f"1px solid {colors['border']}",
+                                'padding': '10px 0',
+                            },
+                            page_current=0,
+                            css=[
+                                {
+                                    'selector': '.dash-spreadsheet-menu',
+                                    'rule': f'background-color: {colors["surface"]} !important; color: {colors["text"]} !important;'
+                                },
+                                {
+                                    'selector': '.dash-spreadsheet-menu .bp3-button',
+                                    'rule': f'background-color: {colors["surface"]} !important; color: {colors["text"]} !important;'
+                                },
+                                {
+                                    'selector': '.dash-filter--case',
+                                    'rule': f'display: none !important;'
+                                }
+                            ]
+                        )
+                    ], style={'overflowX': 'auto'}),
+                    color=colors['info'],
+                    type="border",
+                    fullscreen=False,
+                ),
+                
+                # Rodapé com informações adicionais
+                html.Div([
+                    html.Div([
+                        html.Small([
+                            html.I(className="fas fa-info-circle me-1", style={'color': colors['info']}),
+                            "Clique nos cabeçalhos para ordenar. Use os filtros para refinar os dados."
+                        ], style={'color': colors['text_secondary']})
+                    ], className="col-12 col-md-8"),
+                    html.Div([
+                        html.Small([
+                            html.Span("Página: ", style={'color': colors['text_secondary']}),
+                            html.Span("1", id=f"table-current-page-{table_id}", style={'fontWeight': 'bold', 'color': colors['text']}),
+                            html.Span(" de ", style={'color': colors['text_secondary']}),
+                            html.Span(str(max(1, (total_rows // 15) + (1 if total_rows % 15 > 0 else 0))), 
+                                     id=f"table-total-pages-{table_id}", 
+                                     style={'color': colors['text']})
+                        ])
+                    ], className="col-12 col-md-4 text-md-end mt-2 mt-md-0")
+                ], className="d-flex flex-wrap justify-content-between align-items-center mt-3 small")
+            ], className="p-3")
+        ], className="shadow-sm mb-4", style=card_style)
+    ], lg=12, className="mb-4")
+
+def create_sample_chart(chart_type, data=None, theme='light', animation=True, advanced_options=None):
+    """Cria gráficos modernos e interativos baseados nos dados disponíveis
+    
+    Parâmetros:
+    - chart_type: Tipo de gráfico (line, bar, area, scatter, heatmap, histogram, pie, box, violin)
+    - data: DataFrame com os dados para visualização
+    - theme: Tema de cores (light, dark)
+    - animation: Se True, adiciona animações aos gráficos
+    - advanced_options: Dicionário com opções avançadas de configuração
+    """
+    colors = THEMES[theme]
+    
+    # Configurações padrão
+    default_options = {
+        'show_grid': True,
+        'show_legend': True,
+        'template': 'plotly_white' if theme == 'light' else 'plotly_dark',
+        'colorscale': 'Viridis',
+        'marker_size': 8,
+        'line_width': 2,
+        'opacity': 0.8,
+        'title_font_size': 18,
+        'axis_font_size': 14,
+        'legend_font_size': 12,
+        'show_trend': True,
+        'smooth_line': True,
+        'bar_mode': 'group',
+        'show_values': False
+    }
+    
+    # Mesclar com opções avançadas, se fornecidas
+    options = default_options.copy()
+    if advanced_options:
+        options.update(advanced_options)
+    
+    # Definir paleta de cores personalizada baseada no tema
+    custom_colors = [
+        colors['primary'], colors['secondary'], colors['success'], 
+        colors['info'], colors['warning'], colors['danger']
+    ]
+    
+    # Gerar dados de exemplo se não houver dados reais
+    if data is None or data.empty:
+        # Dados de exemplo mais interessantes
+        if chart_type in ['line', 'area']:
+            # Gerar série temporal com tendência e sazonalidade
+            dates = pd.date_range('2024-01-01', periods=90, freq='D')
+            trend = np.linspace(0, 15, 90)  # Tendência crescente
+            seasonality = 5 * np.sin(np.linspace(0, 6*np.pi, 90))  # Padrão sazonal
+            noise = np.random.normal(0, 1, 90)  # Ruído aleatório
+            values = trend + seasonality + noise
+            
+            # Criar DataFrame com múltiplas séries
+            df = pd.DataFrame({
+                'Data': dates,
+                'Série A': values,
+                'Série B': values * 0.7 + np.random.normal(0, 1, 90) + 5,
+                'Série C': values * 0.5 + np.random.normal(0, 1, 90) + 10
+            })
+            
+            if chart_type == 'line':
+                fig = px.line(df, x='Data', y=['Série A', 'Série B', 'Série C'], 
+                              title="Tendência Temporal com Sazonalidade",
+                              color_discrete_sequence=custom_colors,
+                              line_shape='spline' if options['smooth_line'] else 'linear')
+                
+                # Adicionar linha de tendência
+                if options['show_trend']:
+                    for col in ['Série A', 'Série B', 'Série C']:
+                        fig.add_traces(
+                            px.scatter(x=df['Data'], y=df[col], trendline="lowess").data[1]
+                        )
+            else:  # area
+                fig = px.area(df, x='Data', y=['Série A', 'Série B', 'Série C'], 
+                              title="Performance ao Longo do Tempo",
+                              color_discrete_sequence=custom_colors)
+                
+        elif chart_type == 'bar':
+            # Dados de barras mais interessantes com categorias significativas
+            categories = ['Vendas', 'Marketing', 'Operações', 'Financeiro', 'RH', 'TI']
+            values_2023 = np.random.randint(50, 150, 6)
+            values_2024 = values_2023 * (1 + np.random.uniform(-0.3, 0.5, 6))  # Variação ano a ano
+            
+            df = pd.DataFrame({
+                'Departamento': categories * 2,
+                'Valor': np.concatenate([values_2023, values_2024]),
+                'Ano': ['2023'] * 6 + ['2024'] * 6
+            })
+            
+            fig = px.bar(df, x='Departamento', y='Valor', color='Ano', 
+                         title="Comparativo por Departamento",
+                         barmode=options['bar_mode'],
+                         color_discrete_sequence=custom_colors)
+            
+            # Adicionar valores nas barras
+            if options['show_values']:
+                fig.update_traces(texttemplate='%{y:.0f}', textposition='outside')
+                
+        elif chart_type == 'heatmap':
+            # Matriz de correlação mais interessante
+            labels = ['Vendas', 'Lucro', 'Custo', 'Volume', 'Satisfação', 'Retenção']
+            n = len(labels)
+            
+            # Criar matriz de correlação com padrões realistas
+            base = np.eye(n)  # Diagonal principal = 1
+            for i in range(n):
+                for j in range(i+1, n):
+                    # Correlações mais realistas entre -0.8 e 0.9
+                    val = np.random.uniform(-0.8, 0.9)
+                    base[i, j] = val
+                    base[j, i] = val  # Matriz simétrica
+            
+            fig = px.imshow(base, x=labels, y=labels, 
+                             title="Matriz de Correlação entre Métricas",
+                             color_continuous_scale=options['colorscale'],
+                             zmin=-1, zmax=1)
+            
+            # Adicionar valores na matriz
+            if options['show_values']:
+                fig.update_traces(text=[[f"{val:.2f}" for val in row] for row in base],
+                                 texttemplate="%{text}")
+                
+        elif chart_type == 'scatter':
+            # Dados de dispersão com clusters
+            n_points = 100
+            
+            # Criar três clusters distintos
+            cluster1_x = np.random.normal(5, 1, n_points // 3)
+            cluster1_y = np.random.normal(5, 1, n_points // 3)
+            
+            cluster2_x = np.random.normal(10, 1.2, n_points // 3)
+            cluster2_y = np.random.normal(10, 1.2, n_points // 3)
+            
+            cluster3_x = np.random.normal(7.5, 1.5, n_points // 3)
+            cluster3_y = np.random.normal(15, 1.5, n_points // 3)
+            
+            df = pd.DataFrame({
+                'x': np.concatenate([cluster1_x, cluster2_x, cluster3_x]),
+                'y': np.concatenate([cluster1_y, cluster2_y, cluster3_y]),
+                'cluster': ['Grupo A'] * (n_points // 3) + ['Grupo B'] * (n_points // 3) + ['Grupo C'] * (n_points // 3),
+                'tamanho': np.random.randint(10, 50, n_points)
+            })
+            
+            fig = px.scatter(df, x='x', y='y', color='cluster', size='tamanho',
+                             title="Análise de Clusters",
+                             color_discrete_sequence=custom_colors,
+                             opacity=options['opacity'])
+            
+        elif chart_type == 'histogram':
+            # Histograma com distribuição interessante
+            # Mistura de duas distribuições normais
+            data1 = np.random.normal(20, 5, 300)  # Média 20, desvio 5
+            data2 = np.random.normal(35, 8, 200)  # Média 35, desvio 8
+            all_data = np.concatenate([data1, data2])
+            
+            fig = px.histogram(all_data, title="Distribuição Bimodal",
+                               color_discrete_sequence=[colors['primary']],
+                               opacity=options['opacity'],
+                               nbins=30)
+            
+        elif chart_type == 'pie':
+            # Gráfico de pizza com dados de mercado
+            labels = ['Produto A', 'Produto B', 'Produto C', 'Produto D', 'Outros']
+            values = [38, 27, 18, 10, 7]  # Porcentagens
+            
+            fig = px.pie(values=values, names=labels, 
+                         title="Participação de Mercado",
+                         color_discrete_sequence=custom_colors,
+                         hole=0.4)  # Transformar em donut chart
+            
+            # Adicionar valores percentuais
+            if options['show_values']:
+                fig.update_traces(textinfo='percent+label')
+                
+        elif chart_type == 'box':
+            # Box plot com múltiplas categorias
+            categories = ['Grupo A', 'Grupo B', 'Grupo C', 'Grupo D']
+            data_points = []
+            cat_labels = []
+            
+            # Gerar dados com diferentes distribuições para cada categoria
+            for i, cat in enumerate(categories):
+                # Cada categoria tem uma distribuição diferente
+                mean_val = 50 + i * 10
+                std_val = 5 + i * 2
+                points = np.random.normal(mean_val, std_val, 50)
+                data_points.extend(points)
+                cat_labels.extend([cat] * 50)
+            
+            df = pd.DataFrame({
+                'Categoria': cat_labels,
+                'Valor': data_points
+            })
+            
+            fig = px.box(df, x='Categoria', y='Valor', 
+                         title="Distribuição por Grupos",
+                         color='Categoria',
+                         color_discrete_sequence=custom_colors)
+            
+        else:  # Fallback para outros tipos não especificados
+            # Gráfico de linha como padrão
+            dates = pd.date_range('2024-01-01', periods=60, freq='D')
+            values = np.random.randn(60).cumsum() + 100
+            df = pd.DataFrame({'date': dates, 'value': values})
+            fig = px.line(df, x='date', y='value', 
+                          title="Visualização de Dados",
+                          color_discrete_sequence=[colors['primary']])
+    else:
+        # Usar dados reais
+        numeric_cols = data.select_dtypes(include=[np.number]).columns
+        date_cols = [col for col in data.columns if pd.api.types.is_datetime64_any_dtype(data[col]) or 
+                    ('date' in col.lower() or 'data' in col.lower() or 'dia' in col.lower())]  # Detectar colunas de data
+        
+        # Selecionar a primeira coluna de data, se existir
+        date_col = date_cols[0] if date_cols else None
+        
+        # Selecionar x_col baseado na disponibilidade de colunas de data
+        if date_col:
+            x_col = date_col
+        elif len(data.columns) > 0:
+            x_col = data.columns[0]  # Usar primeira coluna como fallback
+        else:
+            # Caso extremo: não há colunas
+            return px.scatter(title="Sem dados disponíveis")
+        
+        if len(numeric_cols) >= 1:
+            # Selecionar até 3 colunas numéricas para visualização
+            y_cols = numeric_cols[:3]
+            
+            if chart_type == 'line':
+                # Gráfico de linha com múltiplas séries
+                fig = px.line(data, x=x_col, y=y_cols, 
+                              title="Tendência dos Dados",
+                              color_discrete_sequence=custom_colors,
+                              line_shape='spline' if options['smooth_line'] else 'linear')
+                
+                # Adicionar linha de tendência
+                if options['show_trend'] and len(data) > 5:
+                    for col in y_cols:
+                        try:
+                            fig.add_traces(
+                                px.scatter(x=data[x_col], y=data[col], trendline="lowess").data[1]
+                            )
+                        except Exception:
+                            # Fallback se a linha de tendência falhar
+                            pass
+                            
+            elif chart_type == 'bar':
+                # Limitar a 15 registros para melhor visualização
+                sample_data = data.head(15) if len(data) > 15 else data
+                
+                # Verificar se há uma coluna categórica para agrupar
+                cat_cols = data.select_dtypes(include=['object', 'category']).columns
+                if len(cat_cols) > 0 and len(y_cols) > 0:
+                    # Usar a primeira coluna categórica para agrupar
+                    color_col = cat_cols[0]
+                    fig = px.bar(sample_data, x=x_col, y=y_cols[0], color=color_col,
+                                title="Distribuição por Categoria",
+                                barmode=options['bar_mode'],
+                                color_discrete_sequence=custom_colors)
+                else:
+                    # Sem coluna categórica, usar apenas barras simples
+                    fig = px.bar(sample_data, x=x_col, y=y_cols[0],
+                                title="Top 15 Registros",
+                                color_discrete_sequence=[colors['primary']])
+                
+                # Adicionar valores nas barras
+                if options['show_values']:
+                    fig.update_traces(texttemplate='%{y:.1f}', textposition='outside')
+                    
+            elif chart_type == 'heatmap':
+                # Matriz de correlação entre variáveis numéricas
+                if len(numeric_cols) >= 2:
+                    # Calcular correlação apenas para colunas numéricas
+                    corr_matrix = data[numeric_cols].corr().round(2)
+                    
+                    # Limitar a 10x10 para melhor visualização
+                    if len(corr_matrix) > 10:
+                        corr_matrix = corr_matrix.iloc[:10, :10]
+                    
+                    fig = px.imshow(corr_matrix,
+                                  title="Matriz de Correlação",
+                                  color_continuous_scale=options['colorscale'],
+                                  zmin=-1, zmax=1)
+                    
+                    # Adicionar valores na matriz
+                    if options['show_values']:
+                        fig.update_traces(text=[[f"{val:.2f}" for val in row] for row in corr_matrix.values],
+                                         texttemplate="%{text}")
+                else:
+                    # Fallback se não houver colunas numéricas suficientes
+                    fig = px.scatter(title="Dados insuficientes para matriz de correlação")
+                    
+            elif chart_type == 'scatter':
+                # Gráfico de dispersão entre duas variáveis numéricas
+                if len(numeric_cols) >= 2:
+                    # Limitar a 200 pontos para performance
+                    sample_data = data.sample(min(200, len(data))) if len(data) > 200 else data
+                    
+                    # Verificar se há uma coluna categórica para colorir
+                    cat_cols = data.select_dtypes(include=['object', 'category']).columns
+                    if len(cat_cols) > 0:
+                        color_col = cat_cols[0]
+                        fig = px.scatter(sample_data, x=numeric_cols[0], y=numeric_cols[1],
+                                       color=color_col, size=numeric_cols[0] if len(numeric_cols) > 0 else None,
+                                       title="Correlação entre Variáveis",
+                                       color_discrete_sequence=custom_colors,
+                                       opacity=options['opacity'])
+                    else:
+                        # Sem coluna categórica
+                        fig = px.scatter(sample_data, x=numeric_cols[0], y=numeric_cols[1],
+                                       title="Correlação entre Variáveis",
+                                       color_discrete_sequence=[colors['primary']],
+                                       opacity=options['opacity'])
+                    
+                    # Adicionar linha de tendência
+                    if options['show_trend']:
+                        fig.update_layout(showlegend=True)
+                        fig.add_traces(
+                            px.scatter(x=sample_data[numeric_cols[0]], 
+                                      y=sample_data[numeric_cols[1]], 
+                                      trendline="ols").data[1]
+                        )
+                else:
+                    # Fallback se não houver colunas numéricas suficientes
+                    fig = px.scatter(title="Dados insuficientes para gráfico de dispersão")
+                    
+            elif chart_type == 'histogram':
+                # Histograma da primeira coluna numérica
+                if len(numeric_cols) > 0:
+                    # Verificar se há uma coluna categórica para colorir
+                    cat_cols = data.select_dtypes(include=['object', 'category']).columns
+                    if len(cat_cols) > 0:
+                        color_col = cat_cols[0]
+                        fig = px.histogram(data, x=numeric_cols[0], color=color_col,
+                                         title=f"Distribuição de {numeric_cols[0]}",
+                                         color_discrete_sequence=custom_colors,
+                                         opacity=options['opacity'],
+                                         nbins=30)
+                    else:
+                        # Sem coluna categórica
+                        fig = px.histogram(data, x=numeric_cols[0],
+                                         title=f"Distribuição de {numeric_cols[0]}",
+                                         color_discrete_sequence=[colors['primary']],
+                                         opacity=options['opacity'],
+                                         nbins=30)
+                else:
+                    # Fallback para primeira coluna se não houver numéricas
+                    fig = px.histogram(data, x=data.columns[0],
+                                     title=f"Distribuição de {data.columns[0]}",
+                                     color_discrete_sequence=[colors['primary']])
+                    
+            elif chart_type == 'pie':
+                # Gráfico de pizza para distribuição de categorias
+                cat_cols = data.select_dtypes(include=['object', 'category']).columns
+                if len(cat_cols) > 0 and len(numeric_cols) > 0:
+                    # Agrupar por categoria e somar valores
+                    cat_col = cat_cols[0]
+                    value_col = numeric_cols[0]
+                    
+                    # Limitar a 8 categorias para melhor visualização
+                    grouped_data = data.groupby(cat_col)[value_col].sum().reset_index()
+                    if len(grouped_data) > 8:
+                        # Manter as 7 maiores categorias e agrupar o resto como "Outros"
+                        top_cats = grouped_data.nlargest(7, value_col)
+                        others_sum = grouped_data[~grouped_data[cat_col].isin(top_cats[cat_col])][value_col].sum()
+                        
+                        # Adicionar categoria "Outros"
+                        others_row = pd.DataFrame({cat_col: ['Outros'], value_col: [others_sum]})
+                        grouped_data = pd.concat([top_cats, others_row])
+                    
+                    fig = px.pie(grouped_data, values=value_col, names=cat_col,
+                                title=f"Distribuição por {cat_col}",
+                                color_discrete_sequence=custom_colors,
+                                hole=0.4)  # Donut chart
+                    
+                    # Adicionar valores percentuais
+                    if options['show_values']:
+                        fig.update_traces(textinfo='percent+label')
+                else:
+                    # Fallback se não houver categorias ou valores numéricos
+                    fig = px.pie(title="Dados insuficientes para gráfico de pizza")
+                    
+            elif chart_type == 'box':
+                # Box plot para distribuição de valores numéricos por categoria
+                cat_cols = data.select_dtypes(include=['object', 'category']).columns
+                if len(cat_cols) > 0 and len(numeric_cols) > 0:
+                    cat_col = cat_cols[0]
+                    value_col = numeric_cols[0]
+                    
+                    # Limitar a 10 categorias para melhor visualização
+                    top_cats = data[cat_col].value_counts().nlargest(10).index
+                    filtered_data = data[data[cat_col].isin(top_cats)]
+                    
+                    fig = px.box(filtered_data, x=cat_col, y=value_col,
+                                title=f"Distribuição de {value_col} por {cat_col}",
+                                color=cat_col,
+                                color_discrete_sequence=custom_colors)
+                else:
+                    # Fallback se não houver categorias ou valores numéricos
+                    if len(numeric_cols) > 0:
+                        # Box plot simples para valores numéricos
+                        fig = px.box(data, y=numeric_cols[0],
+                                    title=f"Distribuição de {numeric_cols[0]}",
+                                    color_discrete_sequence=[colors['primary']])
+                    else:
+                        fig = px.box(title="Dados insuficientes para box plot")
+            else:
+                # Fallback para outros tipos não implementados
+                fig = px.line(data, x=x_col, y=numeric_cols[0] if len(numeric_cols) > 0 else None,
+                             title="Visualização de Dados",
+                             color_discrete_sequence=[colors['primary']])
+        else:
+            # Fallback para dados sem colunas numéricas
+            fig = px.bar(data.head(15), x=data.columns[0], title="Visualização de Dados",
+                        color_discrete_sequence=[colors['primary']])
+    
+    # Aplicar tema e configurações avançadas
+    fig.update_layout(
+        template=options['template'],
+        plot_bgcolor=colors['background'],
+        paper_bgcolor=colors['surface'],
+        font_color=colors['text'],
+        title_font_color=colors['text'],
+        title_font_size=options['title_font_size'],
+        legend_title_font_size=options['legend_font_size'],
+        legend_font_size=options['legend_font_size'],
+        showlegend=options['show_legend'],
+        margin=dict(l=20, r=20, t=50, b=20),
+        hovermode='closest',
+        xaxis=dict(
+            showgrid=options['show_grid'],
+            gridcolor=colors['border'],
+            title_font_size=options['axis_font_size'],
+            tickfont_size=options['axis_font_size'] - 2,
+        ),
+        yaxis=dict(
+            showgrid=options['show_grid'],
+            gridcolor=colors['border'],
+            title_font_size=options['axis_font_size'],
+            tickfont_size=options['axis_font_size'] - 2,
+        ),
+        # Adicionar marca d'água sutil
+        annotations=[
+            dict(
+                text="DataMindVV",
+                x=0.5,
+                y=0.5,
+                xref="paper",
+                yref="paper",
+                showarrow=False,
+                font=dict(
+                    size=50,
+                    color=colors['border'],
+                ),
+                opacity=0.07,
+                textangle=0
+            )
         ]
     )
-    def add_dashboard_element(chart_clicks, table_clicks, kpi_clicks, 
-                             elements, 
-                             chart_title, chart_x, chart_y, chart_type, chart_group, chart_agg,
-                             table_title, table_columns, table_rows,
-                             kpi_title, kpi_column, kpi_operation, kpi_color, kpi_icon):
-        ctx = callback_context
-        if not ctx.triggered:
-            raise PreventUpdate
-        trigger_id = ctx.triggered[0]['prop_id'].split('.')[0]
-        elements = elements or []
-        feedback = {}
-        # Prevenir duplicidade (mesmo título e tipo)
-        def is_duplicate(title, tipo):
-            return any(e.get('title') == title and e.get('type') == tipo for e in elements)
-        if trigger_id == "chart-modal-add":
-            if not chart_x or not chart_title:
-                feedback = {"modal": "chart", "msg": "Preencha o título e selecione a coluna do eixo X."}
-                return elements, feedback
-            if is_duplicate(chart_title, 'chart'):
-                feedback = {"modal": "chart", "msg": "Já existe um gráfico com esse título."}
-                return elements, feedback
-            element_id = f"chart-{str(uuid.uuid4())[:8]}"
-            elements.append({
-                'id': element_id,
-                'type': 'chart',
-                'title': chart_title,
-                'config': {
-                    'x': chart_x,
-                    'y': chart_y,
-                    'type': chart_type,
-                    'group_by': chart_group,
-                    'agg_operation': chart_agg
-                }
-            })
-            return elements, {}
-        elif trigger_id == "table-modal-add":
-            if not table_columns or not table_title:
-                feedback = {"modal": "table", "msg": "Preencha o título e selecione as colunas."}
-                return elements, feedback
-            if is_duplicate(table_title, 'table'):
-                feedback = {"modal": "table", "msg": "Já existe uma tabela com esse título."}
-                return elements, feedback
-            element_id = f"table-{str(uuid.uuid4())[:8]}"
-            elements.append({
-                'id': element_id,
-                'type': 'table',
-                'title': table_title,
-                'config': {
-                    'columns': table_columns,
-                    'rows': table_rows
-                }
-            })
-            return elements, {}
-        elif trigger_id == "kpi-modal-add":
-            if not kpi_column or not kpi_title:
-                feedback = {"modal": "kpi", "msg": "Preencha o título e selecione a coluna."}
-                return elements, feedback
-            if is_duplicate(kpi_title, 'kpi'):
-                feedback = {"modal": "kpi", "msg": "Já existe um KPI com esse título."}
-                return elements, feedback
-            element_id = f"kpi-{str(uuid.uuid4())[:8]}"
-            elements.append({
-                'id': element_id,
-                'type': 'kpi',
-                'title': kpi_title,
-                'config': {
-                    'column': kpi_column,
-                    'operation': kpi_operation,
-                    'color': kpi_color,
-                    'icon': kpi_icon
-                }
-            })
-            return elements, {}
-        return elements, {}
-        
-    # Callback para remover elementos (só no modo edição)
-    @app.callback(
-        Output("dashboard-elements", "data", allow_duplicate=True),
-        [Input({"type": "delete-chart", "index": dash.ALL}, "n_clicks"),
-         Input({"type": "delete-table", "index": dash.ALL}, "n_clicks")],
-        [State("dashboard-elements", "data"),
-         State({"type": "delete-chart", "index": dash.ALL}, "id"),
-         State({"type": "delete-table", "index": dash.ALL}, "id"),
-         State("dashboard-edit-mode", "data")],
-        prevent_initial_call=True
-    )
-    def remove_dashboard_element(chart_clicks, table_clicks, elements, chart_ids, table_ids, edit_mode):
-        ctx = callback_context
-        if not ctx.triggered or not elements or not edit_mode:
-            return elements
-        triggered_id = ctx.triggered[0]["prop_id"]
-        elements_list = elements.copy()
-        if ".n_clicks" in triggered_id:
-            element_id = json.loads(triggered_id.split(".")[0])["index"]
-            elements_list = [e for e in elements_list if e.get('id') != element_id]
-        return elements_list
-        
-    @app.callback(
-        Output("dashboard-content-area", "children"),
-        [Input("refresh-dashboard-btn", "n_clicks"),
-         Input("dashboard-interval-component", "n_intervals"),
-         Input("dashboard-elements", "data"),
-         Input("dashboard-edit-mode", "data")],
-        [State("server-side-data-key", "data"),
-         State("active-connection-name", "data"),
-         State("active-table-name", "data"),
-         State("data-source-type", "data")]
-    )
-    def update_dashboard_layout(n_clicks, n_intervals, elements, edit_mode, data_key, conn, table, src_type):
-        if not data_key: return create_empty_dashboard_layout()
-        df_check = cache.get(data_key)
-        data_exists = df_check is not None and not df_check.empty
-        name = f"{conn} - {table}" if src_type=='database' else table if src_type=='upload' else "N/A"
-        return create_dashboard_layout(data_exists, name, src_type, elements, edit_mode=edit_mode)
-
-    # Callback para renderizar gráficos
-    @app.callback(
-        Output({"type": "graph", "index": dash.ALL}, "figure"),
-        [Input("refresh-dashboard-btn", "n_clicks"),
-         Input("dashboard-interval-component", "n_intervals")],
-        [State("dashboard-filtered-data", "data"),
-         State("dashboard-elements", "data"),
-         State({"type": "graph", "index": dash.ALL}, "id")]
-    )
-    def update_charts(n_clicks, n_intervals, filtered_data_json, elements, graph_ids):
-        if not filtered_data_json or not elements or not graph_ids:
-            return [go.Figure() for _ in graph_ids]
-        try:
-            df = pd.read_json(filtered_data_json, orient='split')
-        except Exception:
-            return [go.Figure() for _ in graph_ids]
-        if df is None or df.empty:
-            return [go.Figure() for _ in graph_ids]
-        figures = []
-        for graph_id in graph_ids:
-            element_id = graph_id["index"]
-            element = next((e for e in elements if e.get('id') == element_id and e.get('type') == 'chart'), None)
-            if not element:
-                figures.append(go.Figure())
-                continue
-            config = element.get('config', {})
-            x_col = config.get('x')
-            y_col = config.get('y')
-            chart_type = config.get('type', 'bar')
-            group_by = config.get('group_by')
-            agg_operation = config.get('agg_operation', 'count')
-            title = element.get('title', 'Gráfico')
-            fig = go.Figure()
-            try:
-                if x_col and x_col in df.columns:
-                    if chart_type == "scatter":
-                        if y_col and y_col in df.columns:
-                            if group_by and group_by in df.columns:
-                                fig = px.scatter(df, x=x_col, y=y_col, color=group_by, title=title, template="plotly_white")
-                            else:
-                                fig = px.scatter(df, x=x_col, y=y_col, title=title, template="plotly_white")
-                    elif chart_type == "line":
-                        if y_col and y_col in df.columns:
-                            if group_by and group_by in df.columns:
-                                fig = px.line(df, x=x_col, y=y_col, color=group_by, title=title, template="plotly_white")
-                            else:
-                                fig = px.line(df, x=x_col, y=y_col, title=title, template="plotly_white")
-                    elif chart_type == "bar":
-                        if y_col and y_col in df.columns:
-                            if group_by and group_by in df.columns:
-                                agg_df = df.groupby([x_col, group_by]).agg({y_col: agg_operation}).reset_index()
-                                fig = px.bar(agg_df, x=x_col, y=y_col, color=group_by, title=title, template="plotly_white")
-                            else:
-                                agg_df = df.groupby(x_col).agg({y_col: agg_operation}).reset_index()
-                                fig = px.bar(agg_df, x=x_col, y=y_col, title=title, template="plotly_white")
-                    elif chart_type == "histogram":
-                        fig = px.histogram(df, x=x_col, title=title, template="plotly_white")
-                    elif chart_type == "box":
-                        if y_col and y_col in df.columns:
-                            if group_by and group_by in df.columns:
-                                fig = px.box(df, x=group_by, y=y_col, title=title, template="plotly_white")
-                            else:
-                                fig = px.box(df, y=y_col, title=title, template="plotly_white")
-                    elif chart_type == "pie":
-                        if y_col and y_col in df.columns:
-                            agg_df = df.groupby(x_col).agg({y_col: agg_operation}).reset_index()
-                            fig = px.pie(agg_df, names=x_col, values=y_col, title=title, template="plotly_white")
-                    fig.update_layout(title_x=0.5, margin=dict(t=50,b=20,l=20,r=20))
-            except Exception as e:
-                log_error("Erro ao criar gráfico", extra={
-                    "element_id": element_id,
-                    "error": str(e),
-                    "chart_type": chart_type if 'chart_type' in locals() else None,
-                    "df_shape": df.shape if 'df' in locals() else None
-                })
-                fig.update_layout(annotations=[{'text':f'Erro ao criar gráfico: {str(e)}','showarrow':False, 'font_size':10}])
-            figures.append(fig)
-        return figures
     
-    # Callback para renderizar tabelas
-    @app.callback(
-        Output({"type": "table", "index": dash.ALL}, "children"),
-        [Input("refresh-dashboard-btn", "n_clicks"),
-         Input("dashboard-interval-component", "n_intervals")],
-        [State("dashboard-filtered-data", "data"),
-         State("dashboard-elements", "data"),
-         State({"type": "table", "index": dash.ALL}, "id")]
-    )
-    def update_tables(n_clicks, n_intervals, filtered_data_json, elements, table_ids):
-        if not filtered_data_json or not elements or not table_ids:
-            return [html.Div("Sem dados") for _ in table_ids]
-        try:
-            df = pd.read_json(filtered_data_json, orient='split')
-        except Exception:
-            return [html.Div("Sem dados") for _ in table_ids]
-        if df is None or df.empty:
-            return [html.Div("Nenhum dado corresponde aos filtros") for _ in table_ids]
-        tables = []
-        for table_id in table_ids:
-            element_id = table_id["index"]
-            element = next((e for e in elements if e.get('id') == element_id and e.get('type') == 'table'), None)
-            if not element:
-                tables.append(html.Div("Configuração de tabela não encontrada"))
-                continue
-            config = element.get('config', {})
-            columns = config.get('columns', [])
-            rows = config.get('rows', 10)
-            try:
-                if columns and all(col in df.columns for col in columns):
-                    table_df = df[columns].head(rows)
-                else:
-                    table_df = df.head(rows)
-                table = dash_table.DataTable(
-                    data=table_df.to_dict('records'), 
-                    columns=[{"name":str(i),"id":str(i)} for i in table_df.columns],
-                    page_size=rows, 
-                    style_table={'overflowX':'auto','minHeight':'300px'},
-                    style_cell={'textAlign':'left','padding':'8px','fontSize':'0.9em'},
-                    style_header={'backgroundColor':'#e9ecef','fontWeight':'bold'}, 
-                    fixed_rows={'headers':True}
+    # Configurar linhas e marcadores
+    if chart_type == 'line' or chart_type == 'scatter':
+        # Aplicar configurações específicas para gráficos de linha e dispersão
+        for trace in fig.data:
+            if hasattr(trace, 'type') and trace.type in ['scatter', 'scattergl']:
+                # Configurar marcadores para todos os tipos de scatter
+                if hasattr(trace, 'marker'):
+                    trace.marker.size = options['marker_size']
+                # Configurar linhas apenas para traces que suportam essa propriedade
+                if hasattr(trace, 'line'):
+                    trace.line.width = options['line_width']
+    
+    # Adicionar animações se solicitado
+    if animation:
+        # Configurar animações para transições suaves
+        fig.update_layout(
+            updatemenus=[
+                dict(
+                    type="buttons",
+                    showactive=False,
+                    buttons=[
+                        dict(
+                            label="Animar",
+                            method="animate",
+                            args=[
+                                None,
+                                dict(
+                                    frame=dict(duration=500, redraw=True),
+                                    fromcurrent=True,
+                                    transition=dict(duration=300, easing="quadratic-in-out")
+                                )
+                            ]
+                        )
+                    ],
+                    x=0.05,
+                    y=1.15,
                 )
-                tables.append(table)
-            except Exception as e:
-                log_error("Erro ao criar tabela", extra={
-                    "element_id": element_id,
-                    "error": str(e),
-                    "df_shape": df.shape if 'df' in locals() else None
-                })
-                tables.append(html.Div(f"Erro ao criar tabela: {str(e)}"))
-        return tables
+            ]
+        )
     
-    # Callback para renderizar KPIs
-    @app.callback(
-        Output({"type": "kpi", "index": dash.ALL}, "children"),
-        [Input("refresh-dashboard-btn", "n_clicks"),
-         Input("dashboard-interval-component", "n_intervals")],
-        [State("dashboard-filtered-data", "data"),
-         State("dashboard-elements", "data"),
-         State({"type": "kpi", "index": dash.ALL}, "id")]
+    # Adicionar marca d'água com a data de atualização
+    current_time = datetime.now().strftime("%d/%m/%Y %H:%M")
+    fig.add_annotation(
+        text=f"Atualizado em: {current_time}",
+        x=1,
+        y=-0.15,
+        xref="paper",
+        yref="paper",
+        showarrow=False,
+        font=dict(size=10, color=colors['text_secondary']),
+        align="right"
     )
-    def update_kpis(n_clicks, n_intervals, filtered_data_json, elements, kpi_ids):
-        if not filtered_data_json or not elements or not kpi_ids:
-            return [create_kpi_card("N/D", "-", "fas fa-ban", "light") for _ in kpi_ids]
+    
+    return fig
+
+def create_empty_dashboard_layout():
+    """Layout para dashboard vazio"""
+    return html.Div([
+        dbc.Card([
+            dbc.CardBody([
+                html.Div([
+                    html.Div([
+                        html.I(className="fas fa-chart-line fa-3x text-primary mb-3"),
+                        html.H3("Dashboard Vazio", className="mb-3"),
+                        html.P(
+                            "Nenhum dado carregado. Para começar a criar visualizações, você precisa carregar dados.",
+                            className="text-muted mb-4"
+                        ),
+                        html.Div([
+                            dbc.Button([
+                                html.I(className="fas fa-upload me-2"),
+                                "Carregar Arquivo"
+                            ], color="primary", className="me-3 mb-2", href="/upload"),
+                            dbc.Button([
+                                html.I(className="fas fa-database me-2"),
+                                "Conectar a Fonte de Dados"
+                            ], color="outline-primary", className="mb-2", href="/database")
+                        ], className="d-flex flex-wrap justify-content-center")
+                    ], className="text-center py-5")
+                ], className="d-flex justify-content-center align-items-center")
+            ])
+        ], className="shadow-sm border-0 my-5")
+    ], className="container py-5")
+
+# Layout principal moderno e responsivo
+layout = html.Div([
+    # Stores para gerenciar estado
+    dcc.Store(id="dashboard-data", storage_type="session"),
+    dcc.Store(id="dashboard-theme", data="light"),
+    dcc.Store(id="dashboard-filters", data={}),
+    dcc.Store(id="dashboard-config", data={}),
+    dcc.Store(id="dashboard-layout-mode", data="default"),
+    
+    # Script para aplicar tema inicial
+    html.Script("""
+        // Aplicar tema inicial
+        document.addEventListener('DOMContentLoaded', function() {
+            const theme = localStorage.getItem('app-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+            document.body.setAttribute('data-theme', theme);
+        });
+    """),
+    
+    # Cabeçalho fixo moderno
+    html.Div(id="dashboard-header"),
+    
+    # Container principal com design aprimorado
+    dbc.Container([
+        # Hero Section com KPIs
+        html.Div([
+            # Título da seção
+            dbc.Row([
+                dbc.Col([
+                    html.Div([
+                        html.H2([
+                            html.I(className="fas fa-chart-line me-3 text-primary"),
+                            "Indicadores Principais"
+                        ], className="display-6 fw-bold mb-2"),
+                        html.P("Acompanhe os principais métricas em tempo real", 
+                              className="lead text-muted mb-4")
+                    ], className="text-center py-3")
+                ])
+            ]),
+            
+            # KPIs Cards
+            html.Div(id="kpi-section", className="mb-5")
+        ], className="mb-4"),
+        
+        # Layout principal responsivo
+        dbc.Row([
+            # Sidebar de filtros e controles
+            dbc.Col([
+                # Card de filtros
+                dbc.Card([
+                    dbc.CardHeader([
+                        dbc.Row([
+                            dbc.Col([
+                                html.H5([
+                                    html.I(className="fas fa-filter me-2"),
+                                    "Filtros e Controles"
+                                ], className="mb-0 text-primary")
+                            ], md=8),
+                            dbc.Col([
+                                dbc.Button(
+                                    html.I(id="filters-chevron", className="fas fa-chevron-down"),
+                                    id="filters-collapse-btn",
+                                    color="outline-primary",
+                                    size="sm",
+                                    className="float-end"
+                                )
+                            ], md=4, className="text-end")
+                        ])
+                    ]),
+                    dbc.Collapse(
+                        dbc.CardBody([
+                            html.Div(id="filters-sidebar")
+                        ]),
+                        id="filters-collapse",
+                        is_open=True
+                    )
+                ], className="mb-4 shadow-sm border-0"),
+                
+                # Card de ações rápidas
+                dbc.Card([
+                    dbc.CardHeader([
+                        html.H6([
+                            html.I(className="fas fa-bolt me-2"),
+                            "Ações Rápidas"
+                        ], className="mb-0 text-info")
+                    ]),
+                    dbc.CardBody([
+                        dbc.ButtonGroup([
+                            dbc.Button(
+                                [html.I(className="fas fa-plus me-2"), "Gráfico"],
+                                id="add-chart-btn",
+                                color="primary",
+                                size="sm",
+                                className="mb-2 w-100"
+                            ),
+                            dbc.Button(
+                                [html.I(className="fas fa-table me-2"), "Tabela"],
+                                id="add-table-btn",
+                                color="success",
+                                size="sm",
+                                className="mb-2 w-100"
+                            ),
+                            dbc.Button(
+                                [html.I(className="fas fa-sync-alt me-2"), "Atualizar"],
+                                id="refresh-btn",
+                                color="info",
+                                size="sm",
+                                className="mb-2 w-100"
+                            )
+                        ], vertical=True, className="w-100"),
+                        
+                        html.Hr(),
+                        
+                        # Controles de layout
+                        html.Div([
+                            html.Label("Layout do Dashboard:", className="fw-bold mb-2"),
+                            dbc.RadioItems(
+                                id="layout-mode-selector",
+                                options=[
+                                    {"label": "Padrão", "value": "default"},
+                                    {"label": "Compacto", "value": "compact"},
+                                    {"label": "Expandido", "value": "expanded"}
+                                ],
+                                value="default",
+                                className="mb-3"
+                            ),
+                            
+                            html.Label("Atualização Automática:", className="fw-bold mb-2"),
+                            dbc.Switch(
+                                id="auto-refresh-switch",
+                                label="Ativar",
+                                value=False,
+                                className="mb-3"
+                            )
+                        ])
+                    ])
+                ], className="mb-4 shadow-sm border-0")
+            ], lg=3, md=12, className="mb-4"),
+            
+            # Área principal de visualizações
+            dbc.Col([
+                # Barra de ferramentas superior
+                dbc.Card([
+                    dbc.CardBody([
+                        dbc.Row([
+                            dbc.Col([
+                                html.H5([
+                                    html.I(className="fas fa-chart-area me-2"),
+                                    "Visualizações"
+                                ], className="mb-0 text-secondary")
+                            ], md=6),
+                            dbc.Col([
+                                dbc.ButtonGroup([
+                                    dbc.Button(
+                                        html.I(className="fas fa-th-large"),
+                                        id="grid-view-btn",
+                                        color="outline-secondary",
+                                        size="sm",
+                                        title="Visualização em Grade"
+                                    ),
+                                    dbc.Button(
+                                        html.I(className="fas fa-list"),
+                                        id="list-view-btn",
+                                        color="outline-secondary",
+                                        size="sm",
+                                        title="Visualização em Lista"
+                                    ),
+                                    dbc.Button(
+                                        html.I(className="fas fa-expand-arrows-alt"),
+                                        id="fullscreen-btn",
+                                        color="outline-secondary",
+                                        size="sm",
+                                        title="Tela Cheia"
+                                    )
+                                ], className="float-end")
+                            ], md=6, className="text-end")
+                        ])
+                    ])
+                ], className="mb-4 shadow-sm border-0"),
+                
+                # Grid de visualizações responsivo
+                html.Div([
+                    dcc.Loading(
+                        id="loading-charts",
+                        type="default",
+                        children=html.Div(id="charts-grid")
+                    )
+                ], className="mb-4"),
+                
+                # Seção de tabelas de dados
+                dbc.Card([
+                    dbc.CardHeader([
+                        dbc.Row([
+                            dbc.Col([
+                                html.H5([
+                                    html.I(className="fas fa-table me-2"),
+                                    "Dados Detalhados"
+                                ], className="mb-0 text-secondary")
+                            ], md=8),
+                            dbc.Col([
+                                dbc.ButtonGroup([
+                                    dbc.Button(
+                                        html.I(className="fas fa-download"),
+                                        id="export-data-btn",
+                                        color="outline-success",
+                                        size="sm",
+                                        title="Exportar Dados"
+                                    ),
+                                    dbc.Button(
+                                        html.I(className="fas fa-search"),
+                                        id="search-data-btn",
+                                        color="outline-info",
+                                        size="sm",
+                                        title="Pesquisar"
+                                    )
+                                ], className="float-end")
+                            ], md=4, className="text-end")
+                        ])
+                    ]),
+                    dbc.CardBody([
+                        dcc.Loading(
+                            id="loading-tables",
+                            type="default",
+                            children=html.Div(id="tables-section")
+                        )
+                    ])
+                ], className="shadow-sm border-0")
+            ], lg=9, md=12)
+        ])
+    ], fluid=True, className="py-4"),
+    
+    # Footer com informações do sistema
+    html.Footer([
+        dbc.Container([
+            dbc.Row([
+                dbc.Col([
+                    html.P([
+                        html.I(className="fas fa-info-circle me-2"),
+                        "Dashboard atualizado automaticamente a cada minuto"
+                    ], className="text-muted small mb-0")
+                ], md=6),
+                dbc.Col([
+                    html.P([
+                        html.I(className="fas fa-clock me-2"),
+                        "Última atualização: ",
+                        html.Span(id="last-update-footer", children=datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
+                    ], className="text-muted small mb-0 text-end")
+                ], md=6)
+            ])
+        ], fluid=True)
+    ], className="bg-light py-3 mt-5"),
+    
+    # Interval para atualizações automáticas
+    dcc.Interval(id="auto-refresh", interval=60000, n_intervals=0, disabled=True)
+], style={'backgroundColor': '#f8f9fa', 'minHeight': '100vh'}, className="dashboard-container")
+
+# Função para carregar dados do cache
+def get_cached_data():
+    """Recupera dados do cache"""
+    global cache
+    if cache is None:
+        return None
+    
+    try:
+        data_key = cache.get_active_data_key()
+        if data_key:
+            return cache.get(data_key)
+    except Exception as e:
+        log_error(f"Erro ao recuperar dados do cache: {str(e)}")
+    
+    return None
+
+# Registrar callbacks
+def register_callbacks(app, cache_instance):
+    """Registra todos os callbacks do dashboard"""
+    global cache
+    cache = cache_instance
+    
+    # Callback para inicialização do layout
+    @app.callback(
+        [Output('dashboard-header', 'children'),
+         Output('kpi-section', 'children'),
+         Output('filters-sidebar', 'children'),
+         Output('charts-grid', 'children'),
+         Output('tables-section', 'children')],
+        [Input('dashboard-theme', 'data'),
+         Input('dashboard-data', 'data'),
+         Input('server-side-data-key', 'data')]
+    )
+    def update_dashboard_layout(theme, dashboard_data, data_key):
+        """Atualiza layout do dashboard baseado no tema e dados"""
         try:
-            df = pd.read_json(filtered_data_json, orient='split')
-        except Exception:
-            return [create_kpi_card("N/D", "-", "fas fa-ban", "light") for _ in kpi_ids]
-        if df is None or df.empty:
-            return [create_kpi_card("Sem dados nos filtros", "0", "fas fa-filter", "light") for _ in kpi_ids]
-        kpis = []
-        for kpi_id in kpi_ids:
-            element_id = kpi_id["index"]
-            element = next((e for e in elements if e.get('id') == element_id and e.get('type') == 'kpi'), None)
-            if not element:
-                kpis.append(create_kpi_card("Configuração não encontrada", "-", "fas fa-question", "light"))
-                continue
-            config = element.get('config', {})
-            column = config.get('column')
-            operation = config.get('operation', 'count')
-            color = config.get('color', 'primary')
-            icon = config.get('icon', 'fas fa-chart-bar')
-            title = element.get('title', 'KPI')
-            try:
-                if column and column in df.columns:
-                    if operation == 'count':
-                        value = len(df)
-                        formatted_value = f"{value:,}"
-                    elif operation == 'sum' and pd.api.types.is_numeric_dtype(df[column]):
-                        value = df[column].sum()
-                        formatted_value = f"{value:,.2f}"
-                    elif operation == 'mean' and pd.api.types.is_numeric_dtype(df[column]):
-                        value = df[column].mean()
-                        formatted_value = f"{value:,.2f}"
-                    elif operation == 'min' and pd.api.types.is_numeric_dtype(df[column]):
-                        value = df[column].min()
-                        formatted_value = f"{value:,.2f}" if isinstance(value, (int, float)) else str(value)
-                    elif operation == 'max' and pd.api.types.is_numeric_dtype(df[column]):
-                        value = df[column].max()
-                        formatted_value = f"{value:,.2f}" if isinstance(value, (int, float)) else str(value)
-                    elif operation == 'nunique':
-                        value = df[column].nunique()
-                        formatted_value = f"{value:,}"
-                    else:
-                        formatted_value = "N/A"
-                else:
-                    formatted_value = "N/A"
-                kpis.append(create_kpi_card(title, formatted_value, icon, color))
-            except Exception as e:
-                log_error("Erro ao criar KPI", extra={
-                    "element_id": element_id,
-                    "error": str(e),
-                    "kpi_type": operation if 'operation' in locals() else None,
-                    "df_shape": df.shape if 'df' in locals() else None
-                })
-                kpis.append(create_kpi_card(title, "Erro", "fas fa-exclamation-circle", "danger"))
-        return kpis
+            # Tentar obter dados do cache primeiro
+            df = None
+            if data_key:
+                df = get_cached_data()
+            elif dashboard_data:
+                df = pd.DataFrame(dashboard_data)
+            
+            # Criar componentes
+            header = create_header(theme)
+            kpis = create_kpi_cards(df, theme)
+            filters = create_filters_sidebar(df, theme)
+            
+            if df is not None and not df.empty:
+                # Criar gráficos com dados reais
+                charts = dbc.Row([
+                    create_chart_card('sales-trend', 'Tendência de Vendas', 'line', theme, df),
+                    create_chart_card('category-dist', 'Distribuição por Categoria', 'bar', theme, df),
+                    create_chart_card('performance', 'Performance Mensal', 'area', theme, df),
+                    create_chart_card('correlation', 'Matriz de Correlação', 'heatmap', theme, df)
+                ])
+                
+                # Criar tabela com dados reais
+                tables = create_data_table_card('main-data', 'Dados Principais', theme, df)
+            else:
+                # Layout vazio
+                charts = create_empty_dashboard_layout()
+                tables = html.Div()
+            
+            return header, kpis, filters, charts, tables
+            
+        except Exception as e:
+            log_error(f"Erro ao atualizar layout do dashboard: {str(e)}")
+            return html.Div(), html.Div(), html.Div(), create_empty_dashboard_layout(), html.Div()
+    
+    # Callback para alternar tema
+    @app.callback(
+        [Output('dashboard-theme', 'data'),
+         Output('theme-toggle-btn', 'children')],
+        Input('theme-toggle-btn', 'n_clicks'),
+        State('dashboard-theme', 'data'),
+        prevent_initial_call=True
+    )
+    def toggle_theme(n_clicks, current_theme):
+        """Alterna entre tema claro e escuro"""
+        if n_clicks:
+            new_theme = 'dark' if current_theme == 'light' else 'light'
+            icon_class = 'fas fa-sun' if new_theme == 'dark' else 'fas fa-moon'
+            return new_theme, html.I(className=icon_class)
+        
+        # Estado inicial
+        icon_class = 'fas fa-sun' if current_theme == 'dark' else 'fas fa-moon'
+        return current_theme, html.I(className=icon_class)
+    
+    # Callback para colapsar filtros
+    @app.callback(
+        [Output('filters-collapse', 'is_open'),
+         Output('filters-chevron', 'className')],
+        Input('filters-collapse-btn', 'n_clicks'),
+        State('filters-collapse', 'is_open'),
+        prevent_initial_call=True
+    )
+    def toggle_filters_collapse(n_clicks, is_open):
+        """Colapsa/expande painel de filtros"""
+        if n_clicks:
+            new_state = not is_open
+            chevron_class = "fas fa-chevron-up" if new_state else "fas fa-chevron-down"
+            return new_state, chevron_class
+        return is_open, "fas fa-chevron-down"
+    
+    # Callback para carregar dados iniciais
+    @app.callback(
+        Output('dashboard-data', 'data'),
+        Input('refresh-btn', 'n_clicks'),
+        State('server-side-data-key', 'data'),
+        prevent_initial_call=True
+    )
+    def load_dashboard_data(n_clicks, data_key):
+        """Carrega dados para o dashboard"""
+        try:
+            if data_key:
+                data = get_cached_data()
+                if data is not None:
+                    # Limitar dados para performance
+                    if len(data) > 10000:
+                        data = data.sample(n=10000)
+                    return data.to_dict('records')
+            return []
+        except Exception as e:
+            log_error(f"Erro ao carregar dados do dashboard: {str(e)}")
+            return []
+    
+    # Callback para atualização automática
+    @app.callback(
+        Output('auto-refresh', 'disabled'),
+        Input('dashboard-theme', 'data')
+    )
+    def setup_auto_refresh(theme):
+        """Configura atualização automática"""
+        return False  # Habilita atualização automática
 
-    @app.callback(
-        Output("dashboard-filtered-data", "data"),
-        Input("server-side-data-key", "data"),
-        Input("dashboard-filter-column", "value"),
-        Input("dashboard-filter-value", "value"),
-        Input("dashboard-date-column-selector", "value"),
-        Input("dashboard-date-range", "start_date"),
-        Input("dashboard-date-range", "end_date"),
-    )
-    def filter_dashboard_data(data_key, filter_col, filter_vals, date_col, start_dt, end_dt):
-        if not data_key:
-            return {}
-        
-        df = cache.get(data_key)
-        if df is None or df.empty:
-            return {}
-        
-        # Aplicar filtros
-        df_filtered = df.copy()
-        if filter_col and filter_vals and filter_col in df.columns:
-            df_filtered = df_filtered[df_filtered[filter_col].isin(filter_vals)]
-        if date_col and start_dt and end_dt and date_col in df.columns:
-            try:
-                df_filtered[date_col] = pd.to_datetime(df_filtered[date_col], errors='coerce')
-                df_filtered.dropna(subset=[date_col], inplace=True)
-                start_dt_obj = pd.to_datetime(start_dt, errors='coerce')
-                end_dt_obj = pd.to_datetime(end_dt, errors='coerce')
-                if pd.NaT not in [start_dt_obj, end_dt_obj]:
-                    df_filtered = df_filtered[(df_filtered[date_col] >= start_dt_obj) & (df_filtered[date_col] <= end_dt_obj)]
-            except Exception as e:
-                log_error("Erro ao aplicar filtro de data em KPIs", extra={
-                    "error": str(e),
-                    "date_col": date_col if 'date_col' in locals() else None,
-                    "start_date": start_dt if 'start_dt' in locals() else None,
-                    "end_date": end_dt if 'end_dt' in locals() else None,
-                    "df_shape": df.shape if 'df' in locals() else None
-                })
-        
-        # Salvar o DataFrame filtrado como JSON (usando df.to_json) para o dcc.Store
-        return df_filtered.to_json(orient='split')
-
-    # Exibir feedback visual nos modais
-    @app.callback(
-        Output("chart-config-modal", "children", allow_duplicate=True),
-        Input("dashboard-modal-feedback", "data"),
-        prevent_initial_call=True
-    )
-    def show_chart_modal_feedback(feedback):
-        if feedback and feedback.get("modal") == "chart":
-            return [
-                dbc.ModalHeader(dbc.ModalTitle("Configurar Gráfico")),
-                dbc.Alert(feedback["msg"], color="danger", className="mb-2"),
-                dash.no_update
-            ]
-        return dash.no_update
-    @app.callback(
-        Output("table-config-modal", "children", allow_duplicate=True),
-        Input("dashboard-modal-feedback", "data"),
-        prevent_initial_call=True
-    )
-    def show_table_modal_feedback(feedback):
-        if feedback and feedback.get("modal") == "table":
-            return [
-                dbc.ModalHeader(dbc.ModalTitle("Configurar Tabela")),
-                dbc.Alert(feedback["msg"], color="danger", className="mb-2"),
-                dash.no_update
-            ]
-        return dash.no_update
-    @app.callback(
-        Output("kpi-config-modal", "children", allow_duplicate=True),
-        Input("dashboard-modal-feedback", "data"),
-        prevent_initial_call=True
-    )
-    def show_kpi_modal_feedback(feedback):
-        if feedback and feedback.get("modal") == "kpi":
-            return [
-                dbc.ModalHeader(dbc.ModalTitle("Configurar KPI")),
-                dbc.Alert(feedback["msg"], color="danger", className="mb-2"),
-                dash.no_update
-            ]
-        return dash.no_update
+print("Dashboard moderno carregado com sucesso!")

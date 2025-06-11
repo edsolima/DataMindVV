@@ -23,6 +23,7 @@ class SQLiteCache(BaseCache):
         super(SQLiteCache, self).__init__(config)
         self.config = config
         self.default_timeout = config.get('CACHE_DEFAULT_TIMEOUT', 300)
+        self.active_data_key = None  # Armazena a chave de dados ativa
         
         # Obter o caminho do banco de dados SQLite
         db_path = config.get('CACHE_SQLITE_PATH')
@@ -208,3 +209,18 @@ class SQLiteCache(BaseCache):
         
         finally:
             conn.close()
+    
+    def get_active_data_key(self):
+        """
+        Retorna a chave de dados ativa atual.
+        Esta chave é usada para identificar o DataFrame principal em uso na aplicação.
+        """
+        return self.active_data_key
+    
+    def set_active_data_key(self, key):
+        """
+        Define a chave de dados ativa atual.
+        """
+        self.active_data_key = key
+        log_info(f"Chave de dados ativa definida: {key}")
+        return True

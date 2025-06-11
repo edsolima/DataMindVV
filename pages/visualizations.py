@@ -1,6 +1,6 @@
 # pages/visualizations.py
 import dash
-from dash import dcc, html, Input, Output, State, callback_context, ALL 
+from dash import dcc, html, Input, Output, State, callback_context, ALL, dash_table
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.graph_objects as go
@@ -20,66 +20,230 @@ from utils.logger import log_error
 cache = None
 
 layout = dbc.Container([
-    # html.Div(id="viz-page-loaded-signal", style={'display':'none'}), # Pode ser útil para triggers de carga inicial específicos da página
+    # Header Section
     dbc.Row([
         dbc.Col([
-            html.H2([html.I(className="fas fa-paint-brush me-2"), "Visualizações Interativas"], className="mb-4 text-primary"),
-            
-            dbc.Row([
-                dbc.Col(md=4, children=[ 
-                    dbc.Card([
-                        dbc.CardHeader(html.H5([html.I(className="fas fa-tools me-2"), "Configurar Gráfico"], className="mb-0")),
-                        dbc.CardBody([
-                            dbc.Label("Tipo de Gráfico:", html_for="viz-chart-type-dropdown"),
-                            dcc.Dropdown(
-                                id="viz-chart-type-dropdown",
-                                options=[
-                                    # Gráficos Básicos
-                                    {"label": "📊 Gráfico de Barras", "value": "bar"},
-                                    {"label": "📈 Gráfico de Linha", "value": "line"},
-                                    {"label": "↔️ Gráfico de Dispersão", "value": "scatter"},
-                                    {"label": "🥧 Gráfico de Pizza", "value": "pie"},
-                                    {"label": "🔥 Heatmap (Correlação/Pivot)", "value": "heatmap"},
-                                    {"label": "📦 Box Plot", "value": "box"},
-                                    {"label": "📊 Histograma", "value": "histogram"},
-                                    {"label": "🎻 Violin Plot", "value": "violin"},
-                                    # Gráficos Avançados
-                                    {"label": "🌳 Treemap (Hierárquico)", "value": "treemap"},
-                                    {"label": "☀️ Sunburst (Gráfico Solar)", "value": "sunburst"},
-                                    {"label": "⏬ Funil de Conversão", "value": "funnel"},
-                                    {"label": "🌊 Gráfico de Cascata", "value": "waterfall"},
-                                    {"label": "🕸️ Gráfico Radar", "value": "radar"},
-                                    {"label": "🔀 Diagrama de Sankey", "value": "sankey"},
-                                    {"label": "🎯 Gráfico de Bala", "value": "bullet"},
-                                    {"label": "📊 Análise de Pareto", "value": "pareto"},
-                                    {"label": "📅 Mapa de Calor Calendário", "value": "calendar"}
-                                ],
-                                value="bar", clearable=False, className="mb-3"
-                            ),
-                            dcc.Loading(type="default", children=html.Div(id="viz-chart-specific-options-area", className="mb-3")),
-                            dbc.Button([html.I(className="fas fa-check-circle me-1"), "Gerar Gráfico"], id="viz-create-chart-btn", color="primary", className="w-100 mb-2", n_clicks=0),
-                            dbc.Button([html.I(className="fas fa-eraser me-1"), "Limpar Gráfico"], id="viz-clear-chart-btn", color="secondary", className="w-100", n_clicks=0)
-                        ])
-                    ], className="shadow-sm sticky-top", style={"top": "80px", "zIndex": "1000"}),
-                ]),
-                
-                dbc.Col(md=8, children=[ 
-                    dbc.Card([
-                        dbc.CardHeader(html.H5([html.I(className="fas fa-chart-area me-2"), "Visualização Principal"], className="mb-0")),
-                        dbc.CardBody([
-                            dcc.Loading(id="viz-loading-main-chart", children=[
-                                dcc.Graph(id="viz-main-chart", style={"height": "500px"}),
-                                html.Div(id="viz-chart-feedback-message")
-                            ], type="default")
-                        ])
-                    ], className="shadow-sm mb-4"),
-                    html.Div(id="viz-filters-panel-area", className="mb-4"),
-                    dcc.Loading(type="default", children=html.Div(id="viz-drill-down-area", className="mb-4")) # Adicionado Loading ao drilldown
-                ])
-            ])
+            html.Div([
+                html.H1([
+                    html.I(className="fas fa-chart-line me-3 text-primary"),
+                    "Visualizações Interativas"
+                ], className="display-4 fw-bold text-center mb-2"),
+                html.P("Crie visualizações poderosas e interativas para seus dados", 
+                      className="lead text-center text-muted mb-4")
+            ], className="py-4")
         ])
+    ]),
+    
+    # Quick Actions Bar
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    html.Div([
+                        html.H6("Ações Rápidas", className="mb-3 text-muted"),
+                        dbc.ButtonGroup([
+                            dbc.Button([
+                                html.I(className="fas fa-magic me-2"),
+                                "Auto Gráfico"
+                            ], id="auto-chart-btn", color="primary", size="sm"),
+                            dbc.Button([
+                                html.I(className="fas fa-robot me-2"),
+                                "Sugestão IA"
+                            ], id="ai-suggest-btn", color="info", size="sm"),
+                            dbc.Button([
+                                html.I(className="fas fa-palette me-2"),
+                                "Temas"
+                            ], id="theme-btn", color="secondary", size="sm"),
+                            dbc.Button([
+                                html.I(className="fas fa-save me-2"),
+                                "Salvar"
+                            ], id="save-chart-btn", color="success", size="sm"),
+                            dbc.Button([
+                                html.I(className="fas fa-share-alt me-2"),
+                                "Compartilhar"
+                            ], id="share-chart-btn", color="warning", size="sm")
+                        ], className="w-100 d-flex justify-content-center flex-wrap gap-2")
+                    ])
+                ])
+            ], className="shadow-sm border-0")
+        ])
+    ], className="mb-4"),
+    
+    # Main Content
+    dbc.Row([
+        # Left Sidebar - Configuration
+        dbc.Col([
+            # Chart Type Selection
+            dbc.Card([
+                dbc.CardHeader([
+                    html.H5([
+                        html.I(className="fas fa-cog me-2"),
+                        "Configuração"
+                    ], className="mb-0 text-primary")
+                ]),
+                dbc.CardBody([
+                    # Basic Charts
+                    html.Div([
+                        html.Label("Gráficos Básicos:", className="fw-bold mb-2"),
+                        dcc.Dropdown(
+                            id="viz-chart-type-dropdown",
+                            options=[
+                                # Gráficos Básicos
+                                {"label": "📊 Gráfico de Barras", "value": "bar"},
+                                {"label": "📈 Gráfico de Linha", "value": "line"},
+                                {"label": "↔️ Gráfico de Dispersão", "value": "scatter"},
+                                {"label": "🥧 Gráfico de Pizza", "value": "pie"},
+                                {"label": "🔥 Heatmap (Correlação/Pivot)", "value": "heatmap"},
+                                {"label": "📦 Box Plot", "value": "box"},
+                                {"label": "📊 Histograma", "value": "histogram"},
+                                {"label": "🎻 Violin Plot", "value": "violin"},
+                                # Gráficos Avançados
+                                {"label": "🌳 Treemap (Hierárquico)", "value": "treemap"},
+                                {"label": "☀️ Sunburst (Gráfico Solar)", "value": "sunburst"},
+                                {"label": "⏬ Funil de Conversão", "value": "funnel"},
+                                {"label": "🌊 Gráfico de Cascata", "value": "waterfall"},
+                                {"label": "🕸️ Gráfico Radar", "value": "radar"},
+                                {"label": "🔀 Diagrama de Sankey", "value": "sankey"},
+                                {"label": "🎯 Gráfico de Bala", "value": "bullet"},
+                                {"label": "📊 Análise de Pareto", "value": "pareto"},
+                                {"label": "📅 Mapa de Calor Calendário", "value": "calendar"}
+                            ],
+                            value="bar", clearable=False, className="mb-3"
+                        )
+                    ])
+                ])
+            ], className="mb-4 shadow-sm border-0"),
+            
+            # Chart Options
+            dbc.Card([
+                dbc.CardHeader([
+                    html.H6([
+                        html.I(className="fas fa-sliders-h me-2"),
+                        "Opções do Gráfico"
+                    ], className="mb-0 text-secondary")
+                ]),
+                dbc.CardBody([
+                    dcc.Loading(type="default", children=html.Div(id="viz-chart-specific-options-area", className="mb-3"))
+                ])
+            ], className="mb-4 shadow-sm border-0"),
+            
+            # Filters
+            dbc.Card([
+                dbc.CardHeader([
+                    html.H6([
+                        html.I(className="fas fa-filter me-2"),
+                        "Filtros"
+                    ], className="mb-0 text-info")
+                ]),
+                dbc.CardBody([
+                    html.Div(id="viz-filters-panel-area", children=[
+                        html.P("Nenhum filtro disponível", className="text-muted text-center")
+                    ])
+                ])
+            ], className="shadow-sm border-0")
+        ], md=3),
+        
+        # Main Chart Area
+        dbc.Col([
+            # Chart Controls
+            dbc.Card([
+                dbc.CardBody([
+                    dbc.Row([
+                        dbc.Col([
+                            dbc.Button(
+                                [html.I(className="fas fa-check-circle me-2"), "Gerar Gráfico"],
+                                id="viz-create-chart-btn",
+                                color="primary",
+                                size="lg",
+                                className="me-2 hover-lift",
+                                n_clicks=0
+                            ),
+                            dbc.Button(
+                                [html.I(className="fas fa-refresh me-2"), "Atualizar"],
+                                id="refresh-chart-btn",
+                                color="info",
+                                size="lg",
+                                className="me-2 hover-lift"
+                            ),
+                            dbc.Button(
+                                [html.I(className="fas fa-eraser me-2"), "Limpar"],
+                                id="viz-clear-chart-btn",
+                                color="secondary",
+                                size="lg",
+                                className="hover-lift",
+                                n_clicks=0
+                            )
+                        ], className="text-center")
+                    ])
+                ])
+            ], className="mb-4 shadow-sm border-0"),
+            
+            # Main Chart Display
+            dbc.Card([
+                dbc.CardHeader([
+                    dbc.Row([
+                        dbc.Col([
+                            html.H5([
+                                html.I(className="fas fa-chart-area me-2"),
+                                "Visualização Principal"
+                            ], className="mb-0 text-primary")
+                        ], md=6),
+                        dbc.Col([
+                            dbc.ButtonGroup([
+                                dbc.Button(
+                                    html.I(className="fas fa-download"), 
+                                    id="download-chart-btn", 
+                                    color="outline-primary", 
+                                    size="sm",
+                                    title="Download"
+                                ),
+                                dbc.Button(
+                                    html.I(className="fas fa-expand"), 
+                                    id="fullscreen-btn", 
+                                    color="outline-primary", 
+                                    size="sm",
+                                    title="Tela Cheia"
+                                ),
+                                dbc.Button(
+                                    html.I(className="fas fa-cog"), 
+                                    id="chart-settings-btn", 
+                                    color="outline-secondary", 
+                                    size="sm",
+                                    title="Configurações"
+                                )
+                            ], className="float-end")
+                        ], md=6, className="text-end")
+                    ])
+                ]),
+                dbc.CardBody([
+                    dcc.Loading(
+                        id="viz-loading-main-chart",
+                        type="default",
+                        children=[
+                            dcc.Graph(id="viz-main-chart", style={"height": "500px"}),
+                            html.Div(id="viz-chart-feedback-message")
+                        ]
+                    )
+                ], style={"min-height": "500px"})
+            ], className="mb-4 shadow border-0"),
+            
+            # Drill-down Area
+            dbc.Card([
+                dbc.CardHeader([
+                    html.H6([
+                        html.I(className="fas fa-search-plus me-2"),
+                        "Análise Detalhada"
+                    ], className="mb-0 text-warning")
+                ]),
+                dbc.CardBody([
+                    dcc.Loading(type="default", children=html.Div(id="viz-drill-down-area", children=[
+                        html.P("Clique em um ponto do gráfico para análise detalhada", className="text-muted text-center")
+                    ]))
+                ])
+            ], className="shadow-sm border-0")
+        ], md=9)
     ])
-], fluid=True)
+], fluid=True, className="py-4")
 
 # ----- Funções Auxiliares (permanecem as mesmas da última versão) -----
 def format_datatable(df_to_display, table_id, page_size=10):

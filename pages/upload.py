@@ -122,7 +122,7 @@ def register_callbacks(app, cache_instance): # Mudança aqui
     )
     def update_upload_status_and_button(filename, contents):
         if filename and contents:
-            log_info("Arquivo selecionado para upload", extra={"filename": filename, "content_size": len(contents) if contents else 0})
+            log_info("Arquivo selecionado para upload", extra={"file_name": filename, "content_size": len(contents) if contents else 0})
             return html.Div([html.I(className="fas fa-file-alt me-1"), f"Arquivo selecionado: {filename}"], className="text-success"), False
         return "Nenhum arquivo selecionado.", True
 
@@ -183,7 +183,7 @@ def register_callbacks(app, cache_instance): # Mudança aqui
 
         try:
             file_extension = filename.split('.')[-1].lower()
-            log_info("Iniciando processamento de arquivo", extra={"filename": filename, "file_extension": file_extension, "delimiter": delimiter, "encoding": encoding_choice})
+            log_info("Iniciando processamento de arquivo", extra={"file_name": filename, "file_extension": file_extension, "delimiter": delimiter, "encoding": encoding_choice})
             
             if file_extension == 'csv' and DASK_AVAILABLE:
                 # Heurística: se arquivo > 100MB, usar Dask
@@ -204,11 +204,11 @@ def register_callbacks(app, cache_instance): # Mudança aqui
                 df = pd.read_excel(io.BytesIO(decoded_content), header=header_row_val)
             else:
                 err_msg = "Tipo de arquivo não suportado."
-                log_error("Tipo de arquivo não suportado", extra={"filename": filename, "file_extension": file_extension})
+                log_error("Tipo de arquivo não suportado", extra={"file_name": filename, "file_extension": file_extension})
                 return dbc.Alert(err_msg,color="danger"),html.Div(),hr_style,None,None,None,None,True,err_msg,"Erro Upload","danger"
 
             if df is not None and not df.empty:
-                log_info("Arquivo carregado com sucesso", extra={"filename": filename, "rows": len(df), "columns": len(df.columns)})
+                log_info("Arquivo carregado com sucesso", extra={"file_name": filename, "rows": len(df), "columns": len(df.columns)})
                 
                 # Inferência aprimorada de tipos de dados
                 type_changes = {}
@@ -326,7 +326,7 @@ def register_callbacks(app, cache_instance): # Mudança aqui
                     html.Span(" (Dask)", className="ms-2 text-info") if used_dask else None
                 ])
                 logger.info("Arquivo processado e armazenado no cache", extra={
-                    "filename": filename, 
+                    "file_name": filename, 
                     "data_key": data_key_to_store, 
                     "rows": len(df), 
                     "columns": len(df.columns),

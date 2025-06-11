@@ -301,15 +301,119 @@ def generate_plotly_chart(chart_params: Dict, df: pd.DataFrame) -> Optional[go.F
 
 
 layout = dbc.Container([
+    # Header Section
+    dbc.Row([
+        dbc.Col([
+            html.Div([
+                html.H1([
+                    html.I(className="fas fa-robot me-3 text-info"),
+                    "Assistente de Dados IA"
+                ], className="display-4 fw-bold text-center mb-2"),
+                html.P("Converse com seus dados e obtenha insights instantâneos", 
+                      className="lead text-center text-muted mb-4")
+            ], className="py-4")
+        ])
+    ]),
+    
+    # Stores
     dcc.Store(id="ai-chat-index-status-store", storage_type="session", data={"summary_cache_key": None, "status_message": "Nenhum dado preparado.", "original_data_key": None}),
     dcc.Store(id="ai-chat-history-store", storage_type="session", data=[]),
     dcc.Store(id="ai-chat-pending-suggestion-store", storage_type="session", data=None), # For chart suggestions
     dcc.Store(id="ai-chat-generated-charts-store", storage_type="session", data=[]), # [cite: 33, 35] For chart gallery
-
-    dbc.Row(dbc.Col(html.H2([html.I(className="fas fa-comments me-2"), "Assistente de Análise (Chat com Dados)"], className="mb-4 text-primary"))),
-
+    
+    # Main Chat Interface
     dbc.Row([
-        dbc.Col(md=4, children=[
+        # Left Panel - Chat Interface
+        dbc.Col([
+            dbc.Card([
+                dbc.CardHeader([
+                    dbc.Row([
+                        dbc.Col([
+                            html.H5([
+                                html.I(className="fas fa-comments me-2 text-info"),
+                                "Conversa"
+                            ], className="mb-0")
+                        ], width=6),
+                        dbc.Col([
+                            dbc.ButtonGroup([
+                                dbc.Button(
+                                    html.I(className="fas fa-trash-alt"), 
+                                    id="ai-chat-clear", 
+                                    color="outline-danger", 
+                                    size="sm",
+                                    title="Limpar conversa"
+                                ),
+                                dbc.Button(
+                                    html.I(className="fas fa-save"), 
+                                    id="ai-chat-save", 
+                                    color="outline-primary", 
+                                    size="sm",
+                                    title="Salvar conversa"
+                                ),
+                                dbc.Button(
+                                    html.I(className="fas fa-cog"), 
+                                    id="ai-chat-settings", 
+                                    color="outline-secondary", 
+                                    size="sm",
+                                    title="Configurações"
+                                )
+                            ], className="float-end")
+                        ], width=6, className="text-end")
+                    ])
+                ]),
+                dbc.CardBody([
+                    # Chat Messages Area
+                    dcc.Loading(id="ai-chat-loading-conversation", type="default", children=[
+                        html.Div(id="ai-chat-conversation-area", style={
+                            "height": "500px", 
+                            "overflowY": "auto",
+                            "display": "flex",
+                            "flexDirection": "column",
+                            "padding": "15px",
+                            "gap": "15px",
+                            "borderRadius": "8px",
+                            "backgroundColor": "#f8f9fa"
+                        }, children=[dbc.Alert("Configure e prepare os dados para iniciar o chat.", color="light", className="text-center")])
+                    ]),
+                    
+                    # Input Area with Send Button
+                    dbc.InputGroup([
+                        dcc.Textarea(
+                            id="ai-chat-user-question", 
+                            placeholder="Faça uma pergunta sobre seus dados...", 
+                            className="chat-input border-primary", 
+                            style={
+                                "resize": "none", 
+                                "height": "80px",
+                                "borderRadius": "20px 0 0 20px",
+                                "padding": "15px"
+                            }
+                        ),
+                        dbc.InputGroupText(
+                            dbc.Button(
+                                html.I(className="fas fa-paper-plane"), 
+                                id="ai-chat-send-question-btn", 
+                                color="primary", 
+                                n_clicks=0,
+                                className="rounded-circle",
+                                style={"width": "50px", "height": "50px"},
+                                disabled=True
+                            ),
+                            style={
+                                "alignSelf": "flex-end", 
+                                "backgroundColor": "transparent",
+                                "border": "none",
+                                "padding": "0 10px 10px 0"
+                            }
+                        )
+                    ])
+                ])
+            ], className="shadow border-0 h-100")
+        ], md=5),
+        
+        # Right Panel - Configuration and Visualization
+        dbc.Col([
+            # Configuration Card
             dbc.Card([
                 dbc.CardHeader(html.H5([html.I(className="fas fa-cogs me-2"), "Configurações e Ações"])),
                 dbc.CardBody([
@@ -350,28 +454,66 @@ layout = dbc.Container([
                                      value="llama3-8b-8192", className="mb-2"),
                     ]),
                 ])
-            ], className="shadow-sm sticky-top", style={"top":"80px"})
-        ]),
-
-        dbc.Col(md=8, children=[
+            ], className="shadow-sm border-0 mb-4"),
+            
+            # Visualization Card
             dbc.Card([
-                dbc.CardHeader(html.H5([html.I(className="fas fa-comment-dots me-2"), "Conversa"])),
+                dbc.CardHeader([
+                    dbc.Row([
+                        dbc.Col([
+                            html.H5([
+                                html.I(className="fas fa-chart-line me-2 text-success"),
+                                "Visualização Gerada"
+                            ], className="mb-0")
+                        ], width=6),
+                        dbc.Col([
+                            dbc.ButtonGroup([
+                                dbc.Button(
+                                    html.I(className="fas fa-download"), 
+                                    id="ai-chart-download", 
+                                    color="outline-success", 
+                                    size="sm",
+                                    title="Download"
+                                ),
+                                dbc.Button(
+                                    html.I(className="fas fa-expand"), 
+                                    id="ai-chart-fullscreen", 
+                                    color="outline-success", 
+                                    size="sm",
+                                    title="Tela Cheia"
+                                ),
+                                dbc.Button(
+                                    html.I(className="fas fa-edit"), 
+                                    id="ai-chart-edit", 
+                                    color="outline-success", 
+                                    size="sm",
+                                    title="Editar no Visualizador"
+                                )
+                            ], className="float-end")
+                        ], width=6, className="text-end")
+                    ])
+                ]),
                 dbc.CardBody([
-                    dcc.Loading(id="ai-chat-loading-conversation", type="default", children=[
-                        html.Div(id="ai-chat-conversation-area", style={
-                            "height": "calc(100vh - 380px)", "minHeight": "400px",
-                            "overflowY": "auto", "border": "1px solid #dee2e6",
-                            "padding": "15px", "borderRadius":"5px", "backgroundColor":"#f8f9fa" # Light background
-                        }, children=[dbc.Alert("Configure e prepare os dados para iniciar o chat.", color="light", className="text-center")])
-                    ]),
-                    dbc.InputGroup([
-                        dcc.Textarea(id="ai-chat-user-question", placeholder="Faça uma pergunta sobre seus dados ou peça um gráfico...", className="mt-3", style={"height": "80px", "resize":"none"}),
-                        dbc.Button(html.I(className="fas fa-paper-plane fs-5"), id="ai-chat-send-question-btn", color="primary", className="mt-3", n_clicks=0, disabled=True)
-                    ], className="mt-2")
+                    dcc.Loading(
+                        id="ai-chat-loading-chart",
+                        type="default",
+                        children=[
+                            html.Div(id="ai-chat-chart-container", className="text-center", 
+                                    style={"height": "350px", "display": "flex", "alignItems": "center", "justifyContent": "center"},
+                                    children=[
+                                        html.Div([
+                                            html.I(className="fas fa-chart-bar fa-5x text-muted mb-3"),
+                                            html.H4("Visualizações Inteligentes", className="text-muted mb-2"),
+                                            html.P("Peça para a IA gerar um gráfico ou análise visual", className="text-muted")
+                                        ])
+                                    ])
+                        ]
+                    )
                 ])
-            ], className="shadow-sm")
-        ])
+            ], className="shadow-sm border-0")
+        ], md=7)
     ]),
+    
     # Offcanvas for Chart Gallery [cite: 33]
     dbc.Offcanvas(
         id="ai-chat-charts-gallery-offcanvas",
@@ -382,7 +524,7 @@ layout = dbc.Container([
         scrollable=True,
         style={"width": "60%"} # Adjust width as needed
     )
-], fluid=True)
+], fluid=True, className="py-4")
 
 
 def chat_history_to_html(chat_history_list: List[Dict]) -> List:

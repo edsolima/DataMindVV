@@ -393,3 +393,440 @@ Allowed arguments: active_cell, cell_selectable, column_selectable, columns, css
 2025-06-11 07:58:56 | BI_APP | INFO | logger:info:70 | Navegação de página
 2025-06-11 07:58:57 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30343b38-9795-43f8-a626-799d360359a7 | select_result=OK | file_size=37363712 bytes
 2025-06-11 07:58:57 | BI_APP | INFO | logger:info:70 | Conexão com banco de dados estabelecida
+2025-06-11 14:03:58 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 14:03:58 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 14:03:58 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 14:03:58 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 14:03:58 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 14:03:58 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 14:03:58 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 14:03:58 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 14:03:58 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 14:03:58 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 14:03:58 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 14:03:58 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 14:04:05 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 14:04:05 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 14:04:05 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 14:04:05 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 14:04:05 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 14:04:05 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 14:04:05 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 14:04:05 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 14:04:05 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 14:04:05 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 14:04:05 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 14:04:05 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 14:04:09 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 30343b38-9795-43f8-a626-799d360359a7
+2025-06-11 14:04:09 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:04:09 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30343b38-9795-43f8-a626-799d360359a7 | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:04:09 | BI_APP | WARNING | logger:warning:74 | Dados não encontrados no cache
+2025-06-11 14:04:09 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30343b38-9795-43f8-a626-799d360359a7 | select_result=None | file_size=37363712 bytes
+2025-06-11 14:04:09 | BI_APP | INFO | logger:info:70 | Conexão com banco de dados estabelecida
+2025-06-11 14:04:12 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:04:13 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-11 14:04:27 | BI_APP | INFO | logger:info:70 | Conexão com banco de dados estabelecida
+2025-06-11 14:04:27 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-11 14:04:45 | BI_APP | INFO | logger:info:70 | Query executada com sucesso
+2025-06-11 14:04:45 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d6fe3403-87d3-4433-8d3f-a5d97d8bc96f | file_size=37363712 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-11 14:04:45 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d6fe3403-87d3-4433-8d3f-a5d97d8bc96f | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:04:45 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Dados salvos no cache com chave: d6fe3403-87d3-4433-8d3f-a5d97d8bc96f. Cache.has('d6fe3403-87d3-4433-8d3f-a5d97d8bc96f') = True
+2025-06-11 14:04:45 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d6fe3403-87d3-4433-8d3f-a5d97d8bc96f | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:04:45 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: 1000
+2025-06-11 14:04:45 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: d6fe3403-87d3-4433-8d3f-a5d97d8bc96f
+2025-06-11 14:04:45 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d6fe3403-87d3-4433-8d3f-a5d97d8bc96f | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:04:45 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-11 14:04:56 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:04:56 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d6fe3403-87d3-4433-8d3f-a5d97d8bc96f | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:04:57 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d6fe3403-87d3-4433-8d3f-a5d97d8bc96f | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:05:14 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=d6fe3403-87d3-4433-8d3f-a5d97d8bc96f | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:05:14 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=a45543fb-4097-4b23-8b82-f3e4f2afd913 | file_size=37363712 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-11 14:05:15 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: a45543fb-4097-4b23-8b82-f3e4f2afd913
+2025-06-11 14:05:15 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=a45543fb-4097-4b23-8b82-f3e4f2afd913 | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:05:15 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=a45543fb-4097-4b23-8b82-f3e4f2afd913 | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:05:15 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-11 14:05:24 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=a45543fb-4097-4b23-8b82-f3e4f2afd913 | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:05:24 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=5360d7e9-bf1f-4ef9-9b68-7de9fdafd326 | file_size=37363712 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-11 14:05:25 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 5360d7e9-bf1f-4ef9-9b68-7de9fdafd326
+2025-06-11 14:05:25 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=5360d7e9-bf1f-4ef9-9b68-7de9fdafd326 | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:05:25 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=5360d7e9-bf1f-4ef9-9b68-7de9fdafd326 | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:05:25 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-11 14:06:07 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=5360d7e9-bf1f-4ef9-9b68-7de9fdafd326 | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:06:07 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=019e5ee4-b713-4471-be39-f9a691a6b4d7 | file_size=37363712 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-11 14:06:07 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 019e5ee4-b713-4471-be39-f9a691a6b4d7
+2025-06-11 14:06:07 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=019e5ee4-b713-4471-be39-f9a691a6b4d7 | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:06:07 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=019e5ee4-b713-4471-be39-f9a691a6b4d7 | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:06:07 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-11 14:06:15 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=019e5ee4-b713-4471-be39-f9a691a6b4d7 | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:06:15 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7b9adddf-93e2-495f-9e42-cc280ae48c5b | file_size=37363712 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-11 14:06:15 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 7b9adddf-93e2-495f-9e42-cc280ae48c5b
+2025-06-11 14:06:15 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7b9adddf-93e2-495f-9e42-cc280ae48c5b | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:06:15 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7b9adddf-93e2-495f-9e42-cc280ae48c5b | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:06:15 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-11 14:06:18 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:06:18 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7b9adddf-93e2-495f-9e42-cc280ae48c5b | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:06:23 | BI_APP | ERROR | logger:error:81 | Erro ao atualizar layout do dashboard: The `dash_table.DataTable` component (version 3.0.4) with the ID "table-main-data" received an unexpected keyword argument: `style_pagination`
+Allowed arguments: active_cell, cell_selectable, column_selectable, columns, css, data, data_previous, data_timestamp, derived_filter_query_structure, derived_viewport_data, derived_viewport_indices, derived_viewport_row_ids, derived_viewport_selected_columns, derived_viewport_selected_row_ids, derived_viewport_selected_rows, derived_virtual_data, derived_virtual_indices, derived_virtual_row_ids, derived_virtual_selected_row_ids, derived_virtual_selected_rows, dropdown, dropdown_conditional, dropdown_data, editable, end_cell, export_columns, export_format, export_headers, fill_width, filter_action, filter_options, filter_query, fixed_columns, fixed_rows, hidden_columns, id, include_headers_on_copy_paste, is_focused, loading_state, locale_format, markdown_options, merge_duplicate_headers, page_action, page_count, page_current, page_size, persisted_props, persistence, persistence_type, row_deletable, row_selectable, selected_cells, selected_columns, selected_row_ids, selected_rows, sort_action, sort_as_null, sort_by, sort_mode, start_cell, style_as_list_view, style_cell, style_cell_conditional, style_data, style_data_conditional, style_filter, style_filter_conditional, style_header, style_header_conditional, style_table, tooltip, tooltip_conditional, tooltip_data, tooltip_delay, tooltip_duration, tooltip_header, virtualization
+2025-06-11 14:09:07 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 14:09:07 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 14:09:07 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 14:09:07 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 14:09:07 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 14:09:07 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 14:09:07 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 14:09:07 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 14:09:07 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 14:09:07 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 14:09:07 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 14:09:07 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 14:09:34 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 7b9adddf-93e2-495f-9e42-cc280ae48c5b
+2025-06-11 14:09:34 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7b9adddf-93e2-495f-9e42-cc280ae48c5b | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:09:34 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-11 14:09:34 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:09:34 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=7b9adddf-93e2-495f-9e42-cc280ae48c5b | select_result=OK | file_size=37363712 bytes
+2025-06-11 14:09:37 | BI_APP | ERROR | logger:error:81 | Erro ao atualizar layout do dashboard: The `dash_table.DataTable` component (version 3.0.4) with the ID "table-main-data" received an unexpected keyword argument: `style_pagination`
+Allowed arguments: active_cell, cell_selectable, column_selectable, columns, css, data, data_previous, data_timestamp, derived_filter_query_structure, derived_viewport_data, derived_viewport_indices, derived_viewport_row_ids, derived_viewport_selected_columns, derived_viewport_selected_row_ids, derived_viewport_selected_rows, derived_virtual_data, derived_virtual_indices, derived_virtual_row_ids, derived_virtual_selected_row_ids, derived_virtual_selected_rows, dropdown, dropdown_conditional, dropdown_data, editable, end_cell, export_columns, export_format, export_headers, fill_width, filter_action, filter_options, filter_query, fixed_columns, fixed_rows, hidden_columns, id, include_headers_on_copy_paste, is_focused, loading_state, locale_format, markdown_options, merge_duplicate_headers, page_action, page_count, page_current, page_size, persisted_props, persistence, persistence_type, row_deletable, row_selectable, selected_cells, selected_columns, selected_row_ids, selected_rows, sort_action, sort_as_null, sort_by, sort_mode, start_cell, style_as_list_view, style_cell, style_cell_conditional, style_data, style_data_conditional, style_filter, style_filter_conditional, style_header, style_header_conditional, style_table, tooltip, tooltip_conditional, tooltip_data, tooltip_delay, tooltip_duration, tooltip_header, virtualization
+2025-06-11 14:17:27 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:17:43 | BI_APP | INFO | logger:info:70 | Arquivo selecionado para upload
+2025-06-11 14:17:45 | BI_APP | INFO | logger:info:70 | Iniciando processamento de arquivo
+2025-06-11 14:17:45 | BI_APP | ERROR | logger:error:81 | Tipo de arquivo não suportado
+2025-06-11 14:17:45 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-11 14:18:31 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 14:18:31 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 14:18:32 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 14:18:32 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 14:18:32 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 14:18:32 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 14:18:32 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 14:18:32 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 14:18:32 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 14:18:32 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 14:18:32 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 14:18:32 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 14:18:33 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-11 14:18:33 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:18:51 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 14:18:51 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 14:18:51 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 14:18:51 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 14:18:51 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 14:18:51 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 14:18:51 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 14:18:51 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 14:18:51 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 14:18:51 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 14:18:51 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 14:18:51 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 14:18:52 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-11 14:18:52 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:20:27 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 14:20:27 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 14:20:27 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 14:20:27 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 14:20:27 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 14:20:27 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 14:20:27 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 14:20:27 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 14:20:27 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 14:20:27 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 14:20:27 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 14:20:27 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 14:20:34 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-11 14:20:34 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:20:39 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:20:40 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-11 14:20:46 | BI_APP | INFO | logger:info:70 | Conexão com banco de dados estabelecida
+2025-06-11 14:20:46 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-11 14:20:55 | BI_APP | INFO | logger:info:70 | Query executada com sucesso
+2025-06-11 14:20:55 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=c01af566-eca2-4c65-92f7-518118973182 | file_size=37924864 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-11 14:20:55 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=c01af566-eca2-4c65-92f7-518118973182 | select_result=OK | file_size=37924864 bytes
+2025-06-11 14:20:55 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Dados salvos no cache com chave: c01af566-eca2-4c65-92f7-518118973182. Cache.has('c01af566-eca2-4c65-92f7-518118973182') = True
+2025-06-11 14:20:55 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=c01af566-eca2-4c65-92f7-518118973182 | select_result=OK | file_size=37924864 bytes
+2025-06-11 14:20:55 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: 10000
+2025-06-11 14:20:56 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: c01af566-eca2-4c65-92f7-518118973182
+2025-06-11 14:20:56 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=c01af566-eca2-4c65-92f7-518118973182 | select_result=OK | file_size=37924864 bytes
+2025-06-11 14:20:56 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-11 14:21:00 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:21:01 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=c01af566-eca2-4c65-92f7-518118973182 | select_result=OK | file_size=37924864 bytes
+2025-06-11 14:21:13 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 14:21:13 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 14:21:13 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 14:21:13 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 14:21:13 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 14:21:13 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 14:21:13 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 14:21:13 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 14:21:13 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 14:21:13 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 14:21:13 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 14:21:13 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 14:21:14 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:21:14 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: c01af566-eca2-4c65-92f7-518118973182
+2025-06-11 14:21:14 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=c01af566-eca2-4c65-92f7-518118973182 | select_result=OK | file_size=37924864 bytes
+2025-06-11 14:21:14 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-11 14:21:14 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=c01af566-eca2-4c65-92f7-518118973182 | select_result=OK | file_size=37924864 bytes
+2025-06-11 14:24:04 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 14:24:04 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 14:24:04 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 14:24:04 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 14:24:04 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 14:24:04 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 14:24:04 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 14:24:04 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 14:24:04 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 14:24:04 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 14:24:04 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 14:24:04 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 14:24:14 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 14:24:14 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 14:24:15 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 14:24:15 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 14:24:15 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 14:24:15 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 14:24:15 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 14:24:15 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 14:24:15 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 14:24:15 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 14:24:15 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 14:24:15 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 14:24:16 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: c01af566-eca2-4c65-92f7-518118973182
+2025-06-11 14:24:16 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:24:16 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=c01af566-eca2-4c65-92f7-518118973182 | select_result=OK | file_size=37924864 bytes
+2025-06-11 14:24:16 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-11 14:24:32 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:24:38 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:24:39 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-11 14:24:44 | BI_APP | INFO | logger:info:70 | Conexão com banco de dados estabelecida
+2025-06-11 14:24:44 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-11 14:24:54 | BI_APP | INFO | logger:info:70 | Query executada com sucesso
+2025-06-11 14:24:54 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=4df4b766-55cc-4aa8-a46a-5e221f603da8 | file_size=38039552 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-11 14:24:54 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=4df4b766-55cc-4aa8-a46a-5e221f603da8 | select_result=OK | file_size=38039552 bytes
+2025-06-11 14:24:54 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Dados salvos no cache com chave: 4df4b766-55cc-4aa8-a46a-5e221f603da8. Cache.has('4df4b766-55cc-4aa8-a46a-5e221f603da8') = True
+2025-06-11 14:24:54 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=4df4b766-55cc-4aa8-a46a-5e221f603da8 | select_result=OK | file_size=38039552 bytes
+2025-06-11 14:24:54 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: 1000
+2025-06-11 14:24:55 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 4df4b766-55cc-4aa8-a46a-5e221f603da8
+2025-06-11 14:24:55 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=4df4b766-55cc-4aa8-a46a-5e221f603da8 | select_result=OK | file_size=38039552 bytes
+2025-06-11 14:24:55 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-11 14:24:59 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:24:59 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=4df4b766-55cc-4aa8-a46a-5e221f603da8 | select_result=OK | file_size=38039552 bytes
+2025-06-11 14:24:59 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=4df4b766-55cc-4aa8-a46a-5e221f603da8 | select_result=OK | file_size=38039552 bytes
+2025-06-11 14:25:10 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=4df4b766-55cc-4aa8-a46a-5e221f603da8 | select_result=OK | file_size=38039552 bytes
+2025-06-11 14:25:10 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=0b7e99ce-8519-4f16-bd0d-245ef3538b4a | file_size=38154240 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-11 14:25:11 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 0b7e99ce-8519-4f16-bd0d-245ef3538b4a
+2025-06-11 14:25:11 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=0b7e99ce-8519-4f16-bd0d-245ef3538b4a | select_result=OK | file_size=38154240 bytes
+2025-06-11 14:25:11 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=0b7e99ce-8519-4f16-bd0d-245ef3538b4a | select_result=OK | file_size=38154240 bytes
+2025-06-11 14:25:11 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-11 14:25:21 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=0b7e99ce-8519-4f16-bd0d-245ef3538b4a | select_result=OK | file_size=38154240 bytes
+2025-06-11 14:25:21 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | file_size=38260736 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-11 14:25:21 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 30816837-d4f0-4808-bc02-6dbd154831a5
+2025-06-11 14:25:21 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:25:21 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-11 14:25:21 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:25:24 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:25:24 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:29:25 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:29:25 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:30:12 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:30:12 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:34:21 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:34:21 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:34:21 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:34:41 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:34:53 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:35:49 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:35:54 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:36:13 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:37:13 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:37:14 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:37:28 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:38:38 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:38:39 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:38:50 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:38:50 | BI_APP | WARNING | logger:warning:74 | Aviso: Não foi possível inferir frequência para 'valor'. Alguns modelos podem ter problemas.
+2025-06-11 14:38:59 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:38:59 | BI_APP | WARNING | logger:warning:74 | Aviso: Não foi possível inferir frequência para 'valor'. Alguns modelos podem ter problemas.
+2025-06-11 14:38:59 | BI_APP | WARNING | logger:warning:74 | Aviso: Não foi possível inferir frequência para a série temporal 'valor'. Resultados podem variar.
+2025-06-11 14:39:19 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 14:39:20 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=30816837-d4f0-4808-bc02-6dbd154831a5 | select_result=OK | file_size=38260736 bytes
+2025-06-11 14:39:20 | BI_APP | INFO | logger:info:70 | Dados válidos carregados para AI Chat
+2025-06-11 14:44:43 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 14:44:43 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 14:44:44 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 14:44:44 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 14:44:44 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 14:44:44 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 14:44:44 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 14:44:44 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 14:44:44 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 14:44:44 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 14:44:44 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 14:44:44 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 14:44:55 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 14:44:55 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 14:44:56 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 14:44:56 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 14:44:56 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 14:44:56 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 14:44:56 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 14:44:56 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 14:44:56 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 14:44:56 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 14:44:56 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 14:44:56 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 14:49:26 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 14:49:26 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 14:49:26 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 14:49:26 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 14:49:26 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 14:49:26 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 14:49:26 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 14:49:26 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 14:49:26 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 14:49:26 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 14:49:26 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 14:49:26 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 14:50:14 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 14:50:14 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 14:50:14 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 14:50:14 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 14:50:14 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 14:50:14 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 14:50:14 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 14:50:14 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 14:50:14 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 14:50:14 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 14:50:14 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 14:50:14 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 14:50:25 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 14:50:25 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 14:50:25 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 14:50:25 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 14:50:25 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 14:50:25 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 14:50:25 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 14:50:25 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 14:50:25 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 14:50:25 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 14:50:25 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 14:50:25 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 15:00:36 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 15:00:36 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 15:00:37 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 15:00:37 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 15:00:37 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 15:00:37 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 15:00:37 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 15:00:37 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 15:00:37 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 15:00:37 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 15:00:37 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 15:00:37 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 15:00:58 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 15:00:58 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 15:00:59 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 15:00:59 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 15:00:59 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 15:00:59 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 15:00:59 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 15:00:59 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 15:00:59 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 15:00:59 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 15:00:59 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 15:00:59 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 15:06:09 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 15:06:09 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 15:06:10 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 15:06:10 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 15:06:10 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 15:06:10 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 15:06:10 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 15:06:10 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 15:06:10 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 15:06:10 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 15:06:10 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 15:06:11 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 15:06:32 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 15:06:32 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 15:06:33 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 15:06:33 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 15:06:33 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 15:06:33 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 15:06:33 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 15:06:33 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 15:06:33 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 15:06:33 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 15:06:33 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 15:06:33 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 15:09:24 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 15:09:24 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 15:09:25 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 15:09:25 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 15:09:25 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 15:09:25 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 15:09:25 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 15:09:25 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 15:09:25 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 15:09:25 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 15:09:25 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 15:09:25 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 15:09:46 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-11 15:09:46 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-11 15:09:47 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-11 15:09:47 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-11 15:09:47 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-11 15:09:47 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-11 15:09:47 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-11 15:09:47 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-11 15:09:47 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-11 15:09:47 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-11 15:09:47 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-11 15:09:47 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-11 15:09:48 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-11 15:09:48 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 15:09:49 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-11 15:09:49 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 15:10:10 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 15:10:12 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 15:10:15 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 15:10:29 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 15:10:30 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-11 15:10:35 | BI_APP | INFO | logger:info:70 | Conexão com banco de dados estabelecida
+2025-06-11 15:10:36 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-11 15:10:41 | BI_APP | INFO | logger:info:70 | Query executada com sucesso
+2025-06-11 15:10:41 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=9eaea17a-15f3-4719-bf6a-c3ff6bbbc695 | file_size=39407616 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-11 15:10:42 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=9eaea17a-15f3-4719-bf6a-c3ff6bbbc695 | select_result=OK | file_size=39407616 bytes
+2025-06-11 15:10:42 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Dados salvos no cache com chave: 9eaea17a-15f3-4719-bf6a-c3ff6bbbc695. Cache.has('9eaea17a-15f3-4719-bf6a-c3ff6bbbc695') = True
+2025-06-11 15:10:42 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=9eaea17a-15f3-4719-bf6a-c3ff6bbbc695 | select_result=OK | file_size=39407616 bytes
+2025-06-11 15:10:42 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: 10000
+2025-06-11 15:10:42 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 9eaea17a-15f3-4719-bf6a-c3ff6bbbc695
+2025-06-11 15:10:42 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=9eaea17a-15f3-4719-bf6a-c3ff6bbbc695 | select_result=OK | file_size=39407616 bytes
+2025-06-11 15:10:43 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-11 15:10:46 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 15:10:46 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=9eaea17a-15f3-4719-bf6a-c3ff6bbbc695 | select_result=OK | file_size=39407616 bytes
+2025-06-11 15:10:46 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=9eaea17a-15f3-4719-bf6a-c3ff6bbbc695 | select_result=OK | file_size=39407616 bytes
+2025-06-11 15:11:54 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=9eaea17a-15f3-4719-bf6a-c3ff6bbbc695 | select_result=OK | file_size=39407616 bytes
+2025-06-11 15:11:54 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=6865cadb-7b4f-4657-8ca6-8984aa138711 | file_size=40361984 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-11 15:11:55 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 6865cadb-7b4f-4657-8ca6-8984aa138711
+2025-06-11 15:11:55 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=6865cadb-7b4f-4657-8ca6-8984aa138711 | select_result=OK | file_size=40361984 bytes
+2025-06-11 15:11:55 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=6865cadb-7b4f-4657-8ca6-8984aa138711 | select_result=OK | file_size=40361984 bytes
+2025-06-11 15:11:55 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-11 15:12:07 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=6865cadb-7b4f-4657-8ca6-8984aa138711 | select_result=OK | file_size=40361984 bytes
+2025-06-11 15:12:07 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=6d67aa54-3604-422a-bb16-2e01d66d72a3 | file_size=41267200 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-11 15:12:07 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 6d67aa54-3604-422a-bb16-2e01d66d72a3
+2025-06-11 15:12:07 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=6d67aa54-3604-422a-bb16-2e01d66d72a3 | select_result=OK | file_size=41267200 bytes
+2025-06-11 15:12:07 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=6d67aa54-3604-422a-bb16-2e01d66d72a3 | select_result=OK | file_size=41267200 bytes
+2025-06-11 15:12:07 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-11 15:12:22 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=6d67aa54-3604-422a-bb16-2e01d66d72a3 | select_result=OK | file_size=41267200 bytes
+2025-06-11 15:12:22 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=e0db1ccd-bb2c-461b-aca7-b2aab7748872 | file_size=42123264 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-11 15:12:22 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: e0db1ccd-bb2c-461b-aca7-b2aab7748872
+2025-06-11 15:12:22 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=e0db1ccd-bb2c-461b-aca7-b2aab7748872 | select_result=OK | file_size=42123264 bytes
+2025-06-11 15:12:22 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=e0db1ccd-bb2c-461b-aca7-b2aab7748872 | select_result=OK | file_size=42123264 bytes
+2025-06-11 15:12:22 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-11 15:12:31 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=e0db1ccd-bb2c-461b-aca7-b2aab7748872 | select_result=OK | file_size=42123264 bytes
+2025-06-11 15:12:31 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=bb92da5a-80bd-4b82-8979-5d2060b906d9 | file_size=42950656 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-11 15:12:32 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: bb92da5a-80bd-4b82-8979-5d2060b906d9
+2025-06-11 15:12:32 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=bb92da5a-80bd-4b82-8979-5d2060b906d9 | select_result=OK | file_size=42950656 bytes
+2025-06-11 15:12:32 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=bb92da5a-80bd-4b82-8979-5d2060b906d9 | select_result=OK | file_size=42950656 bytes
+2025-06-11 15:12:32 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-11 15:12:37 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-11 15:12:37 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=bb92da5a-80bd-4b82-8979-5d2060b906d9 | select_result=OK | file_size=42950656 bytes

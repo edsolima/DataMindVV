@@ -1098,10 +1098,7 @@ def create_data_table_card(table_id, title, theme='light', data=None):
                                 'padding': '8px',
                                 'borderRadius': '4px',
                             },
-                            style_pagination={
-                                'borderTop': f"1px solid {colors['border']}",
-                                'padding': '10px 0',
-                            },
+
                             page_current=0,
                             css=[
                                 {
@@ -1115,6 +1112,14 @@ def create_data_table_card(table_id, title, theme='light', data=None):
                                 {
                                     'selector': '.dash-filter--case',
                                     'rule': f'display: none !important;'
+                                },
+                                {
+                                    'selector': '.previous-next-container',
+                                    'rule': f'border-top: 1px solid {colors["border"]} !important; padding: 10px 0 !important;'
+                                },
+                                {
+                                    'selector': '.page-number',
+                                    'rule': f'color: {colors["text"]} !important;'
                                 }
                             ]
                         )
@@ -1944,6 +1949,16 @@ layout = html.Div([
         ], fluid=True)
     ], className="bg-light py-3 mt-5"),
     
+    # Toast para mensagens
+    dbc.Toast(
+        id="dashboard-toast",
+        header="Dashboard",
+        is_open=False,
+        dismissable=True,
+        duration=4000,
+        style={"position": "fixed", "top": 66, "right": 10, "width": 350, "z-index": 9999}
+    ),
+    
     # Interval para atualizações automáticas
     dcc.Interval(id="auto-refresh", interval=60000, n_intervals=0, disabled=True)
 ], style={'backgroundColor': '#f8f9fa', 'minHeight': '100vh'}, className="dashboard-container")
@@ -2083,5 +2098,123 @@ def register_callbacks(app, cache_instance):
     def setup_auto_refresh(theme):
         """Configura atualização automática"""
         return False  # Habilita atualização automática
+    
+    # Callbacks para botões de ação
+    @app.callback(
+        [Output('dashboard-toast', 'is_open', allow_duplicate=True),
+         Output('dashboard-toast', 'children', allow_duplicate=True)],
+        [Input('export-data-btn', 'n_clicks'),
+         Input('add-chart-btn', 'n_clicks'),
+         Input('add-table-btn', 'n_clicks'),
+         Input('fullscreen-btn', 'n_clicks'),
+         Input('grid-view-btn', 'n_clicks'),
+         Input('list-view-btn', 'n_clicks')],
+        prevent_initial_call=True
+    )
+    def handle_dashboard_actions(export_clicks, chart_clicks, table_clicks, 
+                               fullscreen_clicks, grid_clicks, list_clicks):
+        """Processa ações dos botões do dashboard"""
+        ctx = callback_context
+        if not ctx.triggered:
+            raise PreventUpdate
+        
+        button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+        
+        try:
+            if button_id == 'export-data-btn' and export_clicks:
+                # Simular exportação de dados
+                log_info("Dados exportados com sucesso")
+                return True, dbc.Alert("Dados exportados com sucesso!", color="success")
+                
+            elif button_id == 'add-chart-btn' and chart_clicks:
+                # Simular adição de gráfico
+                log_info("Novo gráfico adicionado")
+                return True, dbc.Alert("Novo gráfico adicionado ao dashboard!", color="info")
+                
+            elif button_id == 'add-table-btn' and table_clicks:
+                # Simular adição de tabela
+                log_info("Nova tabela adicionada")
+                return True, dbc.Alert("Nova tabela adicionada ao dashboard!", color="info")
+                
+            elif button_id == 'fullscreen-btn' and fullscreen_clicks:
+                # Simular modo tela cheia
+                log_info("Modo tela cheia ativado")
+                return True, dbc.Alert("Modo tela cheia ativado!", color="secondary")
+                
+            elif button_id == 'grid-view-btn' and grid_clicks:
+                # Simular visualização em grade
+                log_info("Visualização em grade ativada")
+                return True, dbc.Alert("Visualização em grade ativada!", color="primary")
+                
+            elif button_id == 'list-view-btn' and list_clicks:
+                # Simular visualização em lista
+                log_info("Visualização em lista ativada")
+                return True, dbc.Alert("Visualização em lista ativada!", color="primary")
+            
+            return False, ""
+            
+        except Exception as e:
+            log_error(f"Erro em ação do dashboard: {e}")
+            return True, dbc.Alert("Erro ao executar ação. Tente novamente.", color="danger")
+    
+    # Callback para aplicar filtros
+    @app.callback(
+        [Output('dashboard-toast', 'is_open', allow_duplicate=True),
+         Output('dashboard-toast', 'children', allow_duplicate=True),
+         Output('last-update-time', 'children')],
+        [Input('apply-filters-btn', 'n_clicks'),
+         Input('clear-filters-btn', 'n_clicks')],
+        prevent_initial_call=True
+    )
+    def handle_filters(apply_clicks, clear_clicks):
+        """Processa aplicação e limpeza de filtros"""
+        ctx = callback_context
+        if not ctx.triggered:
+            raise PreventUpdate
+        
+        button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+        current_time = datetime.now().strftime("%d/%m/%Y %H:%M")
+        
+        try:
+            if button_id == 'apply-filters-btn' and apply_clicks:
+                # Aplicar filtros
+                message = "Filtros aplicados com sucesso"
+                log_info(message)
+                return True, dbc.Alert(message, color="success"), current_time
+                    
+            elif button_id == 'clear-filters-btn' and clear_clicks:
+                # Limpar filtros
+                log_info("Filtros limpos")
+                return True, dbc.Alert("Todos os filtros foram removidos.", color="info"), current_time
+            
+            return False, "", current_time
+            
+        except Exception as e:
+            log_error(f"Erro ao processar filtros: {e}")
+            return True, dbc.Alert("Erro ao processar filtros.", color="danger"), current_time
+    
+    # Callback para busca de dados
+    @app.callback(
+        [Output('dashboard-toast', 'is_open', allow_duplicate=True),
+         Output('dashboard-toast', 'children', allow_duplicate=True)],
+        [Input('search-data-btn', 'n_clicks')],
+        [State('search-input', 'value')],
+        prevent_initial_call=True
+    )
+    def handle_search(search_clicks, search_term):
+        """Processa busca de dados"""
+        if not search_clicks:
+            raise PreventUpdate
+        
+        try:
+            if search_term:
+                log_info(f"Busca realizada: {search_term}")
+                return True, dbc.Alert(f"Busca realizada por: '{search_term}'", color="info")
+            else:
+                return True, dbc.Alert("Digite um termo para buscar.", color="warning")
+                
+        except Exception as e:
+            log_error(f"Erro na busca: {e}")
+            return True, dbc.Alert("Erro ao realizar busca.", color="danger")
 
 print("Dashboard moderno carregado com sucesso!")

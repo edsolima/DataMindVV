@@ -1,0 +1,824 @@
+2025-06-14 11:05:34 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 11:05:34 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 11:05:35 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 11:05:35 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 11:05:35 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 11:05:35 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 11:05:35 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 11:05:35 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 11:05:35 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 11:05:35 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 11:05:35 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 11:05:35 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 11:05:35 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 11:05:35 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 11:05:35 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 11:05:35 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 11:05:35 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 11:05:35 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 11:05:35 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-14 11:05:43 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 11:05:43 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 11:05:44 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 11:05:44 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 11:05:44 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 11:05:44 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 11:05:44 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 11:05:44 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 11:05:44 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 11:05:44 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 11:05:44 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 11:05:44 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 11:05:44 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 11:05:44 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 11:05:44 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 11:05:44 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 11:05:44 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 11:05:44 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 11:05:44 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-14 11:19:24 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 11:19:24 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 11:19:32 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 11:19:33 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 11:19:37 | BI_APP | INFO | logger:info:70 | Conexão com banco de dados estabelecida
+2025-06-14 11:19:38 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 11:19:43 | BI_APP | INFO | logger:info:70 | Query executada com sucesso
+2025-06-14 11:19:43 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=1ab48566-e4e9-4e36-a977-e9eea97ba824 | file_size=52002816 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-14 11:19:43 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=1ab48566-e4e9-4e36-a977-e9eea97ba824 | select_result=OK | file_size=52002816 bytes
+2025-06-14 11:19:43 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Dados salvos no cache com chave: 1ab48566-e4e9-4e36-a977-e9eea97ba824. Cache.has('1ab48566-e4e9-4e36-a977-e9eea97ba824') = True
+2025-06-14 11:19:43 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=1ab48566-e4e9-4e36-a977-e9eea97ba824 | select_result=OK | file_size=52002816 bytes
+2025-06-14 11:19:43 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: 10000
+2025-06-14 11:19:43 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 1ab48566-e4e9-4e36-a977-e9eea97ba824
+2025-06-14 11:19:43 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=1ab48566-e4e9-4e36-a977-e9eea97ba824 | select_result=OK | file_size=52002816 bytes
+2025-06-14 11:19:43 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-14 11:19:47 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 11:22:42 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 11:22:42 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 11:22:42 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 11:22:42 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 11:22:42 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 11:22:42 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 11:22:42 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 11:22:42 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 11:22:42 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 11:22:42 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 11:22:42 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 11:22:42 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 11:22:42 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 11:22:42 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 11:22:42 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 11:22:42 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 11:22:42 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 11:22:42 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 11:22:42 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-14 11:22:43 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 1ab48566-e4e9-4e36-a977-e9eea97ba824
+2025-06-14 11:22:43 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 11:22:43 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=1ab48566-e4e9-4e36-a977-e9eea97ba824 | select_result=OK | file_size=52002816 bytes
+2025-06-14 11:22:43 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-14 11:23:58 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 11:23:58 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 11:23:59 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 11:23:59 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 11:23:59 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 11:23:59 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 11:23:59 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 11:23:59 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 11:23:59 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 11:23:59 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 11:23:59 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 11:23:59 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 11:23:59 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 11:23:59 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 11:23:59 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 11:23:59 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 11:23:59 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 11:23:59 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 11:23:59 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-14 11:24:09 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 11:24:09 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 11:24:09 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 11:24:09 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 11:24:09 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 11:24:09 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 11:24:09 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 11:24:09 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 11:24:09 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 11:24:10 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 11:24:10 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 11:24:10 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 11:24:10 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 11:24:10 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 11:24:10 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 11:24:10 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 11:24:10 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 11:24:10 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 11:24:10 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-14 11:35:44 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 11:35:44 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 11:35:44 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 11:35:44 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 11:35:44 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 11:35:44 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 11:35:44 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 11:35:44 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 11:35:44 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 11:35:44 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 11:35:44 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 11:35:44 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 11:35:44 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 11:35:44 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 11:35:44 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 11:35:44 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 11:35:44 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 11:35:44 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 11:35:44 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-14 11:35:53 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 11:35:53 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 11:35:54 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 11:35:54 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 11:35:54 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 11:35:54 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 11:35:54 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 11:35:54 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 11:35:54 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 11:35:54 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 11:35:54 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 11:35:54 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 11:35:54 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 11:35:54 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 11:35:54 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 11:35:54 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 11:35:54 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 11:35:54 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 11:35:54 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-14 12:00:27 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 12:00:27 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 12:00:29 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 12:00:30 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 12:00:40 | BI_APP | INFO | logger:info:70 | Conexão com banco de dados estabelecida
+2025-06-14 12:00:40 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 12:00:44 | BI_APP | INFO | logger:info:70 | Query executada com sucesso
+2025-06-14 12:00:44 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=f0ec1261-797e-4034-9938-5a09319acf65 | file_size=52457472 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-14 12:00:44 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=f0ec1261-797e-4034-9938-5a09319acf65 | select_result=OK | file_size=52457472 bytes
+2025-06-14 12:00:44 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Dados salvos no cache com chave: f0ec1261-797e-4034-9938-5a09319acf65. Cache.has('f0ec1261-797e-4034-9938-5a09319acf65') = True
+2025-06-14 12:00:44 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=f0ec1261-797e-4034-9938-5a09319acf65 | select_result=OK | file_size=52457472 bytes
+2025-06-14 12:00:44 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: 5761
+2025-06-14 12:00:45 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: f0ec1261-797e-4034-9938-5a09319acf65
+2025-06-14 12:00:45 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=f0ec1261-797e-4034-9938-5a09319acf65 | select_result=OK | file_size=52457472 bytes
+2025-06-14 12:00:45 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-14 12:00:56 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 12:00:59 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 12:01:25 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 12:01:25 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 12:01:25 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 12:01:25 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 12:01:25 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 12:01:25 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 12:01:25 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 12:01:25 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 12:01:25 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 12:01:26 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-14 12:38:47 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 12:38:47 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 12:38:47 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 12:38:47 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 12:39:53 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 12:39:53 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 12:39:54 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 12:39:54 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 12:39:54 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 12:39:54 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 12:39:54 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 12:39:54 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 12:39:54 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 12:39:54 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 12:39:54 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 12:39:54 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 12:39:54 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 12:39:54 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 12:39:54 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 12:39:54 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 12:39:54 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 12:39:54 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 12:39:54 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-14 12:40:01 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 12:40:01 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 12:40:01 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 12:40:01 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 12:40:01 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 12:40:01 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 12:40:01 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 12:40:01 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 12:40:01 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 12:40:01 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 12:40:01 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 12:40:01 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 12:40:01 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 12:40:01 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 12:40:01 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 12:40:01 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 12:40:01 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 12:40:01 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 12:40:01 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-14 12:47:38 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 12:47:38 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 12:47:45 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 12:47:46 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 13:03:07 | BI_APP | INFO | logger:info:70 | Conexão com banco de dados estabelecida
+2025-06-14 13:03:07 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 13:03:09 | BI_APP | INFO | logger:info:70 | Query executada com sucesso
+2025-06-14 13:03:09 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=184b949f-5198-4cc4-b7db-9b3509db95c6 | file_size=52576256 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-14 13:03:09 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=184b949f-5198-4cc4-b7db-9b3509db95c6 | select_result=OK | file_size=52576256 bytes
+2025-06-14 13:03:09 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Dados salvos no cache com chave: 184b949f-5198-4cc4-b7db-9b3509db95c6. Cache.has('184b949f-5198-4cc4-b7db-9b3509db95c6') = True
+2025-06-14 13:03:09 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=184b949f-5198-4cc4-b7db-9b3509db95c6 | select_result=OK | file_size=52576256 bytes
+2025-06-14 13:03:09 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: 1000
+2025-06-14 13:03:10 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 184b949f-5198-4cc4-b7db-9b3509db95c6
+2025-06-14 13:03:10 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=184b949f-5198-4cc4-b7db-9b3509db95c6 | select_result=OK | file_size=52576256 bytes
+2025-06-14 13:03:10 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-14 13:03:18 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 15:08:16 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 15:08:16 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 15:08:16 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 15:08:16 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 15:08:17 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 15:08:17 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 15:08:17 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 15:08:17 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 15:08:17 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 15:08:17 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 15:08:17 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 15:08:17 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 15:08:17 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 15:08:17 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 15:08:17 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 15:08:17 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 15:08:17 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 15:08:17 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 15:08:17 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-14 15:08:25 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 15:08:25 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 15:08:26 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 15:08:26 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 15:08:26 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 15:08:26 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 15:08:26 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 15:08:26 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 15:08:26 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 15:08:26 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 15:08:26 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 15:08:26 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 15:08:26 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 15:08:26 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 15:08:26 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 15:08:26 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 15:08:26 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 15:08:26 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 15:08:26 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-14 15:08:27 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 15:08:27 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 15:08:34 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 15:08:35 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 15:08:39 | BI_APP | INFO | logger:info:70 | Conexão com banco de dados estabelecida
+2025-06-14 15:08:39 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 15:08:40 | BI_APP | INFO | logger:info:70 | Conexão com banco de dados estabelecida
+2025-06-14 15:08:40 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 15:08:45 | BI_APP | INFO | logger:info:70 | Query executada com sucesso
+2025-06-14 15:08:45 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=6abb0c2f-4a14-42ed-98b2-956209db8008 | file_size=53719040 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-14 15:08:45 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=6abb0c2f-4a14-42ed-98b2-956209db8008 | select_result=OK | file_size=53719040 bytes
+2025-06-14 15:08:45 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Dados salvos no cache com chave: 6abb0c2f-4a14-42ed-98b2-956209db8008. Cache.has('6abb0c2f-4a14-42ed-98b2-956209db8008') = True
+2025-06-14 15:08:45 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=6abb0c2f-4a14-42ed-98b2-956209db8008 | select_result=OK | file_size=53719040 bytes
+2025-06-14 15:08:45 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: 10000
+2025-06-14 15:08:45 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 6abb0c2f-4a14-42ed-98b2-956209db8008
+2025-06-14 15:08:45 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=6abb0c2f-4a14-42ed-98b2-956209db8008 | select_result=OK | file_size=53719040 bytes
+2025-06-14 15:08:45 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-14 15:08:48 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:05:08 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 18:05:08 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 18:05:08 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 18:05:08 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 18:05:08 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:05:08 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:05:08 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:05:08 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:05:08 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 18:05:08 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 18:05:08 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 18:05:08 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:05:08 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:05:08 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:05:08 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:05:08 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 18:05:08 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 18:05:08 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 18:05:08 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-14 18:05:15 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 18:05:15 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 18:05:16 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 18:05:16 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 18:05:16 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:05:16 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:05:16 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:05:16 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:05:16 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 18:05:16 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 18:05:16 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 18:05:16 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:05:16 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:05:16 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:05:16 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:05:16 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 18:05:16 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 18:05:16 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 18:05:16 | BI_APP | INFO | logger:info:70 | Iniciando aplicação Dash
+2025-06-14 18:08:33 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 18:08:33 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:08:38 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:08:39 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 18:11:16 | BI_APP | INFO | logger:info:70 | Conexão com banco de dados estabelecida
+2025-06-14 18:11:17 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 18:12:41 | BI_APP | INFO | logger:info:70 | Query executada com sucesso
+2025-06-14 18:12:41 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=0babf6b5-9919-4de9-82cf-a4dfecafe269 | file_size=53833728 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-14 18:12:41 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=0babf6b5-9919-4de9-82cf-a4dfecafe269 | select_result=OK | file_size=53833728 bytes
+2025-06-14 18:12:41 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Dados salvos no cache com chave: 0babf6b5-9919-4de9-82cf-a4dfecafe269. Cache.has('0babf6b5-9919-4de9-82cf-a4dfecafe269') = True
+2025-06-14 18:12:41 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=0babf6b5-9919-4de9-82cf-a4dfecafe269 | select_result=OK | file_size=53833728 bytes
+2025-06-14 18:12:41 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: 1000
+2025-06-14 18:12:41 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 0babf6b5-9919-4de9-82cf-a4dfecafe269
+2025-06-14 18:12:41 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=0babf6b5-9919-4de9-82cf-a4dfecafe269 | select_result=OK | file_size=53833728 bytes
+2025-06-14 18:12:41 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-14 18:12:58 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:12:58 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=0babf6b5-9919-4de9-82cf-a4dfecafe269 | select_result=OK | file_size=53833728 bytes
+2025-06-14 18:12:58 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=0babf6b5-9919-4de9-82cf-a4dfecafe269 | select_result=OK | file_size=53833728 bytes
+2025-06-14 18:13:01 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:13:01 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=0babf6b5-9919-4de9-82cf-a4dfecafe269 | select_result=OK | file_size=53833728 bytes
+2025-06-14 18:13:14 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:13:14 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=0babf6b5-9919-4de9-82cf-a4dfecafe269 | select_result=OK | file_size=53833728 bytes
+2025-06-14 18:13:15 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=0babf6b5-9919-4de9-82cf-a4dfecafe269 | select_result=OK | file_size=53833728 bytes
+2025-06-14 18:13:58 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:13:58 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=0babf6b5-9919-4de9-82cf-a4dfecafe269 | select_result=OK | file_size=53833728 bytes
+2025-06-14 18:14:47 | BI_APP | INFO | logger:info:70 | Novo gráfico adicionado
+2025-06-14 18:14:57 | BI_APP | INFO | logger:info:70 | Nova tabela adicionada
+2025-06-14 18:15:08 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:15:09 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=0babf6b5-9919-4de9-82cf-a4dfecafe269 | select_result=OK | file_size=53833728 bytes
+2025-06-14 18:15:09 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=0babf6b5-9919-4de9-82cf-a4dfecafe269 | select_result=OK | file_size=53833728 bytes
+2025-06-14 18:15:12 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:15:12 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=0babf6b5-9919-4de9-82cf-a4dfecafe269 | select_result=OK | file_size=53833728 bytes
+2025-06-14 18:42:21 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 18:42:21 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 18:42:21 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 18:42:21 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 18:42:56 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 18:42:56 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 18:42:56 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 18:42:56 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 18:43:39 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 18:43:39 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 18:43:40 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 18:43:40 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 18:43:40 | BI_APP | WARNING | logger:warning:74 | JWT secret gerado temporariamente para desenvolvimento. Configure JWT_SECRET em produção.
+2025-06-14 18:43:40 | BI_APP | WARNING | logger:warning:74 | Chave de criptografia gerada temporariamente para desenvolvimento. Configure ENCRYPTION_KEY em produção.
+2025-06-14 18:43:40 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:43:40 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:43:40 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:43:40 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:43:40 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 18:43:40 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:43:40 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:43:40 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:43:40 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:43:40 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 18:44:10 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 18:44:10 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 18:44:10 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 18:44:10 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 18:44:10 | BI_APP | WARNING | logger:warning:74 | JWT secret gerado temporariamente para desenvolvimento. Configure JWT_SECRET em produção.
+2025-06-14 18:44:10 | BI_APP | WARNING | logger:warning:74 | Chave de criptografia gerada temporariamente para desenvolvimento. Configure ENCRYPTION_KEY em produção.
+2025-06-14 18:44:10 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:44:10 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:44:10 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:44:10 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:44:10 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 18:44:10 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:44:10 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:44:10 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:44:10 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:44:10 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 18:44:10 | BI_APP | ERROR | logger:error:79 | Erro ao configurar dependências | Exception: SQLiteCache.__init__() missing 1 required positional argument: 'config'
+Traceback (most recent call last):
+  File "C:\Users\never\Desktop\BI-25-05\utils\dependency_container.py", line 175, in setup_dependencies
+    app_container.register_singleton(ICacheManager, SQLiteCache())
+                                                    ~~~~~~~~~~~^^
+TypeError: SQLiteCache.__init__() missing 1 required positional argument: 'config'
+2025-06-14 18:45:24 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 18:45:24 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 18:45:24 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 18:45:24 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 18:45:24 | BI_APP | WARNING | logger:warning:74 | JWT secret gerado temporariamente para desenvolvimento. Configure JWT_SECRET em produção.
+2025-06-14 18:45:24 | BI_APP | WARNING | logger:warning:74 | Chave de criptografia gerada temporariamente para desenvolvimento. Configure ENCRYPTION_KEY em produção.
+2025-06-14 18:45:24 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:45:24 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:45:24 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:45:24 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:45:24 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 18:45:24 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:45:24 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:45:24 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:45:24 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:45:24 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 18:45:24 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 18:45:24 | BI_APP | INFO | logger:info:70 | Dependências configuradas com sucesso
+2025-06-14 18:46:56 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 18:46:56 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 18:46:56 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 18:46:56 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 18:46:56 | BI_APP | WARNING | logger:warning:74 | JWT secret gerado temporariamente para desenvolvimento. Configure JWT_SECRET em produção.
+2025-06-14 18:46:56 | BI_APP | WARNING | logger:warning:74 | Chave de criptografia gerada temporariamente para desenvolvimento. Configure ENCRYPTION_KEY em produção.
+2025-06-14 18:46:57 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:46:57 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:46:57 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:46:57 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:46:57 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 18:46:57 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:46:57 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:46:57 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:46:57 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:46:57 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 18:46:57 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 18:46:57 | BI_APP | INFO | logger:info:70 | Dependências configuradas com sucesso
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 18:47:46 | BI_APP | WARNING | logger:warning:74 | JWT secret gerado temporariamente para desenvolvimento. Configure JWT_SECRET em produção.
+2025-06-14 18:47:46 | BI_APP | WARNING | logger:warning:74 | Chave de criptografia gerada temporariamente para desenvolvimento. Configure ENCRYPTION_KEY em produção.
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | Dependências configuradas com sucesso
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 18:47:46 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 18:48:04 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 18:48:04 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 18:48:05 | BI_APP | WARNING | logger:warning:74 | JWT secret gerado temporariamente para desenvolvimento. Configure JWT_SECRET em produção.
+2025-06-14 18:48:05 | BI_APP | WARNING | logger:warning:74 | Chave de criptografia gerada temporariamente para desenvolvimento. Configure ENCRYPTION_KEY em produção.
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | Dependências configuradas com sucesso
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 18:48:05 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 18:49:40 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 18:49:40 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 18:49:40 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 18:49:40 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 18:49:40 | BI_APP | WARNING | logger:warning:74 | JWT secret gerado temporariamente para desenvolvimento. Configure JWT_SECRET em produção.
+2025-06-14 18:49:40 | BI_APP | WARNING | logger:warning:74 | Chave de criptografia gerada temporariamente para desenvolvimento. Configure ENCRYPTION_KEY em produção.
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | Dependências configuradas com sucesso
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 18:49:41 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 18:49:48 | BI_APP | WARNING | logger:warning:74 | JWT secret gerado temporariamente para desenvolvimento. Configure JWT_SECRET em produção.
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | Dependências configuradas com sucesso
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 18:49:48 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 18:50:04 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 18:50:04 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 18:50:04 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 18:50:04 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 18:50:04 | BI_APP | WARNING | logger:warning:74 | JWT secret gerado temporariamente para desenvolvimento. Configure JWT_SECRET em produção.
+2025-06-14 18:50:04 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente
+2025-06-14 18:50:04 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:50:04 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:50:04 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:50:04 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:50:04 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 18:50:04 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:50:04 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:50:04 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:50:04 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:50:04 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 18:50:04 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 18:50:04 | BI_APP | INFO | logger:info:70 | Dependências configuradas com sucesso
+2025-06-14 18:50:05 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 18:50:05 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 18:50:05 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:50:05 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:50:05 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:50:05 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:50:05 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 18:50:05 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 18:50:05 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 18:50:07 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 18:50:07 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:50:22 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:50:23 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 18:50:30 | BI_APP | INFO | logger:info:70 | Conexão com banco de dados estabelecida
+2025-06-14 18:50:30 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 18:50:35 | BI_APP | INFO | logger:info:70 | Query executada com sucesso
+2025-06-14 18:50:35 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=3c0cd064-880d-45cc-984e-c70b234624c1 | file_size=54976512 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-14 18:50:35 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=3c0cd064-880d-45cc-984e-c70b234624c1 | select_result=OK | file_size=54976512 bytes
+2025-06-14 18:50:35 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Dados salvos no cache com chave: 3c0cd064-880d-45cc-984e-c70b234624c1. Cache.has('3c0cd064-880d-45cc-984e-c70b234624c1') = True
+2025-06-14 18:50:35 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=3c0cd064-880d-45cc-984e-c70b234624c1 | select_result=OK | file_size=54976512 bytes
+2025-06-14 18:50:35 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: 10000
+2025-06-14 18:50:36 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 3c0cd064-880d-45cc-984e-c70b234624c1
+2025-06-14 18:50:36 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=3c0cd064-880d-45cc-984e-c70b234624c1 | select_result=OK | file_size=54976512 bytes
+2025-06-14 18:50:36 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-14 18:51:12 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:51:12 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=3c0cd064-880d-45cc-984e-c70b234624c1 | select_result=OK | file_size=54976512 bytes
+2025-06-14 18:51:15 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:51:16 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=3c0cd064-880d-45cc-984e-c70b234624c1 | select_result=OK | file_size=54976512 bytes
+2025-06-14 18:51:16 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=3c0cd064-880d-45cc-984e-c70b234624c1 | select_result=OK | file_size=54976512 bytes
+2025-06-14 18:51:30 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:51:30 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=3c0cd064-880d-45cc-984e-c70b234624c1 | select_result=OK | file_size=54976512 bytes
+2025-06-14 18:51:30 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=3c0cd064-880d-45cc-984e-c70b234624c1 | select_result=OK | file_size=54976512 bytes
+2025-06-14 18:51:39 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=3c0cd064-880d-45cc-984e-c70b234624c1 | select_result=OK | file_size=54976512 bytes
+2025-06-14 18:51:40 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=fd762bca-88f5-4168-92be-ed61e4fbef36 | file_size=56094720 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-14 18:51:40 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: fd762bca-88f5-4168-92be-ed61e4fbef36
+2025-06-14 18:51:40 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=fd762bca-88f5-4168-92be-ed61e4fbef36 | select_result=OK | file_size=56094720 bytes
+2025-06-14 18:51:40 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=fd762bca-88f5-4168-92be-ed61e4fbef36 | select_result=OK | file_size=56094720 bytes
+2025-06-14 18:51:40 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-14 18:51:49 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=fd762bca-88f5-4168-92be-ed61e4fbef36 | select_result=OK | file_size=56094720 bytes
+2025-06-14 18:51:49 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=f6bd85c7-acd4-4280-ab1b-baf3ad2941e5 | file_size=57163776 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-14 18:51:50 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: f6bd85c7-acd4-4280-ab1b-baf3ad2941e5
+2025-06-14 18:51:50 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=f6bd85c7-acd4-4280-ab1b-baf3ad2941e5 | select_result=OK | file_size=57163776 bytes
+2025-06-14 18:51:50 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=f6bd85c7-acd4-4280-ab1b-baf3ad2941e5 | select_result=OK | file_size=57163776 bytes
+2025-06-14 18:51:50 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-14 18:51:55 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:51:55 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=f6bd85c7-acd4-4280-ab1b-baf3ad2941e5 | select_result=OK | file_size=57163776 bytes
+2025-06-14 18:51:55 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=f6bd85c7-acd4-4280-ab1b-baf3ad2941e5 | select_result=OK | file_size=57163776 bytes
+2025-06-14 18:51:59 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=f6bd85c7-acd4-4280-ab1b-baf3ad2941e5 | select_result=OK | file_size=57163776 bytes
+2025-06-14 18:51:59 | BI_APP | ERROR | logger:error:79 | Erro viz: | Exception: Eixo X obrigatório.
+Traceback (most recent call last):
+  File "C:\Users\never\Desktop\BI-25-05\pages\visualizations.py", line 424, in create_main_visualization
+    if not opt_x: raise ValueError("Eixo X obrigatório.")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Eixo X obrigatório.
+2025-06-14 18:52:35 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=f6bd85c7-acd4-4280-ab1b-baf3ad2941e5 | select_result=OK | file_size=57163776 bytes
+2025-06-14 18:52:56 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:52:57 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=f6bd85c7-acd4-4280-ab1b-baf3ad2941e5 | select_result=OK | file_size=57163776 bytes
+2025-06-14 18:53:00 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:53:00 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=f6bd85c7-acd4-4280-ab1b-baf3ad2941e5 | select_result=OK | file_size=57163776 bytes
+2025-06-14 18:53:05 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:53:05 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=f6bd85c7-acd4-4280-ab1b-baf3ad2941e5 | select_result=OK | file_size=57163776 bytes
+2025-06-14 18:53:05 | BI_APP | INFO | logger:info:70 | Dados válidos carregados para AI Chat
+2025-06-14 18:54:36 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:54:37 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 18:54:44 | BI_APP | INFO | logger:info:70 | Conexão com banco de dados estabelecida
+2025-06-14 18:54:45 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: None
+2025-06-14 18:54:50 | BI_APP | INFO | logger:info:70 | Query executada com sucesso
+2025-06-14 18:54:50 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=93696d5c-8dd5-456e-8e28-1e09fad42f86 | file_size=57176064 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-14 18:54:50 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=93696d5c-8dd5-456e-8e28-1e09fad42f86 | select_result=OK | file_size=57176064 bytes
+2025-06-14 18:54:50 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Dados salvos no cache com chave: 93696d5c-8dd5-456e-8e28-1e09fad42f86. Cache.has('93696d5c-8dd5-456e-8e28-1e09fad42f86') = True
+2025-06-14 18:54:50 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=93696d5c-8dd5-456e-8e28-1e09fad42f86 | select_result=OK | file_size=57176064 bytes
+2025-06-14 18:54:50 | BI_APP | INFO | logger:info:70 | DATABASE_PAGE - Verificação IMEDIATA: DataFrame recuperado do cache. Linhas: 100
+2025-06-14 18:54:51 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 93696d5c-8dd5-456e-8e28-1e09fad42f86
+2025-06-14 18:54:51 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=93696d5c-8dd5-456e-8e28-1e09fad42f86 | select_result=OK | file_size=57176064 bytes
+2025-06-14 18:54:51 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-14 18:54:53 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:54:53 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=93696d5c-8dd5-456e-8e28-1e09fad42f86 | select_result=OK | file_size=57176064 bytes
+2025-06-14 18:54:53 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=93696d5c-8dd5-456e-8e28-1e09fad42f86 | select_result=OK | file_size=57176064 bytes
+2025-06-14 18:55:02 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=93696d5c-8dd5-456e-8e28-1e09fad42f86 | select_result=OK | file_size=57176064 bytes
+2025-06-14 18:55:02 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=634dc0e4-c438-4388-b0ad-07054f9b47e4 | file_size=57188352 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-14 18:55:03 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: 634dc0e4-c438-4388-b0ad-07054f9b47e4
+2025-06-14 18:55:03 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=634dc0e4-c438-4388-b0ad-07054f9b47e4 | select_result=OK | file_size=57188352 bytes
+2025-06-14 18:55:03 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=634dc0e4-c438-4388-b0ad-07054f9b47e4 | select_result=OK | file_size=57188352 bytes
+2025-06-14 18:55:03 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-14 18:55:09 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=634dc0e4-c438-4388-b0ad-07054f9b47e4 | select_result=OK | file_size=57188352 bytes
+2025-06-14 18:55:09 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=ecb10371-abee-41b7-b5ce-93f80b314066 | file_size=57200640 bytes | value_type=<class 'pandas.core.frame.DataFrame'>
+2025-06-14 18:55:09 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: ecb10371-abee-41b7-b5ce-93f80b314066
+2025-06-14 18:55:09 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=ecb10371-abee-41b7-b5ce-93f80b314066 | select_result=OK | file_size=57200640 bytes
+2025-06-14 18:55:09 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-14 18:55:09 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=ecb10371-abee-41b7-b5ce-93f80b314066 | select_result=OK | file_size=57200640 bytes
+2025-06-14 18:55:12 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:55:12 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=ecb10371-abee-41b7-b5ce-93f80b314066 | select_result=OK | file_size=57200640 bytes
+2025-06-14 18:55:29 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:55:29 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=ecb10371-abee-41b7-b5ce-93f80b314066 | select_result=OK | file_size=57200640 bytes
+2025-06-14 18:55:29 | BI_APP | INFO | logger:info:70 | Dados válidos carregados para AI Chat
+2025-06-14 18:58:39 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=ecb10371-abee-41b7-b5ce-93f80b314066 | select_result=OK | file_size=57200640 bytes
+2025-06-14 18:58:39 | BI_APP | INFO | logger:info:70 | Iniciando preparação de dados para RAG
+2025-06-14 18:58:39 | BI_APP | INFO | logger:info:70 | Iniciando preparação de dados para chat
+2025-06-14 18:58:39 | BI_APP | INFO | logger:info:70 | Forçando estratégia COMPREHENSIVE
+2025-06-14 18:58:39 | BI_APP | INFO | logger:info:70 | Iniciando preparação de dados para chat
+2025-06-14 18:58:39 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=rag_index_for_ecb10371-abee-41b7-b5ce-93f80b314066_e02b890c50091852_comprehensive | select_result=None | file_size=57200640 bytes
+2025-06-14 18:58:39 | BI_APP | INFO | logger:info:70 | Iniciando indexação RAG
+2025-06-14 18:58:43 | BI_APP | INFO | logger:info:70 | Modelo de embedding configurado
+2025-06-14 18:58:43 | BI_APP | INFO | logger:info:70 | Iniciando criação de sumário abrangente
+2025-06-14 18:58:43 | BI_APP | INFO | logger:info:70 | DataFrame dividido em chunks
+2025-06-14 18:58:43 | BI_APP | INFO | logger:info:70 | Documentos RAG criados com sucesso
+2025-06-14 18:58:43 | BI_APP | INFO | logger:info:70 | Construindo VectorStoreIndex
+2025-06-14 18:59:01 | BI_APP | INFO | logger:info:70 | VectorStoreIndex construído com sucesso
+2025-06-14 18:59:01 | BI_APP | INFO | logger:info:70 | [SQLiteCache:set] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=rag_index_for_ecb10371-abee-41b7-b5ce-93f80b314066_e02b890c50091852_comprehensive | file_size=57364480 bytes | value_type=<class 'llama_index.core.indices.vector_store.base.VectorStoreIndex'>
+2025-06-14 18:59:01 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=rag_index_for_ecb10371-abee-41b7-b5ce-93f80b314066_e02b890c50091852_comprehensive | select_result=OK | file_size=57364480 bytes
+2025-06-14 18:59:04 | BI_APP | INFO | logger:info:70 | Índice RAG salvo no cache com sucesso
+2025-06-14 18:59:19 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 18:59:19 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 18:59:19 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 18:59:19 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 18:59:19 | BI_APP | WARNING | logger:warning:74 | JWT secret gerado temporariamente para desenvolvimento. Configure JWT_SECRET em produção.
+2025-06-14 18:59:19 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente
+2025-06-14 18:59:19 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:59:19 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:59:19 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:59:19 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:59:19 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 18:59:19 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:59:19 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:59:19 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:59:19 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:59:19 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 18:59:19 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 18:59:19 | BI_APP | INFO | logger:info:70 | Dependências configuradas com sucesso
+2025-06-14 18:59:20 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 18:59:20 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 18:59:20 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 18:59:20 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 18:59:20 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 18:59:20 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 18:59:20 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 18:59:20 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 18:59:20 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 18:59:20 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: ecb10371-abee-41b7-b5ce-93f80b314066
+2025-06-14 18:59:20 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 18:59:20 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=ecb10371-abee-41b7-b5ce-93f80b314066 | select_result=OK | file_size=57364480 bytes
+2025-06-14 18:59:20 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-14 18:59:21 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=ecb10371-abee-41b7-b5ce-93f80b314066 | select_result=OK | file_size=57364480 bytes
+2025-06-14 18:59:21 | BI_APP | INFO | logger:info:70 | Dados válidos carregados para AI Chat
+2025-06-14 18:59:40 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=ecb10371-abee-41b7-b5ce-93f80b314066 | select_result=OK | file_size=57364480 bytes
+2025-06-14 18:59:40 | BI_APP | INFO | logger:info:70 | Iniciando preparação de dados para RAG
+2025-06-14 18:59:40 | BI_APP | INFO | logger:info:70 | Iniciando preparação de dados para chat
+2025-06-14 18:59:40 | BI_APP | INFO | logger:info:70 | Forçando estratégia COMPREHENSIVE
+2025-06-14 18:59:40 | BI_APP | INFO | logger:info:70 | Iniciando preparação de dados para chat
+2025-06-14 18:59:40 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=rag_index_for_ecb10371-abee-41b7-b5ce-93f80b314066_e02b890c50091852_comprehensive | select_result=OK | file_size=57364480 bytes
+2025-06-14 18:59:45 | BI_APP | INFO | logger:info:70 | Índice RAG encontrado no cache
+2025-06-14 19:03:58 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=ecb10371-abee-41b7-b5ce-93f80b314066 | select_result=OK | file_size=57364480 bytes
+2025-06-14 19:03:58 | BI_APP | INFO | logger:info:70 | Iniciando preparação de dados para RAG
+2025-06-14 19:03:58 | BI_APP | INFO | logger:info:70 | Iniciando preparação de dados para chat
+2025-06-14 19:03:58 | BI_APP | INFO | logger:info:70 | Forçando estratégia COMPREHENSIVE
+2025-06-14 19:03:58 | BI_APP | INFO | logger:info:70 | Iniciando preparação de dados para chat
+2025-06-14 19:03:58 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=rag_index_for_ecb10371-abee-41b7-b5ce-93f80b314066_e02b890c50091852_comprehensive | select_result=OK | file_size=57364480 bytes
+2025-06-14 19:04:00 | BI_APP | INFO | logger:info:70 | Índice RAG encontrado no cache
+2025-06-14 19:05:01 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 19:05:01 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 19:05:02 | BI_APP | WARNING | logger:warning:74 | JWT secret gerado temporariamente para desenvolvimento. Configure JWT_SECRET em produção.
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | Dependências configuradas com sucesso
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 19:05:02 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 19:05:04 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: ecb10371-abee-41b7-b5ce-93f80b314066
+2025-06-14 19:05:04 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 19:05:04 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=ecb10371-abee-41b7-b5ce-93f80b314066 | select_result=OK | file_size=57364480 bytes
+2025-06-14 19:05:04 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-14 19:05:22 | BI_APP | INFO | logger:info:70 | Componentes principais do LlamaIndex carregados com sucesso
+2025-06-14 19:05:22 | BI_APP | INFO | logger:info:70 | Biblioteca Ollama carregada com sucesso
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | Biblioteca Groq carregada com sucesso
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | Módulo RAG carregado
+2025-06-14 19:05:23 | BI_APP | WARNING | logger:warning:74 | JWT secret gerado temporariamente para desenvolvimento. Configure JWT_SECRET em produção.
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | Sistema de colaboração inicializado
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | Dependências configuradas com sucesso
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | SQLiteCache inicializado em: C:\Users\never\Desktop\BI-25-05\cache.sqlite
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | Cache SQLiteCache inicializado
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | Chave de criptografia carregada de variável de ambiente ENCRYPTION_KEY (recomendado para produção)
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado com criptografia habilitada
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | ConfigManager inicializado
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | DatabaseManager inicializado
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | QueryManager initialized.
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | Callbacks do Dashboard Builder registrados com sucesso
+2025-06-14 19:05:23 | BI_APP | INFO | logger:info:70 | Callbacks dos sistemas registrados com sucesso
+2025-06-14 19:05:24 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=ecb10371-abee-41b7-b5ce-93f80b314066 | select_result=OK | file_size=57364480 bytes
+2025-06-14 19:05:24 | BI_APP | INFO | logger:info:70 | Dados válidos carregados para AI Chat
+2025-06-14 19:05:24 | BI_APP | INFO | logger:info:70 | Chave de dados ativa definida: ecb10371-abee-41b7-b5ce-93f80b314066
+2025-06-14 19:05:24 | BI_APP | INFO | logger:info:70 | Navegação de página
+2025-06-14 19:05:24 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=ecb10371-abee-41b7-b5ce-93f80b314066 | select_result=OK | file_size=57364480 bytes
+2025-06-14 19:05:24 | BI_APP | INFO | logger:info:70 | Status de dados atualizado com sucesso
+2025-06-14 19:05:25 | BI_APP | INFO | logger:info:70 | [SQLiteCache:get] db_path=C:\Users\never\Desktop\BI-25-05\cache.sqlite | key=ecb10371-abee-41b7-b5ce-93f80b314066 | select_result=OK | file_size=57364480 bytes
+2025-06-14 19:05:25 | BI_APP | INFO | logger:info:70 | Dados válidos carregados para AI Chat

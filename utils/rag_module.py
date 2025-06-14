@@ -734,6 +734,12 @@ def prepare_dataframe_for_chat(
     ollama_embedding_model: str = "nomic-embed-text",
     force_complete_processing: bool = True # Defaulting to comprehensive as per user request
 ) -> Tuple[bool, str, Optional[str]]:
+    # Determinar estratégia primeiro
+    if force_complete_processing:
+        strategy = "comprehensive"
+    else:
+        strategy = get_recommended_strategy(len(df), force_complete_processing)
+    
     log_info("Iniciando preparação de dados para chat", extra={
         "data_key": original_data_key,
         "total_records": len(df),
@@ -742,7 +748,6 @@ def prepare_dataframe_for_chat(
     })
 
     if force_complete_processing:
-        strategy = "comprehensive"
         log_info("Forçando estratégia COMPREHENSIVE", extra={
             "data_key": original_data_key,
             "total_records": len(df),
@@ -750,7 +755,6 @@ def prepare_dataframe_for_chat(
             "force_complete": True
         })
     else:
-        strategy = get_recommended_strategy(len(df))
         log_info("Auto-selecionando estratégia RAG", extra={
             "data_key": original_data_key,
             "total_records": len(df),

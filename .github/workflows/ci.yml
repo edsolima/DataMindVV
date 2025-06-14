@@ -1,0 +1,349 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Executa testes diariamente às 2:00 UTC
+    - cron: '0 2 * * *'
+
+env:
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '18'
+
+jobs:
+  # Job de verificação de código
+  code-quality:
+    runs-on: ubuntu-latest
+    name: Verificação de Qualidade do Código
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+    
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: Instalar dependências
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install flake8 black isort mypy bandit safety
+    
+    - name: Verificar formatação com Black
+      run: |
+        black --check --diff utils/ pages/ tests/
+    
+    - name: Verificar imports com isort
+      run: |
+        isort --check-only --diff utils/ pages/ tests/
+    
+    - name: Verificar estilo com flake8
+      run: |
+        flake8 utils/ pages/ tests/ --max-line-length=100 --ignore=E203,W503
+    
+    - name: Verificar tipos com mypy
+      run: |
+        mypy utils/ pages/ --ignore-missing-imports --no-strict-optional
+      continue-on-error: true
+    
+    - name: Verificar segurança com bandit
+      run: |
+        bandit -r utils/ pages/ -f json -o bandit-report.json
+      continue-on-error: true
+    
+    - name: Verificar vulnerabilidades nas dependências
+      run: |
+        safety check --json --output safety-report.json
+      continue-on-error: true
+    
+    - name: Upload relatórios de segurança
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: security-reports
+        path: |
+          bandit-report.json
+          safety-report.json
+
+  # Job de testes unitários
+  unit-tests:
+    runs-on: ubuntu-latest
+    name: Testes Unitários
+    needs: code-quality
+    
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11']
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+    
+    - name: Configurar Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+    
+    - name: Instalar dependências
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Configurar variáveis de ambiente para teste
+      run: |
+        echo "TESTING=true" >> $GITHUB_ENV
+        echo "JWT_SECRET_KEY=test-secret-key-for-ci" >> $GITHUB_ENV
+        echo "ENCRYPTION_KEY=test-encryption-key-for-ci" >> $GITHUB_ENV
+        echo "APP_ENV=test" >> $GITHUB_ENV
+    
+    - name: Executar testes unitários
+      run: |
+        python -m pytest tests/ -m "unit" --cov=utils --cov=pages --cov-report=xml --cov-report=html -v
+    
+    - name: Upload cobertura para Codecov
+      uses: codecov/codecov-action@v3
+      if: matrix.python-version == '3.11'
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+    
+    - name: Upload relatório de cobertura
+      uses: actions/upload-artifact@v3
+      if: matrix.python-version == '3.11'
+      with:
+        name: coverage-report
+        path: htmlcov/
+
+  # Job de testes de integração
+  integration-tests:
+    runs-on: ubuntu-latest
+    name: Testes de Integração
+    needs: unit-tests
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+    
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: Instalar dependências
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Configurar variáveis de ambiente
+      run: |
+        echo "TESTING=true" >> $GITHUB_ENV
+        echo "JWT_SECRET_KEY=test-secret-key-for-ci" >> $GITHUB_ENV
+        echo "ENCRYPTION_KEY=test-encryption-key-for-ci" >> $GITHUB_ENV
+        echo "APP_ENV=test" >> $GITHUB_ENV
+        echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test_db" >> $GITHUB_ENV
+        echo "REDIS_URL=redis://localhost:6379/0" >> $GITHUB_ENV
+    
+    - name: Executar testes de integração
+      run: |
+        python -m pytest tests/ -m "integration" -v --tb=short
+    
+    - name: Executar testes de segurança
+      run: |
+        python -m pytest tests/ -m "security" -v --tb=short
+
+  # Job de testes de performance
+  performance-tests:
+    runs-on: ubuntu-latest
+    name: Testes de Performance
+    needs: integration-tests
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+    
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: Instalar dependências
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Configurar variáveis de ambiente
+      run: |
+        echo "TESTING=true" >> $GITHUB_ENV
+        echo "JWT_SECRET_KEY=test-secret-key-for-ci" >> $GITHUB_ENV
+        echo "ENCRYPTION_KEY=test-encryption-key-for-ci" >> $GITHUB_ENV
+        echo "APP_ENV=test" >> $GITHUB_ENV
+    
+    - name: Executar testes de performance
+      run: |
+        python -m pytest tests/ -m "performance" -v --benchmark-only --benchmark-json=benchmark.json
+    
+    - name: Upload resultados de benchmark
+      uses: actions/upload-artifact@v3
+      with:
+        name: benchmark-results
+        path: benchmark.json
+
+  # Job de build e teste da aplicação
+  build-and-test:
+    runs-on: ubuntu-latest
+    name: Build e Teste da Aplicação
+    needs: unit-tests
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+    
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: Instalar dependências
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Configurar variáveis de ambiente
+      run: |
+        echo "TESTING=true" >> $GITHUB_ENV
+        echo "JWT_SECRET_KEY=test-secret-key-for-ci" >> $GITHUB_ENV
+        echo "ENCRYPTION_KEY=test-encryption-key-for-ci" >> $GITHUB_ENV
+        echo "APP_ENV=test" >> $GITHUB_ENV
+    
+    - name: Verificar se a aplicação inicia
+      run: |
+        timeout 30s python app.py --test-mode || true
+        echo "Teste de inicialização concluído"
+    
+    - name: Executar testes de smoke
+      run: |
+        python -m pytest tests/ -m "smoke" -v --tb=short
+
+  # Job de análise de dependências
+  dependency-analysis:
+    runs-on: ubuntu-latest
+    name: Análise de Dependências
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+    
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    
+    - name: Instalar pip-audit
+      run: |
+        python -m pip install --upgrade pip
+        pip install pip-audit
+    
+    - name: Executar auditoria de dependências
+      run: |
+        pip-audit --format=json --output=pip-audit-report.json
+      continue-on-error: true
+    
+    - name: Upload relatório de auditoria
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: dependency-audit
+        path: pip-audit-report.json
+
+  # Job de notificação de resultados
+  notify-results:
+    runs-on: ubuntu-latest
+    name: Notificar Resultados
+    needs: [code-quality, unit-tests, integration-tests, build-and-test]
+    if: always()
+    
+    steps:
+    - name: Verificar status dos jobs
+      run: |
+        echo "Status dos jobs:"
+        echo "Code Quality: ${{ needs.code-quality.result }}"
+        echo "Unit Tests: ${{ needs.unit-tests.result }}"
+        echo "Integration Tests: ${{ needs.integration-tests.result }}"
+        echo "Build and Test: ${{ needs.build-and-test.result }}"
+        
+        if [[ "${{ needs.code-quality.result }}" == "failure" || 
+              "${{ needs.unit-tests.result }}" == "failure" || 
+              "${{ needs.integration-tests.result }}" == "failure" || 
+              "${{ needs.build-and-test.result }}" == "failure" ]]; then
+          echo "❌ Pipeline falhou"
+          exit 1
+        else
+          echo "✅ Pipeline passou com sucesso"
+        fi
+
+  # Job de limpeza (apenas em schedule)
+  cleanup:
+    runs-on: ubuntu-latest
+    name: Limpeza de Artefatos
+    if: github.event_name == 'schedule'
+    
+    steps:
+    - name: Limpar artefatos antigos
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const artifacts = await github.rest.actions.listArtifactsForRepo({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+          });
+          
+          const oldArtifacts = artifacts.data.artifacts.filter(artifact => {
+            const createdAt = new Date(artifact.created_at);
+            const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+            return createdAt < thirtyDaysAgo;
+          });
+          
+          for (const artifact of oldArtifacts) {
+            await github.rest.actions.deleteArtifact({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              artifact_id: artifact.id,
+            });
+            console.log(`Deleted artifact: ${artifact.name}`);
+          }

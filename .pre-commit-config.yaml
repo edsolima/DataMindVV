@@ -1,0 +1,165 @@
+# Configuração do pre-commit para DataMindVV
+# Para instalar: pip install pre-commit && pre-commit install
+
+repos:
+  # Hooks básicos
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: \.md$
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: check-xml
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: check-docstring-first
+      - id: debug-statements
+      - id: requirements-txt-fixer
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+
+  # Formatação de código Python
+  - repo: https://github.com/psf/black
+    rev: 23.7.0
+    hooks:
+      - id: black
+        language_version: python3
+        args: ['--line-length=100']
+        files: \.(py)$
+        exclude: ^(migrations/|venv/|env/)
+
+  # Organização de imports
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        args: ['--profile=black', '--line-length=100']
+        files: \.(py)$
+        exclude: ^(migrations/|venv/|env/)
+
+  # Linting com flake8
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+        args: [
+          '--max-line-length=100',
+          '--ignore=E203,W503,E501',
+          '--exclude=migrations,venv,env,.git,__pycache__,.pytest_cache'
+        ]
+        files: \.(py)$
+
+  # Verificação de segurança
+  - repo: https://github.com/pycqa/bandit
+    rev: 1.7.5
+    hooks:
+      - id: bandit
+        args: ['-r', '-f', 'json']
+        files: \.(py)$
+        exclude: ^(tests/|venv/|env/)
+
+  # Verificação de tipos (mypy)
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.5.1
+    hooks:
+      - id: mypy
+        args: [
+          '--ignore-missing-imports',
+          '--no-strict-optional',
+          '--warn-redundant-casts',
+          '--warn-unused-ignores'
+        ]
+        files: ^(utils/|pages/)
+        exclude: ^(tests/|migrations/)
+        additional_dependencies: [
+          'types-requests',
+          'types-PyYAML',
+          'types-python-dateutil'
+        ]
+
+  # Verificação de vulnerabilidades em dependências
+  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
+    rev: v1.3.2
+    hooks:
+      - id: python-safety-dependencies-check
+        files: requirements.*\.txt$
+
+  # Verificação de secrets
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: .*\.lock$|package-lock\.json$
+
+  # Verificação de arquivos grandes
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+
+  # Verificação de encoding
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-byte-order-marker
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+
+  # Hooks customizados para o projeto
+  - repo: local
+    hooks:
+      # Verificar se há TODOs/FIXMEs em produção
+      - id: check-todos
+        name: Check for TODOs and FIXMEs
+        entry: bash -c 'if git diff --cached --name-only | grep -E "\.(py|js|ts|jsx|tsx)$" | xargs grep -l "TODO\|FIXME\|XXX" 2>/dev/null; then echo "❌ TODOs/FIXMEs encontrados - revisar antes do commit"; exit 1; fi'
+        language: system
+        pass_filenames: false
+        always_run: true
+
+      # Executar testes unitários rápidos
+      - id: run-unit-tests
+        name: Run unit tests
+        entry: python -m pytest tests/ -m "unit" --tb=short -q --maxfail=3
+        language: system
+        pass_filenames: false
+        files: \.(py)$
+        exclude: ^(migrations/|venv/|env/)
+
+      # Verificar estrutura de arquivos críticos
+      - id: check-critical-files
+        name: Check critical files exist
+        entry: bash -c 'for file in requirements.txt .env.example README.md; do if [ ! -f "$file" ]; then echo "❌ Arquivo crítico ausente: $file"; exit 1; fi; done'
+        language: system
+        pass_filenames: false
+        always_run: true
+
+      # Verificar se há hardcoded secrets
+      - id: check-hardcoded-secrets
+        name: Check for hardcoded secrets
+        entry: bash -c 'if git diff --cached | grep -E "(password|secret|key|token)\s*=\s*[\"\'][^\"\'][\"\']" 2>/dev/null; then echo "❌ Possíveis secrets hardcoded encontrados"; exit 1; fi'
+        language: system
+        pass_filenames: false
+        always_run: true
+
+# Configurações globais
+default_stages: [commit]
+fail_fast: false
+minimum_pre_commit_version: '3.0.0'
+
+# Configuração de CI
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit hooks
+
+    for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: ''
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip: []
+  submodules: false

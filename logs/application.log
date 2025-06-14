@@ -1,0 +1,68 @@
+2025-06-14 18:43:40,213 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Iniciando aplicação DataMindVV
+2025-06-14 18:44:10,811 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Iniciando aplicação DataMindVV
+2025-06-14 18:45:24,604 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Iniciando aplicação DataMindVV
+2025-06-14 18:45:24,610 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Sistema de injeção de dependências configurado
+2025-06-14 18:46:57,015 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Iniciando aplicação DataMindVV
+2025-06-14 18:46:57,036 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Sistema de injeção de dependências configurado
+2025-06-14 18:47:46,789 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Iniciando aplicação DataMindVV
+2025-06-14 18:47:46,796 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Sistema de injeção de dependências configurado
+2025-06-14 18:47:46,856 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Middleware de tratamento de erros configurado
+2025-06-14 18:47:46,857 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Configurações de segurança aplicadas
+2025-06-14 18:47:46,860 - BI-Dashboard - [33mWARNING[0m - enhanced_logger:_log:192 - Fallback para inicialização tradicional: 'str' object has no attribute '__name__'
+2025-06-14 18:47:46,864 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Managers inicializados via método tradicional
+2025-06-14 18:47:46,888 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Modo de teste ativado - aplicação não será executada
+2025-06-14 18:48:05,564 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Iniciando aplicação DataMindVV
+2025-06-14 18:48:05,579 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Sistema de injeção de dependências configurado
+2025-06-14 18:48:05,746 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Middleware de tratamento de erros configurado
+2025-06-14 18:48:05,747 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Configurações de segurança aplicadas
+2025-06-14 18:48:05,755 - BI-Dashboard - [33mWARNING[0m - enhanced_logger:_log:192 - Fallback para inicialização tradicional: 'str' object has no attribute '__name__'
+2025-06-14 18:48:05,765 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Managers inicializados via método tradicional
+2025-06-14 18:48:05,816 - BI-Dashboard - [33mWARNING[0m - enhanced_logger:_log:192 - Executando em modo de desenvolvimento - chaves temporárias sendo usadas
+2025-06-14 18:49:41,057 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Iniciando aplicação DataMindVV
+2025-06-14 18:49:41,063 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Sistema de injeção de dependências configurado
+2025-06-14 18:49:41,126 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Middleware de tratamento de erros configurado
+2025-06-14 18:49:41,127 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Configurações de segurança aplicadas
+2025-06-14 18:49:41,131 - BI-Dashboard - [33mWARNING[0m - enhanced_logger:_log:192 - Fallback para inicialização tradicional: 'str' object has no attribute '__name__'
+2025-06-14 18:49:41,135 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Managers inicializados via método tradicional
+2025-06-14 18:49:41,154 - BI-Dashboard - [33mWARNING[0m - enhanced_logger:_log:192 - Executando em modo de desenvolvimento - chaves temporárias sendo usadas
+2025-06-14 18:49:41,154 - BI-Dashboard - [32mINFO[0m - :None:0 - Iniciando servidor Dash
+2025-06-14 18:49:48,700 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Iniciando aplicação DataMindVV
+2025-06-14 18:49:48,711 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Sistema de injeção de dependências configurado
+2025-06-14 18:49:48,794 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Middleware de tratamento de erros configurado
+2025-06-14 18:49:48,795 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Configurações de segurança aplicadas
+2025-06-14 18:49:48,800 - BI-Dashboard - [33mWARNING[0m - enhanced_logger:_log:192 - Fallback para inicialização tradicional: 'str' object has no attribute '__name__'
+2025-06-14 18:49:48,805 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Managers inicializados via método tradicional
+2025-06-14 18:49:48,832 - BI-Dashboard - [33mWARNING[0m - enhanced_logger:_log:192 - Executando em modo de desenvolvimento - chaves temporárias sendo usadas
+2025-06-14 18:49:48,833 - BI-Dashboard - [32mINFO[0m - :None:0 - Iniciando servidor Dash
+2025-06-14 18:50:04,992 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Iniciando aplicação DataMindVV
+2025-06-14 18:50:05,000 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Sistema de injeção de dependências configurado
+2025-06-14 18:50:05,076 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Middleware de tratamento de erros configurado
+2025-06-14 18:50:05,077 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Configurações de segurança aplicadas
+2025-06-14 18:50:05,081 - BI-Dashboard - [33mWARNING[0m - enhanced_logger:_log:192 - Fallback para inicialização tradicional: 'str' object has no attribute '__name__'
+2025-06-14 18:50:05,085 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Managers inicializados via método tradicional
+2025-06-14 18:50:05,112 - BI-Dashboard - [33mWARNING[0m - enhanced_logger:_log:192 - Executando em modo de desenvolvimento - chaves temporárias sendo usadas
+2025-06-14 18:50:05,113 - BI-Dashboard - [32mINFO[0m - :None:0 - Iniciando servidor Dash
+2025-06-14 18:59:19,881 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Iniciando aplicação DataMindVV
+2025-06-14 18:59:19,893 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Sistema de injeção de dependências configurado
+2025-06-14 18:59:20,017 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Middleware de tratamento de erros configurado
+2025-06-14 18:59:20,018 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Configurações de segurança aplicadas
+2025-06-14 18:59:20,024 - BI-Dashboard - [33mWARNING[0m - enhanced_logger:_log:192 - Fallback para inicialização tradicional: 'str' object has no attribute '__name__'
+2025-06-14 18:59:20,030 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Managers inicializados via método tradicional
+2025-06-14 18:59:20,068 - BI-Dashboard - [33mWARNING[0m - enhanced_logger:_log:192 - Executando em modo de desenvolvimento - chaves temporárias sendo usadas
+2025-06-14 18:59:20,069 - BI-Dashboard - [32mINFO[0m - :None:0 - Iniciando servidor Dash
+2025-06-14 19:05:02,702 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Iniciando aplicação DataMindVV
+2025-06-14 19:05:02,721 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Sistema de injeção de dependências configurado
+2025-06-14 19:05:02,890 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Middleware de tratamento de erros configurado
+2025-06-14 19:05:02,892 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Configurações de segurança aplicadas
+2025-06-14 19:05:02,902 - BI-Dashboard - [33mWARNING[0m - enhanced_logger:_log:192 - Fallback para inicialização tradicional: 'str' object has no attribute '__name__'
+2025-06-14 19:05:02,911 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Managers inicializados via método tradicional
+2025-06-14 19:05:02,963 - BI-Dashboard - [33mWARNING[0m - enhanced_logger:_log:192 - Executando em modo de desenvolvimento - chaves temporárias sendo usadas
+2025-06-14 19:05:02,964 - BI-Dashboard - [32mINFO[0m - :None:0 - Iniciando servidor Dash
+2025-06-14 19:05:23,780 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Iniciando aplicação DataMindVV
+2025-06-14 19:05:23,790 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Sistema de injeção de dependências configurado
+2025-06-14 19:05:23,924 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Middleware de tratamento de erros configurado
+2025-06-14 19:05:23,925 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Configurações de segurança aplicadas
+2025-06-14 19:05:23,932 - BI-Dashboard - [33mWARNING[0m - enhanced_logger:_log:192 - Fallback para inicialização tradicional: 'str' object has no attribute '__name__'
+2025-06-14 19:05:23,940 - BI-Dashboard - [32mINFO[0m - enhanced_logger:_log:192 - Managers inicializados via método tradicional
+2025-06-14 19:05:23,980 - BI-Dashboard - [33mWARNING[0m - enhanced_logger:_log:192 - Executando em modo de desenvolvimento - chaves temporárias sendo usadas
+2025-06-14 19:05:23,981 - BI-Dashboard - [32mINFO[0m - :None:0 - Iniciando servidor Dash

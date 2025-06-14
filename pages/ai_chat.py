@@ -711,7 +711,7 @@ def register_callbacks(app, cache_instance):
             log_info("Dados preparados com sucesso para RAG", extra={
                 "summary_key": summary_key,
                 "data_key": data_key,
-                "message": message
+                "response_message": message
             })
             alert_msg = dbc.Alert(message, color="success", duration=4000, className="small")
             # Update store with new summary_key and original_data_key
